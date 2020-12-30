@@ -17,20 +17,20 @@ $sec-font-color-theme3:#d66a57;
 $sec-font-color-theme4:#a75d30;
 
 //基础背景颜色
-@function background-color-theme1($lightness:1.0%) {
-    @return hsl(244, 100%, 10%);
+@function background-color-theme1($lightness:hsl(244,100%,10.0%)) {
+    @return ($lightness);
 }
 
-@function background-color-theme2($lightness:1.0%) {
-    @return #f0f2f5;
+@function background-color-theme2($lightness:hsl(216,20%,95.0%)) {
+    @return ($lightness);
 }
 
-@function background-color-theme3($lightness:1.0%) {
-    @return #f0f2f5;
+@function background-color-theme3($lightness:hsl(216,20%,95.0%)) {
+    @return  ($lightness);
 }
 
-@function background-color-theme4($lightness:1.0%) {
-    @return #111111;
+@function background-color-theme4($lightness:hsl(0, 0%, 7.0%)) {
+    @return  ($lightness);
 }
 
 // 二级背景色，工具栏，内容区域背景颜色

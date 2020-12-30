@@ -29,24 +29,41 @@
 }
 
 //基础背景
-@mixin base-background($lightness:1.0%) {
+@mixin base-background() {
     [data-theme="theme1"] & {
-        background-color: background-color-theme1($lightness);
+        background-color: background-color-theme1();
     }
 
     [data-theme="theme2"] & {
-        background-color: background-color-theme2($lightness);
+        background-color: background-color-theme2();
     }
 
     [data-theme="theme3"] & {
-        background-color: background-color-theme3($lightness);
+        background-color: background-color-theme3();
     }
 
     [data-theme="theme4"] & {
-        background-color: background-color-theme4($lightness);
+        background-color: background-color-theme4();
     }
 }
+// 斑马纹
+@mixin striped-background() {
+    [data-theme="theme1"] & {
+        background-color: background-color-theme1(hsl(242,46%,21.0%));
+    }
 
+    [data-theme="theme2"] & {
+        background-color: background-color-theme2();
+    }
+
+    [data-theme="theme3"] & {
+        background-color: background-color-theme3();
+    }
+
+    [data-theme="theme4"] & {
+        background-color: background-color-theme4();
+    }
+}
 // tool-bar
 @mixin tool-bar-color() {
     [data-theme="theme1"] & {
@@ -106,7 +123,7 @@
 }
 
 // 内容区域背景颜色
-@mixin content-background {
+@mixin content-background() {
     [data-theme="theme1"] & {
         background-color: $content-background1;
     }

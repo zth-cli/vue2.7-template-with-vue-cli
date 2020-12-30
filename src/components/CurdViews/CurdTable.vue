@@ -190,6 +190,12 @@ export default {
           projectName: 'name',
           createDate: '12-11',
           description: 'w21'
+        }, {
+          creator: 'rzx007',
+          id: 12,
+          projectName: 'name',
+          createDate: '12-11',
+          description: 'w21'
         }
       ],
       mColumns: [],
@@ -359,11 +365,13 @@ export default {
   border-radius: 4px;
   @include box-shadow();
   .panel_tool_left {
-  float: left;
-  color: #666;
-  font-size: 14px;
-}
-
+    float: left;
+   color: #666;
+    font-size: 14px;
+  }
+  .el-table--striped .el-table__body tr.el-table__row--striped td{
+    @include striped-background();
+  }
 .panel_tool_right {
   float: right;
   padding-bottom: 8px;

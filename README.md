@@ -210,6 +210,7 @@ change // 查询条件发生改变时触发，返回值params:查询条件得集
 * table的**Render 写法不变**，slot插槽主要使用了作用域插槽，`v-slot:action="Props"`,`action`即为插槽name，和clunms项的`slot: 'action'`必须保持一致(可看例子),
 `Props`当前行数据 `row`，当前行序号 `index`。
 >因为进行了封装，所以table自定义列模板和Element有点不一样，但是**Render 写法不变**，可按照Element官方文档书写，
+
 ```js
  <template v-slot:action="Props">
     <el-button type="default" size="small" @click="getRow(Props)">刷新</el-button>

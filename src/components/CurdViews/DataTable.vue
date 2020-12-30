@@ -18,7 +18,7 @@
           :width="item.width"
         >
           <template v-if="item.children&&item.children.length > 0">
-            <DataTable :columns="item.children"></DataTable> 
+            <DataTable :columns="item.children"></DataTable>
           </template>
         </el-table-column>
         <el-table-column v-else :label="item.label" :key="index">
@@ -34,57 +34,57 @@
 
 <script>
 export default {
-  name: "DataTable",
-  data() {
+  name: 'DataTable',
+  data () {
     return {
-      user: "rzx",
-    };
+      user: 'rzx'
+    }
   },
   props: {
     columns: {
       type: Array,
-      required: true,
+      required: true
     },
     tableData: {
       type: Array
     },
     tableSize: {
-      default: "small",
+      default: 'small'
     },
     pageSize: {
-      default: 20,
+      default: 20
     },
     showSettingToolbar: {
       type: Boolean,
-      default: true,
+      default: true
     },
     showPage: {
       type: Boolean,
-      default: true,
+      default: true
     },
     highlightCurrentRow: {
       type: Boolean,
-      default: false,
+      default: false
     },
     lazy: {
       type: Boolean,
-      default: false,
+      default: false
     },
     dataUrl: {},
     params: {},
     height: {
-      default: "53vh",
+      default: '53vh'
     },
     border: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   methods: {
-    renderFunc(columns, h) {
-      var that = this;
-      let children = [];
-      let elememtArr = columns.map((item) => {
+    renderFunc (columns, h) {
+      var that = this
+      let children = []
+      const elememtArr = columns.map((item) => {
         const columnProps = {
           label: item.label,
           width: item.width,
@@ -92,71 +92,71 @@ export default {
           fixed: item.fixed || false,
           renderHeader: item.renderHeader,
           resizable: item.resizable || true,
-          align: item.align || "left",
+          align: item.align || 'left',
           headerAlign: item.headerAlign,
           showOverflowTooltip: item.showOverflowtooltip
-        };
+        }
         if (item.slot) {
           // slot,自定义列模板
-          return h("el-table-column", {
+          return h('el-table-column', {
             props: {
               label: item.label,
               width: item.width,
-              ...columnProps,
+              ...columnProps
             },
             scopedSlots: {
               // scope 就相当于 slot-scope="{title}" 里面的值
               default: (scope) => {
                 return [
-                  h("p", [
+                  h('p', [
                     that.$scopedSlots[item.slot]({
                       rowData: {
                         row: scope.row,
                         colum: scope.column,
-                        index: scope.$index,
-                      },
-                    }),
-                  ]),
-                ];
-              },
-            },
-          });
+                        index: scope.$index
+                      }
+                    })
+                  ])
+                ]
+              }
+            }
+          })
         }
         if (item.prop && item.enum) {
-          let enums = item.enum;
+          const enums = item.enum
 
-          return h("el-table-column", {
+          return h('el-table-column', {
             props: {
               label: item.label,
               width: item.width,
-              ...columnProps,
+              ...columnProps
             },
             scopedSlots: {
               default: (scope) => {
-                let node = null;
+                let node = null
                 for (let index = 0; index < enums.length; index++) {
-                  const element = enums[index];
+                  const element = enums[index]
                   if (element.id === scope.row[item.prop]) {
                     node = h(
-                      "el-tag",
+                      'el-tag',
                       {
                         props: {
-                          size: "mini",
-                          type: element.type ? element.type : "success",
-                        },
+                          size: 'mini',
+                          type: element.type ? element.type : 'success'
+                        }
                       },
                       [element.value]
-                    );
-                    break;
+                    )
+                    break
                   }
                 }
-                return node;
-              },
-            },
-          });
+                return node
+              }
+            }
+          })
         }
 
-        if (item.type === "index") {
+        if (item.type === 'index') {
           // return h(
           //   "el-table-column",
           //   {
@@ -170,7 +170,7 @@ export default {
           //   },
           //   [children]
           // );
-          return h("el-table-column", {
+          return h('el-table-column', {
             props: {
               label: item.label,
               width: item.width,
@@ -180,41 +180,41 @@ export default {
               // scope 就相当于 slot-scope="{title}" 里面的值
               default: (scope) => {
                 return [
-                  h("span", [
+                  h('span', [
                     that.$scopedSlots[item.type]({
                       rowData: {
                         row: scope.row,
                         colum: scope.column,
-                        index: scope.$index,
-                      },
-                    }),
-                  ]),
-                ];
-              },
+                        index: scope.$index
+                      }
+                    })
+                  ])
+                ]
+              }
             }
-          });
+          })
         }
-        if (item.type === "selection") {
+        if (item.type === 'selection') {
           return h(
-            "el-table-column",
+            'el-table-column',
             {
               props: {
-                type: "selection",
+                type: 'selection',
                 label: item.label,
                 width: item.width,
-                fixed: item.fixed,
-              },
+                fixed: item.fixed
+              }
             },
             [children]
-          );
+          )
         }
         if (item.children && item.children.length > 0) {
-          children = that.renderFunc(item.children, h); //嵌套表头，递归、
+          children = that.renderFunc(item.children, h) // 嵌套表头，递归、
         } else {
-          children = [];
+          children = []
         }
         return h(
-          "el-table-column",
+          'el-table-column',
           {
             props: {
               prop: item.prop,
@@ -222,20 +222,20 @@ export default {
               sortable: item.sortable || false,
               sortMethod: item.sortMethod,
               sortBy: item.sortBy,
-              ...columnProps,
-            },
+              ...columnProps
+            }
           },
           [children]
-        );
-      });
-      return elememtArr;
-    },
+        )
+      })
+      return elememtArr
+    }
   },
-  render(h) {
-    var that = this;
-    let elememtArr = this.renderFunc(that.columns, h);
+  render (h) {
+    var that = this
+    const elememtArr = this.renderFunc(that.columns, h)
     return h(
-      "el-table",
+      'el-table',
       {
         props: {
           data: that.tableData,
@@ -243,31 +243,32 @@ export default {
           size: that.tableSize,
           height: that.height,
           highlightCurrentRow: that.highlightCurrentRow,
-          showSummary:that.showSummary,
-          ref: "tableView"
+          showSummary: that.showSummary,
+          stripe: true,
+          ref: 'tableView'
         },
         style: {
           width: '100%'
         },
         on: {
           'row-click': row => {
-            that.$emit("row-click", row);
+            that.$emit('row-click', row)
           },
-          'row-dblclick': row =>  {
-            that.$emit("row-dblclick", row);
+          'row-dblclick': row => {
+            that.$emit('row-dblclick', row)
           },
           'selection-change': selection => {
-            that.$emit("selection-change", selection);
+            that.$emit('selection-change', selection)
           },
           'current-change': row => {
-            that.$emit("current-change", row);
-          },
+            that.$emit('current-change', row)
+          }
         }
       },
       elememtArr
-    );
-  },
-};
+    )
+  }
+}
 </script>
 <style>
 </style>
