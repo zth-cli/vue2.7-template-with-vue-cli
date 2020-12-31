@@ -1,9 +1,9 @@
 // 特殊样式，Echarts表格颜色
 var chartColorObj = {
-  theme1: ['#588da8', '#ccafaf', '#e58a8a'],
-  theme2: ['#2e73ff', '#60e4c2', '#36c57d'],
+  theme1: ['#045762', '#70af85', '#16c79a'],
+  theme2: ['#588da8', '#ccafaf', '#e58a8a'],
   theme3: ['#2e73ff', '#60e4c2', '#36c57d'],
-  theme4: ['#588da8', '#ccafaf', '#e58a8a']
+  theme4: ['#583d72', '#19456b', '#ef4f4f']
 }
 // 地图颜色
 var mapColorObj = {

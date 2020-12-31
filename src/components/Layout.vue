@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="layout">
     <v-slidebar v-if="mode" :mode='mode'></v-slidebar>
     <div class="right_container">
       <el-header>
@@ -8,7 +8,7 @@
         </v-header>
       </el-header>
       <div class="dashborad">
-        <div class="content-wrapper-main">
+        <div class="content-wrapper-layout">
           <template>
             <keep-alive v-if="isShow">
               <router-view v-if="$route.meta.isCache"></router-view>
@@ -77,7 +77,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.main {
+.layout {
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -88,7 +88,7 @@ export default {
   .dashborad {
     height: calc(100vh - 50px);
     width: 100%;
-    overflow: auto;
+    // overflow: auto;
     position: relative;
     .tag-nav-wrapper {
       z-index: 10;
@@ -113,12 +113,12 @@ export default {
   box-sizing: border-box;
   // line-height: 60px;
 }
-.el-main {
+.el-layout {
   @include base-background();
   @include font_color(#666);
   padding: 0 !important;
 }
-.content-wrapper-main {
+.content-wrapper-layout {
   height: calc(100% - 32px);
   overflow: auto;
   overflow-x: hidden;
