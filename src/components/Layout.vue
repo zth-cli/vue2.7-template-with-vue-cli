@@ -105,12 +105,12 @@ export default {
 }
 
 .el-header {
-  @include header-background();
   // background: #272451;
   color: #333;
   // text-align: center;
   height: 50px !important;
   box-sizing: border-box;
+  padding: 0
   // line-height: 60px;
 }
 .el-layout {

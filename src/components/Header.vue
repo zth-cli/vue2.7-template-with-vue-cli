@@ -1,10 +1,12 @@
 <template>
-  <div class="header">
+  <div class="header" :class="[mode ? 'light-header' : '']">
     <!-- 折叠按钮 -->
     <div class="collapse-btn" v-if="mode">
-      <i :class="[collapse?'el-icon-s-unfold':'el-icon-s-fold']"></i>
+      <i :class="[collapse ? 'el-icon-s-unfold' : 'el-icon-s-fold']"></i>
     </div>
-    <div class="logo ellipsis" @click="$router.push('/')" title="首页">{{slogan}}</div>
+    <div class="logo ellipsis" @click="$router.push('/')" title="首页">
+      {{ slogan }}
+    </div>
     <div class="header-menu">
       <slot></slot>
     </div>
@@ -12,11 +14,15 @@
       <div class="header-user-con">
         <!-- 全屏显示 -->
         <div class="btn-fullscreen" @click="handleFullScreen">
-          <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
+          <el-tooltip
+            effect="dark"
+            :content="fullscreen ? `取消全屏` : `全屏`"
+            placement="bottom"
+          >
             <i class="el-icon-rank"></i>
           </el-tooltip>
         </div>
-          <!-- 消息中心 -->
+        <!-- 消息中心 -->
         <!-- <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
            <i class="el-icon-bell"></i>
         </el-tooltip>
@@ -29,30 +35,34 @@
             <i class="el-icon-orange"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="theme1">默认</el-dropdown-item>
-            <el-dropdown-item command="theme3">经典</el-dropdown-item>
-            <el-dropdown-item command="theme2">清爽</el-dropdown-item>
-            <el-dropdown-item command="theme4">暗夜</el-dropdown-item>
+            <el-dropdown-item v-for="(item,index) in themes" :command="item.theme" :key="index">{{item.name}}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <!-- 用户头像 -->
         <div class="user-avator">
           <!-- <img src="@/assets/img/a.png" /> -->
         </div>
+         <i class="el-icon-orange"
+          @click="switchThemeBar = true"
+          v-if="showThemeBar"></i>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
-            {{username}}
+            {{ username }}
             <i f class="el-icon-caret-bottom"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-mouse" command="updataPassword">密码修改</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-switch-button" command="loginout">注销</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-mouse" command="updataPassword"
+              >密码修改</el-dropdown-item
+            >
+            <el-dropdown-item icon="el-icon-switch-button" command="loginout"
+              >注销</el-dropdown-item
+            >
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </div>
-    <theme-bar :status="switchThemeBar" ></theme-bar>
+    <theme-bar :status="switchThemeBar"></theme-bar>
     <overlay :close.sync="close" owidth="400px" oheight="60vh" title="密码修改">
       <div v-if="close" class="addUser">
         <el-form
@@ -63,7 +73,12 @@
           class="demo-ruleForm"
         >
           <el-form-item label="登录名称" prop="userName">
-            <el-input v-model="ruleForm.userName" :disabled="true" size="mini" style="width:220px"></el-input>
+            <el-input
+              v-model="ruleForm.userName"
+              :disabled="true"
+              size="mini"
+              style="width: 220px"
+            ></el-input>
           </el-form-item>
           <el-form-item label="旧密码">
             <el-input
@@ -71,7 +86,7 @@
               v-model="ruleForm.oldPwd"
               size="mini"
               auto-complete="off"
-              style="width:220px"
+              style="width: 220px"
             ></el-input>
           </el-form-item>
           <el-form-item label="新密码" prop="newPwd">
@@ -80,7 +95,7 @@
               v-model="ruleForm.newPwd"
               size="mini"
               auto-complete="off"
-              style="width:220px"
+              style="width: 220px"
             ></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="confirmNewPwd">
@@ -89,12 +104,19 @@
               v-model="ruleForm.confirmNewPwd"
               size="mini"
               auto-complete="off"
-              style="width:220px"
+              style="width: 220px"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="submitForm('ruleForm')">立即创建</el-button>
-            <el-button @click="resetForm('ruleForm')" size="mini">重置</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="submitForm('ruleForm')"
+              >立即创建</el-button
+            >
+            <el-button @click="resetForm('ruleForm')" size="mini"
+              >重置</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
@@ -104,9 +126,11 @@
 <script>
 import { removeToken, getToken } from '@/utils/auth'
 import ThemeBar from '@/components/ThemeBar'
+import { mapGetters } from 'vuex'
 import { updataPassword } from '@/api'
 import { title } from '@/settings'
 import bus from '@/utils/bus'
+import themes from '@/utils/themeMap'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -144,6 +168,7 @@ export default {
       name: getToken('name') || '管理员',
       message: 2,
       close: false,
+      themes,
       ruleForm: {
         userName: getToken('userName'),
         oldPwd: '',
@@ -177,6 +202,7 @@ export default {
   },
   components: { ThemeBar },
   computed: {
+    ...mapGetters(['showThemeBar']),
     username () {
       const username = localStorage.getItem('ms_username')
       return username || this.name
@@ -193,7 +219,7 @@ export default {
       }
     },
     updataPassword () {
-      updataPassword(this.ruleForm).then(res => {
+      updataPassword(this.ruleForm).then((res) => {
         if (res.resultCode === 0) {
           this.$message({
             message: '修改成功，重新登陆',
@@ -212,7 +238,7 @@ export default {
     },
     // 提交用户信息按钮
     submitForm (formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           delete this.ruleForm.confirmNewPwd
           delete this.ruleForm.userName
@@ -297,6 +323,8 @@ export default {
 </script>
 <style lang="scss">
 .header {
+  @include header-background();
+  padding: 0 20px;
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -305,7 +333,7 @@ export default {
   height: 50px;
   font-size: 20px;
   @include font_color(#fff);
-  .collapse-btn{
+  .collapse-btn {
     margin-right: 12px;
     cursor: pointer;
   }
@@ -314,70 +342,79 @@ export default {
     max-width: 250px;
     line-height: 50px;
     margin-right: 24px;
-    @include font_color(#fff);
+    // @include font_color(#fff);
     font-weight: bolder;
   }
   i {
-    @include font_color(#fff);
+    // @include font_color(#fff);
     font-size: 20px;
   }
+  .header-menu {
+    flex: 1;
+  }
+  .header-right {
+    padding-right: 20px;
+  }
+  .header-user-con {
+    display: flex;
+    height: 50px;
+    align-items: center;
+  }
+  .btn-fullscreen {
+    transform: rotate(45deg);
+    margin-right: 5px;
+    font-size: 24px;
+  }
+  .btn-bell,
+  .btn-fullscreen {
+    position: relative;
+    width: 30px;
+    /* height: 30px; */
+    text-align: center;
+    border-radius: 15px;
+    cursor: pointer;
+    line-height: 50px;
+    .el-icon-bell {
+      // @include font_color(#fff);
+    }
+  }
+  .btn-bell-badge {
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #f56c6c;
+    // @include font_color(#fff);
+  }
+  .user-name {
+    margin-left: 10px;
+  }
+  .user-avator {
+    margin-left: 8px;
+  }
+  .user-avator img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .el-dropdown-link {
+    @include font_color(#fff);
+    cursor: pointer;
+  }
+  .el-dropdown-menu__item {
+    text-align: center;
+  }
 }
-.header-menu {
-  flex: 1;
-}
-.header-right {
-  padding-right: 20px;
-}
-.header-user-con {
-  display: flex;
-  height: 50px;
-  align-items: center;
-}
-.btn-fullscreen {
-  transform: rotate(45deg);
-  margin-right: 5px;
-  font-size: 24px;
-}
-.btn-bell,
-.btn-fullscreen {
-  position: relative;
-  width: 30px;
-  /* height: 30px; */
-  text-align: center;
-  border-radius: 15px;
-  cursor: pointer;
-  line-height: 50px;
-}
-.btn-bell-badge {
-  position: absolute;
-  right: 0;
-  top: -2px;
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background: #f56c6c;
-  @include font_color(#fff);
-}
-.btn-bell .el-icon-bell {
-  @include font_color(#fff);
-}
-.user-name {
-  margin-left: 10px;
-}
-.user-avator {
-  margin-left: 8px;
-}
-.user-avator img {
-  display: block;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-.el-dropdown-link {
-  @include font_color(#fff);
-  cursor: pointer;
-}
-.el-dropdown-menu__item {
-  text-align: center;
+
+.light-header {
+  @include content-background();
+  @include font_color(null);
+  .el-dropdown-link {
+    @include font_color(null);
+    cursor: pointer;
+  }
 }
 </style>
