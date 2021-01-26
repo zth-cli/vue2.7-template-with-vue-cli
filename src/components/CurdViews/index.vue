@@ -36,129 +36,127 @@
 </template>
 
 <script>
-  import Tree from "./Tree";
-  import LazyTree from "./LazyTree";
-  import CurdTable from "./CurdTable";
-  import FromDynamic from "./FromDynamic";
+import Tree from './Tree'
+import LazyTree from './LazyTree'
+import CurdTable from './CurdTable'
+import FromDynamic from './FromDynamic'
 
-  export default {
-    data() {
-      return {
-        slotArr: [],
-        toggle: true,
-      };
+export default {
+  data () {
+    return {
+      slotArr: [],
+      toggle: true
+    }
+  },
+  props: {
+    treeOptions: {},
+    tableOptions: {},
+    fromOptions: {}
+  },
+  components: {
+    CurdTable,
+    Tree,
+    FromDynamic,
+    LazyTree
+  },
+  created () {
+    this.getSlot()
+  },
+  methods: {
+    rowClick (row) {
+      this.$emit('row-click', row)
     },
-    props: {
-      treeOptions: {},
-      tableOptions: {},
-      fromOptions: {},
+    rowDblclick (row) {
+      this.$emit('row-dblclick', row)
     },
-    components: {
-      CurdTable,
-      Tree,
-      FromDynamic,
-      LazyTree
-    },
-    created() {
-      this.getSlot();
-    },
-    methods: {
-      rowClick(row) {
-        this.$emit("row-click", row);
-      },
-      rowDblclick(row) {
-        this.$emit("row-dblclick", row);
-      },
-      selectionChange(selection) {
-        if (selection) {
-          this.$emit("selection-change", selection);
-        }
-      },
-      handleCurrentChange(row) {
-        this.$emit("current-change", row);
-      },
-      deleteRows(rows) {
-        this.$emit("row-delete", rows);
-      },
-      editRow(row) {
-        this.$emit("row-edit", row);
-      },
-      addRow(bool) {
-        this.$emit("row-add", bool);
-      },
-      paramsChange(params) {
-        this.$emit("params-change", params);
-        this.tableOptions.params = Object.assign({},
-          this.tableOptions.params,
-          params
-        );
-        // console.log( this.tableOptions.params);
-      },
-      toggler(toggle) {
-        this.toggle = toggle;
-      },
-      treeNodeClick({
-        data,
-        node
-      }) {
-        this.$emit("node-click", {
-          data,
-          node
-        });
-      },
-      query() {
-        this.$refs.table.queryData();
-      },
-      refresh() {
-        this.$refs.table.queryData();
-      },
-      getSlot() {
-        var that = this;
-        let mColumns = this.tableOptions.columns;
-
-        function Maps(mColumns) {
-          mColumns.forEach((item) => {
-            let keys = Object.keys(item);
-            if (keys.indexOf("slot") > 0) {
-              that.slotArr.push(item);
-              // console.log("slot=", that.slotArr);
-            }
-            if (item.children && item.children.length > 0) {
-              Maps(item.children);
-            }
-          });
-        }
-        Maps(mColumns);
-      },
-      nodeExpand(data, node) {
-        this.$emit("node-expand", data, node);
-      },
-      tabClick(val) {
-        this.$emit("tab-click", val);
-      },
-      handleSelectChange(val) {
-        this.$emit("select-form-change", val);
+    selectionChange (selection) {
+      if (selection) {
+        this.$emit('selection-change', selection)
       }
     },
-  };
+    handleCurrentChange (row) {
+      this.$emit('current-change', row)
+    },
+    deleteRows (rows) {
+      this.$emit('row-delete', rows)
+    },
+    editRow (row) {
+      this.$emit('row-edit', row)
+    },
+    addRow (bool) {
+      this.$emit('row-add', bool)
+    },
+    paramsChange (params) {
+      this.$emit('params-change', params)
+      this.tableOptions.params = Object.assign({},
+        this.tableOptions.params,
+        params
+      )
+      // console.log( this.tableOptions.params);
+    },
+    toggler (toggle) {
+      this.toggle = toggle
+    },
+    treeNodeClick ({
+      data,
+      node
+    }) {
+      this.$emit('node-click', {
+        data,
+        node
+      })
+    },
+    query () {
+      this.$refs.table.queryData()
+    },
+    refresh () {
+      this.$refs.table.queryData()
+    },
+    getSlot () {
+      var that = this
+      const mColumns = this.tableOptions.columns
+
+      function Maps (mColumns) {
+        mColumns.forEach((item) => {
+          const keys = Object.keys(item)
+          if (keys.indexOf('slot') > 0) {
+            that.slotArr.push(item)
+            // console.log("slot=", that.slotArr);
+          }
+          if (item.children && item.children.length > 0) {
+            Maps(item.children)
+          }
+        })
+      }
+      Maps(mColumns)
+    },
+    nodeExpand (data, node) {
+      this.$emit('node-expand', data, node)
+    },
+    tabClick (val) {
+      this.$emit('tab-click', val)
+    },
+    handleSelectChange (val) {
+      this.$emit('select-form-change', val)
+    }
+  }
+}
 
 </script>
 <style>
   .curd_view {
     display: flex;
-
   }
 
   .curd_tree_view {
     width: auto;
-
-    height: calc(100vh - 170px);
+    min-height: 100%;
     border-radius: 0 4px 4px 0;
   }
 
   .curd_table_view {
     overflow: auto;
-    padding: 12px;
+    padding:0 12px;
     box-sizing: border-box;
     flex: 1;
 

@@ -60,6 +60,7 @@ export default {
         activeTextColor: '',
         backgroundColor: ''
       },
+      isCollapse: false,
       menuData: [...routeArr]
     }
   },
@@ -68,10 +69,6 @@ export default {
       type: Boolean,
       default: true
     },
-    isCollapse: {
-      type: Boolean,
-      default: false
-    }
   },
   computed: {
     onRoutes () {
@@ -99,6 +96,9 @@ export default {
     // eslint-disable-next-line no-unused-vars
     bus.$on('changMenuColor', (theme) => {
       this.changeMebuColor()
+    })
+    bus.$on('handleCollapse', (bool) => {
+      this.isCollapse = bool
     })
   }
 }

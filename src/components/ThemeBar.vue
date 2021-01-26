@@ -2,8 +2,10 @@
   <div>
     <el-drawer
       title="主题配置"
+      append-to-body
       :visible.sync="status"
       :styles="styles"
+      @close='change'
       size='300px'
     >
       <ul class="theme-list">
@@ -12,20 +14,20 @@
           <div class="drawer-block-checkbox">
             <div
               class="drawer-block-checkbox-item drawer-block-checkbox-item-slide"
-              @click="layout.menuModeisVertical = '1';saveTheme()"
+              @click="layout.menuModeisVertical = true;saveTheme()"
             >
               <i
                 class="selectIcon el-icon-check"
-                v-show="layout.menuModeisVertical == '1'"
+                v-show="layout.menuModeisVertical "
               />
             </div>
             <div
               class="drawer-block-checkbox-item drawer-block-checkbox-item-top"
-              @click="layout.menuModeisVertical = '0';saveTheme()"
+              @click="layout.menuModeisVertical = false;saveTheme()"
             >
               <i
                 class="selectIcon el-icon-check"
-                v-show="layout.menuModeisVertical == '0'"
+                v-show="!layout.menuModeisVertical"
               />
             </div>
           </div>
@@ -38,19 +40,15 @@
                 class="theme-color-block"
                 :style="{ background: item.color }"
                 :key="index"
-                @click="changeTheme(item.theme);themeIndex=index"
-              >
-                <i
-                  class="selectIcon el-icon-check"
-                  v-show="themeIndex == index"
-                />
+                @click="changeTheme(item.theme);themeName = item.theme" >
+                <i class="selectIcon el-icon-check" v-show="themeName === item.theme" />
               </div>
             </template>
           </div>
         </li>
         <li class="theme-item">
           <span>多标签</span>
-          <Checkbox v-model="layout.tagsBar" @on-change='saveTheme()'></Checkbox>
+          <el-checkbox v-model="layout.tagsBar" @change='saveTheme()'></el-checkbox>
         </li>
       </ul>
     </el-drawer>
@@ -58,22 +56,18 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+
 import bus from '@/utils/bus'
+import themes from '@/utils/themeMap'
 export default {
   data () {
     return {
-      colors: [
-        { theme: 'default', color: '#2f3a4c' },
-        { theme: 'green', color: '#397373' },
-        { theme: 'blue', color: '#0e9b92' },
-        { theme: 'dark', color: '#151518' },
-        { theme: 'science', color: '#254cb5' }
-      ],
-      themeIndex: 0,
+      colors: themes,
+      themeName: localStorage.getItem('theme') || 'theme2',
       layout: {
-        menuModeisVertical: '1',
-        tagsBar: '1'
+        menuModeisVertical: localStorage.getItem('menuModeisVertical') === 'true',
+        tagsBar: localStorage.getItem('tagsBar') === 'true'
       },
       styles: {
         height: 'calc(100% - 55px)',
@@ -89,11 +83,7 @@ export default {
       type: Boolean
     }
   },
-  watch: {
-    status: function (val) {
-      this.status = val
-    }
-  },
+  computed: { ...mapGetters(['mode', 'tagsBar']) },
   methods: {
     change (bool) {
       this.$emit('visibleChange', bool)
@@ -105,9 +95,9 @@ export default {
       for (const key in this.layout) {
         // eslint-disable-next-line no-prototype-builtins
         if (this.layout.hasOwnProperty(key)) {
-          const element = Number(this.layout[key])
+          const element = Boolean(this.layout[key])
           console.log(element)
-          this.changeSetting({ key, value: Boolean(element) })
+          this.changeSetting({ key, value: element })
         }
       }
     },
@@ -117,7 +107,7 @@ export default {
         .getElementById('theme')
         .setAttribute(
           'href',
-          `${process.env.BASE_URL}theme/${theme}/iview.css`
+          `${process.env.BASE_URL}theme/${theme}/index.css`
         )
       localStorage.setItem('theme', theme)
       bus.$emit('changMenuColor', theme)
@@ -127,8 +117,14 @@ export default {
 </script>
 <style lang='scss'>
 .theme-list {
+  box-sizing: border-box;
+  padding: 0 18px;
+   @include font_color(null);
   .theme-item {
     margin-bottom: 18px;
+    p{
+      margin-block: 12px;
+    }
     .drawer-block-checkbox {
       display: flex;
       .drawer-block-checkbox-item {
@@ -145,7 +141,7 @@ export default {
           position: absolute;
           bottom: 4px;
           right: 6px;
-          color: var(--sliderColor);
+          @include font_color(null);
           font-weight: 700;
           font-size: 14px;
           pointer-events: none;

@@ -1,6 +1,6 @@
 
 <template>
-  <div class="main">
+  <div class="content home_page">
     <div class="header_tool">
       <div class="tool_bar">
         <i class="icon-changzhanzs"></i>
@@ -360,9 +360,7 @@ export default {
 </script>
 
 <style lang='scss'>
-.main{
-  min-height: 100%;
-  box-sizing: border-box;
+.home_page{
   padding: 18px;
 }
 .header_tool {

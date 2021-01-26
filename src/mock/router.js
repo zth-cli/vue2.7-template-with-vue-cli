@@ -25,6 +25,16 @@ const routeArr = [
       type: 3,
       path: '/curd'
     }]
+  },
+  {
+    title: 'CURD布局',
+    componentName: 'curd',
+    componentPath: 'curd/pages/curd-view',
+    icon: 'el-icon-coffee-cup',
+    parentId: 0,
+    id: '05142',
+    type: 3,
+    path: '/curds'
   }
 ]
 export default routeArr

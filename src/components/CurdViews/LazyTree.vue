@@ -25,7 +25,7 @@
         size="mini"
         v-model="filterText"
       ></el-input>
-      <div class="tree_list" v-loading="loading">
+      <div class="lazy_tree_list" v-loading="loading">
         <el-tree
           v-if="isShow"
           class="filter-tree"
@@ -238,7 +238,7 @@ function renderContent (h, { node }) {
   overflow: hidden;
 }
 
-.tree_list {
+.lazy_tree_list {
   min-width: 220px;
   font-size: 12px !important;
   height: calc(100% - 84px);

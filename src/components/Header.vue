@@ -2,7 +2,7 @@
   <div class="header" :class="[mode ? 'light-header' : '']">
     <!-- 折叠按钮 -->
     <div class="collapse-btn" v-if="mode">
-      <i :class="[collapse ? 'el-icon-s-unfold' : 'el-icon-s-fold']"></i>
+      <i  @click="collapse=!collapse;handleCollapse()" :class="[collapse ? 'el-icon-s-unfold' : 'el-icon-s-fold']"></i>
     </div>
     <div class="logo ellipsis" @click="$router.push('/')" title="首页">
       {{ slogan }}
@@ -12,13 +12,16 @@
     </div>
     <div class="header-right">
       <div class="header-user-con">
+          <!-- 用户头像 -->
+        <div class="user-avator">
+          <!-- <img src="@/assets/img/a.png" /> -->
+        </div>
         <!-- 全屏显示 -->
         <div class="btn-fullscreen" @click="handleFullScreen">
           <el-tooltip
             effect="dark"
             :content="fullscreen ? `取消全屏` : `全屏`"
-            placement="bottom"
-          >
+            placement="bottom">
             <i class="el-icon-rank"></i>
           </el-tooltip>
         </div>
@@ -29,22 +32,14 @@
         <div class="btn-bell">
           <span class="btn-bell-badge" v-if="message"></span>
         </div>-->
-
-        <el-dropdown trigger="click" @command="changeTheme">
-          <span class="el-dropdown-link" title="主题">
-            <i class="el-icon-orange"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-for="(item,index) in themes" :command="item.theme" :key="index">{{item.name}}</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <!-- 用户头像 -->
-        <div class="user-avator">
-          <!-- <img src="@/assets/img/a.png" /> -->
-        </div>
-         <i class="el-icon-orange"
-          @click="switchThemeBar = true"
-          v-if="showThemeBar"></i>
+          <el-tooltip
+            effect="dark"
+            content="主题切换"
+            placement="bottom">
+             <i class="el-icon-orange"
+              @click="switchThemeBar = true"
+              v-if="showThemeBar"></i>
+          </el-tooltip>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
@@ -62,7 +57,7 @@
         </el-dropdown>
       </div>
     </div>
-    <theme-bar :status="switchThemeBar"></theme-bar>
+    <theme-bar :status="switchThemeBar"  @visibleChange="toggleThemeBar"></theme-bar>
     <overlay :close.sync="close" owidth="400px" oheight="60vh" title="密码修改">
       <div v-if="close" class="addUser">
         <el-form
@@ -126,11 +121,9 @@
 <script>
 import { removeToken, getToken } from '@/utils/auth'
 import ThemeBar from '@/components/ThemeBar'
-import { mapGetters } from 'vuex'
 import { updataPassword } from '@/api'
 import { title } from '@/settings'
 import bus from '@/utils/bus'
-import themes from '@/utils/themeMap'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -163,12 +156,11 @@ export default {
     }
     return {
       slogan: title,
-      collapse: true,
+      collapse: false,
       fullscreen: false,
       name: getToken('name') || '管理员',
       message: 2,
       close: false,
-      themes,
       ruleForm: {
         userName: getToken('userName'),
         oldPwd: '',
@@ -186,7 +178,6 @@ export default {
           { required: true, validator: validatePass2, trigger: 'blur' }
         ]
       },
-      isMax: true,
       switchThemeBar: false
     }
   },
@@ -202,7 +193,6 @@ export default {
   },
   components: { ThemeBar },
   computed: {
-    ...mapGetters(['showThemeBar']),
     username () {
       const username = localStorage.getItem('ms_username')
       return username || this.name
@@ -284,40 +274,12 @@ export default {
       }
       this.fullscreen = !this.fullscreen
     },
-    changeTheme (theme) {
-      document.documentElement.setAttribute('data-theme', theme)
-      document
-        .getElementById('theme')
-        .setAttribute(
-          'href',
-          `${process.env.BASE_URL}theme/${theme}/index.css`
-        )
-      localStorage.setItem('theme', theme)
-      bus.$emit('changMenuColor', theme)
+    toggleThemeBar (bool) {
+      this.switchThemeBar = bool
     },
-    listenerSize () {
-      var that = this
-      console.log(document.body.clientWidth)
-      if (document.body.clientWidth < 1400) {
-        that.isMax = false
-      } else {
-        that.isMax = true
-      }
-      bus.$emit('showMini', that.isMax)
+    handleCollapse () {
+      bus.$emit('handleCollapse', this.collapse)
     }
-  },
-  created () {
-    this.listenerSize()
-  },
-  mounted () {
-    var that = this
-    window.addEventListener(
-      'resize',
-      () => {
-        that.listenerSize()
-      },
-      false
-    )
   }
 }
 </script>
@@ -336,6 +298,9 @@ export default {
   .collapse-btn {
     margin-right: 12px;
     cursor: pointer;
+    &:hover{
+      color: #d66a57;
+    }
   }
   .logo {
     cursor: pointer;
@@ -348,6 +313,7 @@ export default {
   i {
     // @include font_color(#fff);
     font-size: 20px;
+    cursor: pointer;
   }
   .header-menu {
     flex: 1;
@@ -412,6 +378,8 @@ export default {
 .light-header {
   @include content-background();
   @include font_color(null);
+  border-bottom: 3px solid transparent;
+  @include border-color();
   .el-dropdown-link {
     @include font_color(null);
     cursor: pointer;

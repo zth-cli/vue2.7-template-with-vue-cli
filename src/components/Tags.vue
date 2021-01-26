@@ -141,7 +141,7 @@ export default {
   line-height: 23px;
   border: 1px solid transparent;
   @include border-color();
-   @include tool-bar-color();
+  @include  sec-content-background();
   padding: 0 5px 0 12px;
   vertical-align: middle;
   @include font_color(#fff);
@@ -149,14 +149,14 @@ export default {
 }
 
 .tags-li:not(.active):hover {
-  background: #f8f8f8;
+  @include tool-bar-color();
 }
 
 .tags-li.active {
   @include font_color(#fff);
 }
 .tags-li.active {
-  background: rgb(209, 204, 204);
+  @include tool-bar-color();
 
 }
 .tags-li-title {

@@ -157,7 +157,7 @@ export default {
     padding: 10px;
     border-radius: 4px;
     // border: 1px solid #ebeef5;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
 
   .curd_tool_content {

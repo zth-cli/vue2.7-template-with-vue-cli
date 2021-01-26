@@ -52,13 +52,13 @@ $tool-bar-background3:#397373;
 $tool-bar-background4:#323232;
 // border颜色
 $border-color-theme1:#423f6b;
-$border-color-theme2:#e5e5e5;
-$border-color-theme3:#e5e5e5;
+$border-color-theme2:#E4E7ED;
+$border-color-theme3:#E4E7ED;
 $border-color-theme4:#363535;
 // box-shadow
 // $box-shadow-theme1:rgba(128, 128, 128, 0.3) 0px 0px 40px inset;
-$box-shadow-theme2:4px 4px 30px rgba(75,102,171,0.2);
-$box-shadow-theme3:4px 4px 30px rgba(75,102,171,0.2);
+$box-shadow-theme2:4px 4px 16px rgba(75,102,171,0.2);
+$box-shadow-theme3:4px 4px 16px rgba(75,102,171,0.2);
 
 @function box-shadow-theme1($lightness) {
     @return rgba(128, 128, 128, 0.3) 0px 0px $lightness inset;

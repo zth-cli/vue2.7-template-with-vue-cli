@@ -49,7 +49,7 @@ export default {
       type: Array
     },
     tableSize: {
-      default: 'small'
+      default: 'mini'
     },
     pageSize: {
       default: 20

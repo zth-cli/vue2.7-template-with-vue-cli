@@ -109,7 +109,7 @@
         </template>
       </DataTable>
     </div>
-    <div v-if="showPage" style="margin: 20px 10px; overflow: hidden">
+    <div v-if="showPage" style="margin:10px; overflow: hidden">
       <div :style="'text-align: ' + this.pageAlign">
         <el-pagination
           :total="total"
@@ -140,7 +140,7 @@ export default {
       default: 'right'
     },
     tableSize: {
-      default: 'small'
+      default: 'mini'
     },
     pageSize: {
       default: 20
@@ -160,7 +160,7 @@ export default {
     columns: {},
     dataUrl: {},
     params: {},
-    height: { default: '53vh' },
+    height: { default: '66vh' },
     showSummary: { default: false },
     border: {
       type: Boolean,

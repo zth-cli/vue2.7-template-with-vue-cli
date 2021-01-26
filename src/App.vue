@@ -24,4 +24,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.content {
+  box-sizing: border-box;
+  padding: 0 18px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
 </style>

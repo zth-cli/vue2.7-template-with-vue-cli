@@ -1,7 +1,9 @@
 <template>
   <div class="nav_bread">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/' }">
+      <i class="el-icon-house"></i>
+      首页</el-breadcrumb-item>
       <!-- <el-breadcrumb-item>
         <a href="/">活动管理</a>
       </el-breadcrumb-item> -->
@@ -34,15 +36,10 @@ export default {
   line-height: 40px;
   display: flex;
   align-items: center;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+   border-bottom: 2px solid transparent;
+  @include border-color();
 }
-.nav_bread::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #e4e7ed;
-  z-index: 1;
-}
+
 </style>

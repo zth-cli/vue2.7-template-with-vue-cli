@@ -3,7 +3,7 @@
     <v-slidebar v-if="mode" :mode='mode'></v-slidebar>
     <div class="right_container">
       <el-header>
-        <v-header :mode='mode' :showThemeBar='showThemeBar'>
+        <v-header :mode='mode'>
            <v-slidebar v-if="!mode" :mode='mode'></v-slidebar>
         </v-header>
       </el-header>
@@ -19,7 +19,7 @@
           </template>
         </div>
         <div class="tag-nav-wrapper">
-          <v-tags></v-tags>
+          <v-tags v-if="tagsBar&&$route.path!='/home'"></v-tags>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@ export default {
   // 提供可注入子组件属性
   provide () { return { reload: this.reload } },
   components: { vTags, vHeader, vSlidebar },
-  computed: { ...mapGetters(['mode', 'showThemeBar']) }, // mode为true时，侧边栏菜单
+  computed: { ...mapGetters(['mode', 'showThemeBar', 'tagsBar']) }, // mode为true时，侧边栏菜单
   methods: {
     reload () {
       this.isShow = false
@@ -70,6 +70,7 @@ export default {
     })
   },
   mounted () {
+    console.log(this.tagsBar)
     bus.$on('showMini', bol => {
       this.isMini = !bol
     })
