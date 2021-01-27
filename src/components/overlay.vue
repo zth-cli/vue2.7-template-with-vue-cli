@@ -22,7 +22,9 @@
             <!-- <i class="icon-error ol_icon" @click="switchs();changeSatus();"></i> -->
           </div>
         </div>
-        <slot></slot>
+        <div class="overlay_view">
+          <slot></slot>
+        </div>
       </div>
     </div>
   </transition>
@@ -107,6 +109,13 @@ export default {
           }
         }
       }
+    }
+    .overlay_view {
+      box-sizing: border-box;
+      width: 100%;
+      height: calc(100% - 35px);
+      overflow: auto;
+      // padding: 10px;
     }
   }
 }

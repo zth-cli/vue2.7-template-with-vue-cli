@@ -5,10 +5,9 @@
       :tableOptions="tableOptions"
       :fromOptions="fromOptions"
       :treeOptions="treeOptions"
-      @row-click="rowClick"
-      @row-dblclick="rowDblclick"
       @selection-change="selectionChange"
       @node-click="treeNodeClick"
+      @row-add='rowAdd'
     >
       <template v-slot:action="Props">
         <el-button size="small" @click="getRow(Props)">action</el-button>
@@ -20,11 +19,15 @@
         <el-button size="small" @click="getRow(Props)">operation</el-button>
       </template>
     </CurdView>
+    <overlay :close.sync='close' owidth='60vw' oheight='50vh' title="新增">
+      <StepsFromData :stepsForm='stepsForm' :stepsLabel='stepsLabel'></StepsFromData>
+    </overlay>
   </div>
 </template>
 
 <script>
 import CurdView from '@/components/CurdViews/index.vue'
+import StepsFromData from '@/components/StepsFromData/index.vue'
 const tableOptions = {
   pageSize: 20,
   showPanelTool: true,
@@ -68,15 +71,28 @@ const treeOptions = {
 }
 export default {
   data () {
-    return { tableOptions, fromOptions, treeOptions }
+    return {
+      tableOptions,
+      fromOptions,
+      treeOptions,
+      stepsForm: [
+        [{ name: 'description', label: '角色描述', type: 'text' }],
+        [{
+          name: 'code',
+          label: '电压等级',
+          type: 'select',
+          options: []
+        }],
+        [{ name: 'des', label: '角色描述', type: 'text' }]
+      ],
+      stepsLabel: ['步骤一','步骤二','步骤三'],
+      close: false
+    }
   },
-  components: { CurdView },
+  components: { CurdView, StepsFromData },
   methods: {
-    rowClick (row) {
-      console.log(row)
-    },
-    rowDblclick (row) {
-      console.log(row)
+    rowAdd () {
+      this.close = true
     },
     selectionChange (selection) {
       console.log(selection)
