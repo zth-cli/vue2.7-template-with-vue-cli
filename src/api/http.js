@@ -1,10 +1,6 @@
 import http from '@/api/axios.js'
-import {
-  getToken
-} from '@/utils/auth'
-import {
-  Message
-} from 'element-ui'
+import { getToken } from '@/utils/auth'
+import { Message } from 'element-ui'
 
 // request 拦截器
 http.interceptors.request.use(

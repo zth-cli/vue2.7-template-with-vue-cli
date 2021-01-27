@@ -22,7 +22,7 @@
       <div class="loginbox">
         <h2 style="text-align: center">
           <!-- <img src="../assets/logo.jpg" width="163" height="54" alt /> -->
-          电量远传
+          {{slogan}}
         </h2>
         <div class="formbox">
           <!--用户名-->
@@ -59,10 +59,11 @@
 <script>
 import { setToken } from '@/utils/auth'
 import { login } from '@/api'
-
+import { title } from '@/settings'
 export default {
   data: function () {
     return {
+      slogan: title,
       lgusername: '',
       lguserpwd: '',
       lgButton: false,
