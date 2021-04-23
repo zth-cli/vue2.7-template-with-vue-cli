@@ -36,9 +36,7 @@
 export default {
   name: 'DataTable',
   data () {
-    return {
-      user: 'rzx'
-    }
+    return {}
   },
   props: {
     columns: {
@@ -53,6 +51,9 @@ export default {
     },
     pageSize: {
       default: 20
+    },
+    pageIndex: {
+      default: 1
     },
     showSettingToolbar: {
       type: Boolean,
@@ -78,6 +79,24 @@ export default {
     border: {
       type: Boolean,
       default: true
+    },
+    showSummary: {
+      type: Boolean,
+      default: false
+    },
+    summaryMethod: { // 合计自定义方法
+      type: Function
+    },
+    spanMethod: { // 合并单元格
+      type: Function,
+      default: function () {}
+    },
+    rowKey: { type: String }, // 支持树类型的数据的显示,rowKey不为空时生效
+    treeProps: {
+      type: Object,
+      default: function () {
+        return { children: 'children', hasChildren: 'hasChildren' }
+      }
     }
   },
   methods: {
@@ -85,6 +104,7 @@ export default {
       var that = this
       let children = []
       const elememtArr = columns.map((item) => {
+        // 参照elementui Table-column Attributes
         const columnProps = {
           label: item.label,
           width: item.width,
@@ -94,9 +114,138 @@ export default {
           resizable: item.resizable || true,
           align: item.align || 'left',
           headerAlign: item.headerAlign,
-          showOverflowTooltip: item.showOverflowtooltip
+          showOverflowTooltip: true,
+          sortable: item.sortable || false,
+          sortMethod: item.sortMethod,
+          sortBy: item.sortBy,
+          filters: item.filters,
+          filteredValue: item.filteredValue
         }
-        if (item.slot) {
+        if (item.filters) {
+          columnProps.filterMethod = item.filterMethod ? item.filterMethod : that.filterHandler
+        }
+        if (item.type === 'index') {
+          return h('el-table-column', {
+            props: { ...columnProps },
+            scopedSlots: {
+              // scope 就相当于 slot-scope="{title}" 里面的值
+              default: (scope) => {
+                let index = null
+                let indexEle = ''
+                // eslint-disable-next-line no-unused-expressions
+                that.showPage ? (index = (that.pageIndex - 1) * that.pageSize + scope.$index + 1) : index = scope.$index + 1
+                if (item.slot) {
+                  // type为index 且有slot，提供插槽功能
+                  indexEle = that.$scopedSlots[item.slot]({
+                    rowData: {
+                      row: scope.row,
+                      colum: scope.column,
+                      index: scope.$index
+                    }
+                  })
+                }
+                return [
+                  h('p', [indexEle, h('span', index)])
+                ]
+              }
+            }
+          })
+        }
+        if (item.type === 'selection') {
+          return h('el-table-column', {
+            props: {
+              ...columnProps,
+              type: item.type
+            }
+          })
+        }
+        if (item.type === 'expand') {
+          return h('el-table-column', {
+            props: { ...columnProps, type: item.type },
+            scopedSlots: {
+              // scope 就相当于 slot-scope="{title}" 里面的值
+              default: (scope) => {
+                return [
+                  h('p', [
+                    that.$scopedSlots[item.slot]({
+                      rowData: {
+                        row: scope.row,
+                        colum: scope.column,
+                        index: scope.$index
+                      }
+                    })
+                  ])
+                ]
+              }
+            }
+          })
+        }
+        if (item.headerSlot && !item.slot) {
+          // slot,自定义列模板
+          return h('el-table-column', {
+            props: {
+              label: item.label,
+              width: item.width,
+              ...columnProps
+            },
+            scopedSlots: {
+              // scope 就相当于 slot-scope="{title}" 里面的值
+              header: (scope) => {
+                return [
+                  h('p', [
+                    that.$scopedSlots[item.headerSlot]({
+                      rowData: {
+                        row: scope.row,
+                        colum: scope.column,
+                        index: scope.$index
+                      }
+                    })
+                  ])
+                ]
+              }
+            }
+          })
+        }
+        if (item.headerSlot && item.slot) {
+          // slot,自定义列模板
+          return h('el-table-column', {
+            props: {
+              label: item.label,
+              width: item.width,
+              ...columnProps
+            },
+            scopedSlots: {
+              // scope 就相当于 slot-scope="{title}" 里面的值
+              default: (scope) => {
+                return [
+                  h('p', [
+                    that.$scopedSlots[item.slot]({
+                      rowData: {
+                        row: scope.row,
+                        colum: scope.column,
+                        index: scope.$index
+                      }
+                    })
+                  ])
+                ]
+              },
+              header: (scope) => {
+                return [
+                  h('p', [
+                    that.$scopedSlots[item.headerSlot]({
+                      rowData: {
+                        row: scope.row,
+                        colum: scope.column,
+                        index: scope.$index
+                      }
+                    })
+                  ])
+                ]
+              }
+            }
+          })
+        }
+        if (!item.headerSlot && item.slot) {
           // slot,自定义列模板
           return h('el-table-column', {
             props: {
@@ -142,7 +291,7 @@ export default {
                       {
                         props: {
                           size: 'mini',
-                          type: element.type ? element.type : 'success'
+                          type: element.type ? element.type : ''
                         }
                       },
                       [element.value]
@@ -155,59 +304,6 @@ export default {
             }
           })
         }
-
-        if (item.type === 'index') {
-          // return h(
-          //   "el-table-column",
-          //   {
-          //     props: {
-          //       type: "index",
-          //       label: item.label,
-          //       width: item.width,
-          //       align: item.align || "left",
-          //       fixed: "left",
-          //     },
-          //   },
-          //   [children]
-          // );
-          return h('el-table-column', {
-            props: {
-              label: item.label,
-              width: item.width,
-              ...columnProps
-            },
-            scopedSlots: {
-              // scope 就相当于 slot-scope="{title}" 里面的值
-              default: (scope) => {
-                return [
-                  h('span', [
-                    that.$scopedSlots[item.type]({
-                      rowData: {
-                        row: scope.row,
-                        colum: scope.column,
-                        index: scope.$index
-                      }
-                    })
-                  ])
-                ]
-              }
-            }
-          })
-        }
-        if (item.type === 'selection') {
-          return h(
-            'el-table-column',
-            {
-              props: {
-                type: 'selection',
-                label: item.label,
-                width: item.width,
-                fixed: item.fixed
-              }
-            },
-            [children]
-          )
-        }
         if (item.children && item.children.length > 0) {
           children = that.renderFunc(item.children, h) // 嵌套表头，递归、
         } else {
@@ -218,10 +314,7 @@ export default {
           {
             props: {
               prop: item.prop,
-              type: item.type,
-              sortable: item.sortable || false,
-              sortMethod: item.sortMethod,
-              sortBy: item.sortBy,
+              // type: item.type,
               ...columnProps
             }
           },
@@ -229,23 +322,46 @@ export default {
         )
       })
       return elememtArr
+    },
+    toggleRowSelection (rows) {
+      if (rows) {
+        rows.forEach(row => {
+          setTimeout(() => {
+            this.$refs.tableView.toggleRowSelection(row)
+          }, 0)
+        })
+      } else {
+        this.$refs.tableView.clearSelection()
+      }
+    },
+    toggleAllSelection () {
+      this.$refs.tableView.toggleAllSelection()
+    },
+    filterHandler (value, row, column) {
+      const property = column.property
+      return row[property] === value
     }
   },
   render (h) {
     var that = this
-    const elememtArr = this.renderFunc(that.columns, h)
-    return h(
+    const elememtArr = this.renderFunc(that.columns, that.$createElement)
+    return this.$createElement(
       'el-table',
       {
+        ref: 'tableView',
         props: {
+          rowKey: that.rowKey, // 支持树类型的数据的显示,必须要指定 row-key
+          treeProps: that.treeProps,
           data: that.tableData,
           border: that.border,
           size: that.tableSize,
           height: that.height,
+          maxHeight: that.maxHeight,
           highlightCurrentRow: that.highlightCurrentRow,
           showSummary: that.showSummary,
-          stripe: true,
-          ref: 'tableView'
+          summaryMethod: that.summaryMethod,
+          spanMethod: that.spanMethod,
+          stripe: true
         },
         style: {
           width: '100%'
@@ -267,6 +383,11 @@ export default {
       },
       elememtArr
     )
+  },
+  updated () {
+    this.$nextTick(() => {
+      this.$refs.tableView.doLayout()
+    })
   }
 }
 </script>

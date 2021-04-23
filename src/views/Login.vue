@@ -224,7 +224,6 @@ export default {
 
 .login_btn {
   width: 100%;
-  height: 42px;
   border-radius: 4px;
   margin-top: 15px;
   transition: all 500ms;

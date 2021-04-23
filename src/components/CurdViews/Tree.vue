@@ -131,6 +131,10 @@ export default {
     expandOnclickNode: {
       type: Boolean,
       default: true
+    },
+    resDataName: {
+      type: String,
+      default: ''
     }
   },
   created () {
@@ -143,14 +147,11 @@ export default {
       }
       this.loading = true
       const params = Object.assign({}, this.params)
-      console.log(params)
       apiGet(this.dataUrl, params)
         .then((res) => {
           this.loading = false
-          if (!res.code === 0) {
-
-          } else {
-            this.treeData = res.data
+          if (res.code === 1) {
+            this.treeData = res.data[this.resDataName]
           }
         })
         .catch(() => {
@@ -237,7 +238,7 @@ function renderContent (h, { node, data }) {
 
 .tree_main {
   height: 100%;
-  width: 260px;
+  width: 300px;
   box-sizing: border-box;
   padding: 8px;
   overflow: hidden;

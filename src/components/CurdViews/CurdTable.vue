@@ -1,14 +1,13 @@
 <template>
   <div class="curd_table">
-    <div class="panel_tool_left" v-if="showPanelTool">
+    <div class="panel_tool_left" v-if="showPanelTool&&mode !== 'simple'">
       <el-button
         icon="el-icon-plus"
         size="mini"
         v-if="defaultPanel.includes('add')"
         type="primary"
         @click="addRow()"
-        >新增</el-button
-      >
+        >新增</el-button>
       <el-button
         icon="el-icon-edit"
         size="mini"
@@ -16,14 +15,12 @@
         type="primary"
         :disabled="isSingle"
         @click="editRow()"
-        >修改</el-button
-      >
+        >修改</el-button>
       <el-popover placement="top" width="160" v-model="visible">
         <p>确定删除吗？</p>
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="visible = false"
-            >取消</el-button
-          >
+            >取消</el-button>
           <el-button
             type="primary"
             size="mini"
@@ -31,8 +28,7 @@
               visible = false;
               deleteRows();
             "
-            >确定</el-button
-          >
+            >确定</el-button>
         </div>
         <el-button
           v-if="defaultPanel.includes('delete')"
@@ -47,7 +43,7 @@
       </el-popover>
       <slot name="panel"></slot>
     </div>
-    <div class="panel_tool_right" v-if="showSettingTool">
+    <div class="panel_tool_right" v-if="showSettingTool&&mode !== 'simple'">
       <el-button
         type="primary"
         icon="el-icon-refresh"
@@ -79,12 +75,20 @@
     </div>
     <div class="curd_table_main">
       <DataTable
+        ref= 'tableView'
         :columns="mColumns"
         :tableData="tableData"
         :border="border"
         :size="tableSize"
         :height="height"
+        :rowKey="rowKey"
+        :treeProps="treeProps"
         :showSummary="showSummary"
+        :summaryMethod="summaryMethod"
+        :spanMethod="spanMethod"
+        :pageSize='pageParam.pageSize'
+        :pageIndex='pageParam.pageIndex'
+        :showPage="showPage"
         :highlight-current-row="highlightCurrentRow"
         @row-click="rowClick"
         @row-dblclick="rowDblclick"
@@ -97,19 +101,18 @@
         <template v-for="item in slotArr" v-slot:[item.slot]="Props">
           <slot :name="item.slot" :rowData="Props.rowData"></slot>
         </template>
+        <template v-for="item in headerSlotArr" v-slot:[item.headerSlot]="Props">
+          <slot :name="item.headerSlot" :rowData="Props.rowData"></slot>
+        </template>
         <template v-slot:index="Props">
           <slot name="index" v-if="showPage">
-            {{
-              Props.rowData.index +
-              (pageParam.pageIndex - 1) * pageParam.pageSize +
-              1
-            }}</slot
-          >
+            {{ Props.rowData.index + (pageParam.pageIndex - 1) * pageParam.pageSize + 1 }}
+          </slot>
           <slot name="index" v-else>{{ Props.rowData.index + 1 }}</slot>
         </template>
       </DataTable>
     </div>
-    <div v-if="showPage" style="margin:10px; overflow: hidden">
+    <div v-if="showPage" style="margin:10px 10px 0 10px; overflow: hidden">
       <div :style="'text-align: ' + this.pageAlign">
         <el-pagination
           :total="total"
@@ -130,6 +133,10 @@ import DataTable from './DataTable'
 import { apiGet } from '@/api'
 export default {
   props: {
+    mode: { // 添加场景选择，适应紧凑布局，充分利用空间
+      type: String,
+      default: 'normal' // 'normal' 正常模式 'simple'简单模式，布局更紧凑
+    },
     defaultPanel: {
       type: Array,
       default: function () {
@@ -161,7 +168,14 @@ export default {
     dataUrl: {},
     params: {},
     height: { default: '66vh' },
+    maxHeight: { default: '' },
     showSummary: { default: false },
+    summaryMethod: { // 合计自定义方法
+      type: Function
+    },
+    spanMethod: {
+      type: Function
+    },
     border: {
       type: Boolean,
       default: true
@@ -177,25 +191,42 @@ export default {
     showPanelTool: {
       type: Boolean,
       default: true
+    },
+    responseName: {
+      type: String,
+      default: 'list'
+    },
+    isPrivate: { // 是否添加私有属性，用于某些情况直接添加私有属性无法生效问题
+      type: Boolean,
+      default: false
+    },
+    rowKey: { type: String }, // 支持树类型的数据的显示,rowKey不为空时生效
+    treeProps: {
+      type: Object,
+      default: function () {
+        return { children: 'children', hasChildren: 'hasChildren' }
+      }
     }
   },
   data () {
     return {
       loading: false,
       visible: false,
-      tableData: [
+      tableData: process.env.NODE_ENV === 'production' ? [] : [
         {
           creator: 'rzx007',
           id: 12,
           projectName: 'name',
           createDate: '12-11',
-          description: 'w21'
+          description: 'w21',
+          _disabled: 0
         }, {
           creator: 'rzx007',
-          id: 12,
+          id: 13,
           projectName: 'name',
           createDate: '12-11',
-          description: 'w21'
+          description: 'w21',
+          _disabled: 0
         }
       ],
       mColumns: [],
@@ -205,10 +236,12 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
-      slotArr: [],
+      slotArr: [], // slot
+      headerSlotArr: [], // 自定义表头
       lazyLoad: this.lazy,
       columnList: [],
-      key: 0
+      key: 0,
+      timeout: {} // 请求防抖计时器
     }
   },
   components: {
@@ -227,28 +260,39 @@ export default {
       if (!this.dataUrl || this.loading === true) {
         return
       }
-      this.selection = null
-      this.$emit('selection-change', null)
-      this.loading = true
-      const params = this.showPage
-        ? Object.assign(
-          {},
-          JSON.parse(JSON.stringify(this.pageParam)),
-          this.params
-        )
-        : this.params
-      apiGet(this.dataUrl, params)
-        .then((res) => {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+      }
+      this.timeout = setTimeout(() => {
+        this.selection = null
+        this.tableData = []
+        this.$emit('selection-change', null)
+        this.loading = true
+        const params = this.showPage
+          ? Object.assign(
+            {},
+            JSON.parse(JSON.stringify(this.pageParam)),
+            this.params
+          )
+          : this.params
+        apiGet(this.dataUrl, params).then((res) => {
           this.loading = false
-          if (!res.data.code === 0) {
-          } else {
-            this.total = res.data.pojoTotalCount
-            this.tableData = res.data.data.list
+          if (res.code === 1) {
+            this.total = res.pojoTotalCount
+            var data = res.data[this.responseName]
+            if (this.isPrivate) {
+              data.forEach(item => { // 添加私有属性，
+                item._disabled = 0
+              })
+            }
+            this.tableData = data
+            this.$emit('getTableData', this.tableData)
           }
         })
-        .catch(() => {
-          this.loading = false
-        })
+          .catch(() => {
+            this.loading = false
+          })
+      }, 200)
     },
     changePage (page) {
       this.pageParam.pageIndex = page
@@ -270,6 +314,12 @@ export default {
       this.selection = selection
       this.$emit('selection-change', selection)
     },
+    toggleRowSelection (rows) { // 设置选中
+      this.$refs.tableView.toggleRowSelection(rows)
+    },
+    toggleAllSelection () { // 全选
+      this.$refs.tableView.toggleAllSelection()
+    },
     handleCurrentChange (row) {
       this.$emit('current-change', row)
     },
@@ -290,8 +340,24 @@ export default {
       function Maps (mColumns) {
         mColumns.forEach((item) => {
           const keys = Object.keys(item)
-          if (keys.indexOf('slot') > 0) {
+          if (keys.includes('slot')) {
             that.slotArr.push(item)
+          }
+          if (item.children && item.children.length > 0) {
+            Maps(item.children)
+          }
+        })
+      }
+      Maps(mColumns)
+    },
+    getHeaderSlot () {
+      var that = this
+      const mColumns = this.mColumns
+      function Maps (mColumns) {
+        mColumns.forEach((item) => {
+          const keys = Object.keys(item)
+          if (keys.includes('headerSlot')) {
+            that.headerSlotArr.push(item)
           }
           if (item.children && item.children.length > 0) {
             Maps(item.children)
@@ -322,6 +388,7 @@ export default {
     }
     this.mColumns = this.columns
     this.getSlot()
+    this.getHeaderSlot()
 
     if (this.pageSize != null && this.showPage) {
       this.pageParam.pageSize = this.pageSize
@@ -336,20 +403,29 @@ export default {
   watch: {
     params: {
       handler (curVal) {
-        // console.log(curVal);
         if (this.showPage) {
           this.pageParam.pageIndex = 1
         }
-        if (!this.lazyLoad) {
-          this.queryData()
-        }
-        this.lazyLoad = false
+        // if (!this.lazyLoad) {
+        //   this.queryData()
+        // }
+        // this.lazyLoad = false
+        this.queryData()
       },
       deep: true
     },
     columns: {
       handler (curVal) {
         this.mColumns = curVal
+      },
+      deep: true
+    },
+    dataUrl: {
+      handler (curVal) {
+        if (this.showPage) {
+          this.pageParam.pageIndex = 1
+        }
+        this.queryData()
       },
       deep: true
     }
@@ -363,11 +439,12 @@ export default {
   padding: 10px;
   /* margin-top: 20px; */
   border-radius: 4px;
-  @include box-shadow();
+  // @include box-shadow();
   .panel_tool_left {
     float: left;
-   color: #666;
+    color: #666;
     font-size: 14px;
+    padding-bottom: 8px;
   }
   .el-table--striped .el-table__body tr.el-table__row--striped td{
     @include striped-background();

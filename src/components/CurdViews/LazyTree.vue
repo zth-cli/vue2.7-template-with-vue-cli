@@ -20,25 +20,33 @@
         </el-tabs>
       </div>
       <el-input
-        v-if="search"
+        v-if="search && !isLazyLoad"
         placeholder="输入关键字进行过滤"
         size="mini"
         v-model="filterText"
       ></el-input>
+      <slot v-else name="searchselect"></slot>
       <div class="lazy_tree_list" v-loading="loading">
-        <el-tree
-          v-if="isShow"
-          class="filter-tree"
-          :props="defaultProps"
-          :filter-node-method="filterNode"
-          :render-content="renderFunction"
-          @node-click="nodeClick"
-          :load="loadNode"
-          lazy
-          ref="tree"
-          @node-expand="nodeExpand"
-          :highlight-current="true"
-        ></el-tree>
+        <el-scrollbar
+          class="treescrollbar"
+          style="height: 100%; background: #fff; overflow-y: hidden;overflow-x: hidden"
+        >
+          <el-tree
+            v-if="isShow"
+            class="filter-tree"
+            :props="defaultProps"
+            :filter-node-method="filterNode"
+            :render-content="renderFunction"
+            node-key="id"
+            @node-click="nodeClick"
+            :load="loadNode"
+            lazy
+            ref="tree"
+            @node-expand="nodeExpand"
+            :highlight-current="true"
+            :default-expanded-keys="defaultExpandedNodes"
+          ></el-tree>
+        </el-scrollbar>
       </div>
     </div>
   </div>
@@ -82,6 +90,15 @@ export default {
     renderFunction: {
       type: Function,
       default: renderContent
+    },
+    defaultExpandedNodes: {
+      type: Array,
+      default: () => []
+    },
+    isLazyLoad: {
+      // true: 表示树为异步加载，用slot自定义搜索框，否则用input过滤搜索
+      type: Boolean,
+      default: false
     }
   },
   created () {},
@@ -94,20 +111,31 @@ export default {
       //   let params = Object.assign({}, this.dataUrlArr[index].params);
       //   console.log(params);
 
-      return apiGet(this.dataUrlArr[this.activeIndex].urlArr[index].url, {
-        params: this.dataUrlArr[this.activeIndex].urlArr[index].params
-      })
+      return apiGet(
+        this.dataUrlArr[this.activeIndex].urlArr[index].url,
+        this.dataUrlArr[this.activeIndex].urlArr[index].params
+      )
         .then((res) => {
           this.loading = false
-          if (!res.code === 0) {
-
+          if (res.code === 0) {
           } else {
+            const data =
+              res.data[
+                this.dataUrlArr[this.activeIndex].urlArr[index].responseName
+              ]
+
             if (index === this.dataUrlArr[this.activeIndex].urlArr.length - 1) {
-              res.data.forEach((item) => {
+              data.forEach((item) => {
                 item.leaf = true
               })
+            } else {
+              data.forEach((item) => { // 暂时兼容书上查询公式
+                if (item.attribute === 'formulaId') {
+                  item.leaf = true
+                }
+              })
             }
-            return resolve(res.data)
+            return resolve(data)
           }
         })
         .catch(() => {
@@ -123,22 +151,15 @@ export default {
       return data.name.indexOf(value) !== -1
     },
     nodeClick (data, node) {
-      this.$emit('nodeClick', {
-        data,
-        node
-      })
+      this.$emit('nodeClick', { data, node })
     },
     loadNode (node, resolve) {
-      for (
-        let index = 0;
-        index < this.dataUrlArr[this.activeIndex].urlArr.length;
-        index++
-      ) {
+      const urlArr = this.dataUrlArr[this.activeIndex].urlArr
+      for (let index = 0; index < urlArr.length; index++) {
         if (node.level === index) {
           return this.queryData(resolve, index)
         }
-
-        if (node.level > this.dataUrlArr[this.activeIndex].urlArr.length - 1) {
+        if (node.level > urlArr.length - 1) {
           return resolve([])
         }
       }
@@ -212,8 +233,10 @@ function renderContent (h, { node }) {
   height: 100%;
   position: relative;
   border-radius: 0 4px 4px 0;
-  .el-tree{
-   background-color: transparent;
+  .el-tree {
+    background-color: transparent;
+    min-width: 100%;
+    display: inline-block !important;
   }
 }
 
@@ -232,7 +255,7 @@ function renderContent (h, { node }) {
 
 .tree_main {
   height: 100%;
-  width: 260px;
+  width: 300px;
   box-sizing: border-box;
   padding: 8px;
   overflow: hidden;
@@ -241,7 +264,11 @@ function renderContent (h, { node }) {
 .lazy_tree_list {
   min-width: 220px;
   font-size: 12px !important;
-  height: calc(100% - 84px);
+  height: calc(100% - 30px);
   overflow-y: auto;
+  overflow-x: hidden;
+}
+.treescrollbar{
+  background-color: transparent !important;
 }
 </style>

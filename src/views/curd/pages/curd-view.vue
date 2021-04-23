@@ -85,7 +85,7 @@ export default {
         }],
         [{ name: 'des', label: '角色描述', type: 'text' }]
       ],
-      stepsLabel: ['步骤一','步骤二','步骤三'],
+      stepsLabel: ['步骤一', '步骤二', '步骤三'],
       close: false
     }
   },

@@ -1,37 +1,132 @@
 <template>
   <div class="curd_view">
-    <div class="curd_tree_view" v-if="treeOptions">
-      <lazy-tree v-if="treeOptions.lazy" @changeSatus="toggler" @nodeClick="treeNodeClick" @node-expand="nodeExpand"
-        @tab-click="tabClick" :renderFunction="treeOptions.renderContent" :dataUrlArr="treeOptions.dataUrlArr"
-        :search="treeOptions.search"></lazy-tree>
-      <Tree v-else @changeSatus="toggler" @nodeClick="treeNodeClick" :renderFunction="treeOptions.renderContent"
-        :dataUrl="treeOptions.dataUrl" :search="treeOptions.search"></Tree>
+    <div class=" curd_tree_view" v-if="treeOptions">
+      <lazy-tree
+        v-if="treeOptions.isLazyLoad"
+        @changeSatus="trigger"
+        @nodeClick="treeNodeClick"
+        @node-expand="nodeExpand"
+        @tab-click="tabClick"
+        :renderFunction="treeOptions.renderContent"
+        :dataUrlArr="treeOptions.dataUrlArr"
+        :search="treeOptions.search"
+        :isLazyLoad="treeOptions.isLazyLoad"
+        :defaultExpandedNodes="treeOptions.defaultExpandedNodes"
+        ref="lazyTree"
+      >
+        <template v-slot:searchselect>
+          <slot name="searchselect"></slot>
+        </template>
+      </lazy-tree>
+      <Tree
+        v-else
+        @changeSatus="trigger"
+        @nodeClick="treeNodeClick"
+        :renderFunction="treeOptions.renderContent"
+        :dataUrl="treeOptions.dataUrl"
+        :search="treeOptions.search"
+      ></Tree>
     </div>
+
     <div class="curd_table_view">
-      <FromDynamic v-if="fromOptions" :searchDynamic="fromOptions" @query="query" @params-change="paramsChange"
-        @select-form-change="handleSelectChange">
-        <template v-slot:tool>
-          <slot name="tool"></slot>
-        </template>
-      </FromDynamic>
-      <CurdTable ref="table" :highlightCurrentRow="tableOptions.highlightCurrentRow" :columns="tableOptions.columns"
-        :lazy="tableOptions.lazy" :dataUrl="tableOptions.dataUrl" :pageSize="tableOptions.pageSize"
-        :params="tableOptions.params" :local="tableOptions.local" :height="tableOptions.height"
-        :showPage="tableOptions.showPage" :showPanelTool="tableOptions.showPanelTool"
-        :defaultPanel='tableOptions.defaultPanel' :border="tableOptions.border" :showSummary='tableOptions.showSummary'
-        :showSettingTool="tableOptions.showSettingTool" @row-click="rowClick" @row-dblclick="rowDblclick"
-        @row-add='addRow' @row-edit='editRow' @row-delete="deleteRows" @selection-change="selectionChange"
-        @current-change="handleCurrentChange">
-        <!-- 自定义表格slot -->
-        <template v-for="(item) in slotArr" v-slot:[item.slot]="Props">
-          <!--  父组件调用  老版本为：slot-scope="{ row, index }" -->
-          <slot :name="item.slot" :rowData="Props.rowData"></slot>
-        </template>
-        <template v-slot:panel>
-          <slot name="panel"></slot>
-        </template>
-      </CurdTable>
+      <div
+        :class="[
+          { boxShadow: tableOptions.mode !== 'simple' },
+          { mb: tableOptions.mode !== 'simple' },
+        ]"
+      >
+        <FromDynamic
+          v-if="showSearchDynamic"
+          :width="fromWidth"
+          :mode="tableOptions.mode"
+          :searchDynamic="fromOptions"
+          @query="query"
+          @params-change="paramsChange">
+          <template v-slot:tool>
+            <slot name="tool"></slot>
+          </template>
+          <template v-slot:rtool>
+            <slot name="rtool"></slot>
+          </template>
+          <template v-slot:ltool>
+            <slot name="ltool"></slot>
+          </template>
+        </FromDynamic>
+      </div>
+      <div :class="{ boxShadow: tableOptions.mode !== 'simple' }">
+        <CurdTable
+          ref="tableView"
+          :highlightCurrentRow="tableOptions.highlightCurrentRow"
+          :columns="tableOptions.columns"
+          :lazy="tableOptions.lazy"
+          :dataUrl="tableOptions.dataUrl"
+          :pageSize="tableOptions.pageSize"
+          :isPrivate="tableOptions.isPrivate"
+          :params="tableOptions.params"
+          :local="tableOptions.local"
+          :height="tableOptions.height"
+          :rowKey="tableOptions.rowKey"
+          :treeProps="tableOptions.treeProps"
+          :maxHeight="tableOptions.maxHeight"
+          :showPage="tableOptions.showPage"
+          :showPanelTool="tableOptions.showPanelTool"
+          :mode="tableOptions.mode"
+          :defaultPanel="tableOptions.defaultPanel"
+          :border="tableOptions.border"
+          :showSummary="tableOptions.showSummary"
+          :summaryMethod="tableOptions.summaryMethod"
+          :spanMethod="tableOptions.spanMethod"
+          :showSettingTool="tableOptions.showSettingTool"
+          :responseName="tableOptions.responseName"
+          @row-click="rowClick"
+          @row-dblclick="rowDblclick"
+          @row-add="addRow"
+          @row-edit="editRow"
+          @row-delete="deleteRows"
+          @selection-change="selectionChange"
+          @getTableData="getTableData"
+          @current-change="handleCurrentChange"
+        >
+          <!-- 自定义表格slot -->
+          <template v-for="item in slotArr" v-slot:[item.slot]="Props">
+            <!--  父组件调用  老版本为：slot-scope="{ row, index }" -->
+            <slot :name="item.slot" :rowData="Props.rowData"></slot>
+          </template>
+          <template
+            v-for="item in headerSlotArr"
+            v-slot:[item.headerSlot]="Props"
+          >
+            <slot :name="item.headerSlot" :rowData="Props.rowData"></slot>
+          </template>
+          <template v-slot:panel>
+            <slot name="panel"></slot>
+          </template>
+        </CurdTable>
+      </div>
     </div>
+    <overlay
+      v-if="fromSumit"
+      :close="fromSumit.showtype"
+      :title="fromSumit.titlename"
+      @changeSatus="changeSatus"
+      oheight="50vh"
+    >
+      <FromData
+        v-if="fromSumit.showtype"
+        :fromItem="fromSumit.fromItem"
+        :postUrl="fromSumit.postUrl"
+        :rowData="fromSumit.rowData"
+        :postParams="fromSumit.postParams"
+        :rulesprops="fromSumit.rules"
+        @change-groupinput="changeGroupinput"
+        @from-change="fromChange"
+        @submit="submit"
+        ref="FromData">
+         <template v-for="item in fromSlotArr" v-slot:[item.slot]="Props">
+            <slot :name="item.slot" :fromData='Props.fromData'></slot>
+          </template>
+      </FromData>
+    </overlay>
   </div>
 </template>
 
@@ -40,29 +135,60 @@ import Tree from './Tree'
 import LazyTree from './LazyTree'
 import CurdTable from './CurdTable'
 import FromDynamic from './FromDynamic'
+import FromData from '../FromData/index'
+import overlay from '../overlay.vue'
 
 export default {
   data () {
     return {
       slotArr: [],
+      fromSlotArr: [], // 表单slot合集
+      headerSlotArr: [],
       toggle: true
     }
   },
   props: {
     treeOptions: {},
     tableOptions: {},
-    fromOptions: {}
+    fromOptions: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    }, // 查询条件item，Array类型
+    fromSumit: {},
+    fromWidth: {}, // 查询框得长度，String类型
+    showSearchDynamic: { // 是否显示查询框，提供某些情况下查询完全自定义
+      type: Boolean,
+      default: true
+    }
   },
   components: {
     CurdTable,
     Tree,
     FromDynamic,
-    LazyTree
+    LazyTree,
+    FromData,
+    overlay
   },
   created () {
     this.getSlot()
+    this.getFromSlot()
+    this.getHeaderSlot()
   },
   methods: {
+    // 关闭弹框
+    changeSatus () {
+      this.fromSumit.showtype = false
+    },
+    // 获取table数据,推荐此做法获取tableData
+    getTableData (rows) {
+      this.$emit('getTableData', rows)
+    },
+    tableData () {
+      // 此方法会直接暴露tableData，可对表格数据直接增删操作，建议在getTableData事件之后获取数据
+      return this.$refs.tableView.tableData
+    },
     rowClick (row) {
       this.$emit('row-click', row)
     },
@@ -74,11 +200,21 @@ export default {
         this.$emit('selection-change', selection)
       }
     },
+    toggleRowSelection (rows) {
+      this.$refs.tableView.toggleRowSelection(rows)
+    },
+    toggleAllSelection () {
+      // 全选
+      this.$refs.tableView.toggleAllSelection()
+    },
     handleCurrentChange (row) {
       this.$emit('current-change', row)
     },
     deleteRows (rows) {
       this.$emit('row-delete', rows)
+    },
+    submit (form) {
+      this.$emit('submit', form)
     },
     editRow (row) {
       this.$emit('row-edit', row)
@@ -86,42 +222,69 @@ export default {
     addRow (bool) {
       this.$emit('row-add', bool)
     },
+    fromChange (bool) {
+      this.$emit('from-change', bool)
+    },
     paramsChange (params) {
       this.$emit('params-change', params)
-      this.tableOptions.params = Object.assign({},
+      this.tableOptions.params = Object.assign(
+        {},
         this.tableOptions.params,
         params
       )
-      // console.log( this.tableOptions.params);
+      console.log(this.tableOptions.params)
     },
-    toggler (toggle) {
+    trigger (toggle) {
       this.toggle = toggle
     },
-    treeNodeClick ({
-      data,
-      node
-    }) {
-      this.$emit('node-click', {
-        data,
-        node
-      })
+    treeNodeClick ({ data, node }) {
+      this.$emit('node-click', { data, node })
     },
     query () {
-      this.$refs.table.queryData()
+      this.$refs.tableView.queryData()
     },
     refresh () {
-      this.$refs.table.queryData()
+      this.$refs.tableView.queryData()
     },
     getSlot () {
       var that = this
       const mColumns = this.tableOptions.columns
-
       function Maps (mColumns) {
         mColumns.forEach((item) => {
           const keys = Object.keys(item)
-          if (keys.indexOf('slot') > 0) {
+          if (keys.includes('slot')) {
             that.slotArr.push(item)
             // console.log("slot=", that.slotArr);
+          }
+          if (item.children && item.children.length > 0) {
+            Maps(item.children)
+          }
+        })
+      }
+      Maps(mColumns)
+    },
+    getFromSlot () {
+      var that = this
+      if (!that.fromSumit) {
+        return
+      }
+      that.fromSlotArr = []
+      const fromItems = that.fromSumit.fromItem
+      fromItems.forEach(item => {
+        if (item.prepend || item.append) {
+          item.slot = item.prepend || item.append
+          that.fromSlotArr.push(item)
+        }
+      })
+    },
+    getHeaderSlot () {
+      var that = this
+      const mColumns = this.tableOptions.columns
+      function Maps (mColumns) {
+        mColumns.forEach((item) => {
+          const keys = Object.keys(item)
+          if (keys.includes('headerSlot')) {
+            that.headerSlotArr.push(item)
           }
           if (item.children && item.children.length > 0) {
             Maps(item.children)
@@ -136,30 +299,44 @@ export default {
     tabClick (val) {
       this.$emit('tab-click', val)
     },
-    handleSelectChange (val) {
-      this.$emit('select-form-change', val)
+    changeGroupinput (val) {
+      this.$emit('change-groupinput', val)
     }
   }
+  // watch: {
+  //   tableOptions: {
+  //     handler: function (val) {
+  //       console.log(val.params,'默认参数改变')
+  //       this.$refs.tableView.queryData();
+  //     },
+  //     deep: true,
+  //   },
+
+  // },
 }
-
 </script>
-<style>
-  .curd_view {
-    display: flex;
+<style lang='scss'>
+.curd_view {
+  display: flex;
+  height: 100%;
+}
+.curd_tree_view {
+  width: auto;
+  min-height: 100%;
+  border-radius: 0 4px 4px 0;
+}
+.curd_table_view {
+  overflow: auto;
+  padding: 12px;
+  box-sizing: border-box;
+  flex: 1;
+  padding-top: 0;
+  /* padding-right: 0; */
+  .boxShadow {
+    @include box-shadow();
   }
-
-  .curd_tree_view {
-    width: auto;
-    min-height: 100%;
-    border-radius: 0 4px 4px 0;
+  .mb {
+    margin-bottom: 12px;
   }
-
-  .curd_table_view {
-    overflow: auto;
-    padding:0 12px;
-    box-sizing: border-box;
-    flex: 1;
-
-  }
-
+}
 </style>
