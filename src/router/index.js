@@ -7,18 +7,20 @@ import getRoutes from './getRoutes'
 import routeArr from '@/mock/router.js'
 
 const sonRoute = getRoutes(routeArr)
-const routes = [{
-  path: '/',
-  name: 'Main',
-  component: Main,
-  redirect: '/home',
-  children: [...sonRoute]
-},
-{
-  path: '/login',
-  name: 'login',
-  component: () => import(/* webpackChunkName: "Login" */ '../views/Login.vue')
-}
+const routes = [
+  {
+    path: '/',
+    name: 'Main',
+    component: Main,
+    redirect: '/home',
+    children: [...sonRoute]
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () =>
+      import(/* webpackChunkName: "Login" */ '../views/Login.vue')
+  }
 ]
 Vue.use(VueRouter)
 // 获取原型对象上的push函数

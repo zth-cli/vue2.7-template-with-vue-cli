@@ -35,6 +35,16 @@ const routeArr = [
     id: '05142',
     type: 3,
     path: '/curds'
+  },
+  {
+    title: '组件错误',
+    componentName: 'sdd',
+    componentPath: 'curd/pages/sdd',
+    icon: 'el-icon-coffee-cup',
+    parentId: 0,
+    id: '05143',
+    type: 3,
+    path: '/sdd'
   }
 ]
 export default routeArr

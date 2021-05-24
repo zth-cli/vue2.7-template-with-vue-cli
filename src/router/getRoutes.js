@@ -1,11 +1,3 @@
-/*
- * @Author: 阮志雄
- * @Date: 2021-04-16 14:52:21
- * @LastEditTime: 2021-05-24 10:23:08
- * @LastEditors: rzx007
- * @Description: 处理菜单数据，返回标准的Vue-Route对象
- * @FilePath: \vue-template-with-elementui\src\router\getRoutes.js
- */
 var addRoutes = []
 function addRouter (routeArr = []) {
   if (routeArr.length < 1) { return }
@@ -17,7 +9,8 @@ function addRouter (routeArr = []) {
         path: item.path,
         name: item.componentName,
         // component: (resolve) => require([`@/views/${item.componentPath}.vue`], resolve),
-        component: () => import(/* webpackChunkName: "[request]" */ `@/views/${item.componentPath}.vue`),
+        // component: () => import(/* webpackChunkName: "[request]" */ `@/views/${item.componentPath}.vue`),
+        component: () => lazyLoad(import(/* webpackChunkName: "[request]" */ `@/views/${item.componentPath}.vue`)),
         meta: {
           title: item.title,
           isCache: false,
@@ -27,5 +20,22 @@ function addRouter (routeArr = []) {
     }
   })
   return addRoutes
+}
+// 处理加载状态
+function lazyLoad (component) {
+  const AsyncHandler = () => ({
+    component,
+    loading: require('@/components/notFound.vue').default,
+    error: require('@/components/error.vue').default,
+    delay: 200,
+    timeout: 10000
+  })
+
+  return Promise.resolve({
+    functional: true,
+    render (h, { data, children }) {
+      return h(AsyncHandler, data, children)
+    }
+  })
 }
 export default addRouter
