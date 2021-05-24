@@ -156,7 +156,6 @@
               v-model="fromData[item.name]"
               :disabled="item.disabled"
               :style="{ width: item.width ? item.width + 'px' : '178px' }"
-
             >
               <el-button
                 slot="append"

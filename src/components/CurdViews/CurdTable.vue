@@ -82,6 +82,7 @@
         :size="tableSize"
         :height="height"
         :rowKey="rowKey"
+        :stripe='stripe'
         :treeProps="treeProps"
         :showSummary="showSummary"
         :summaryMethod="summaryMethod"
@@ -96,8 +97,7 @@
         @current-change="handleCurrentChange"
         style="width: 100%"
         v-loading="loading"
-        :key="key"
-      >
+        :key="key">
         <template v-for="item in slotArr" v-slot:[item.slot]="Props">
           <slot :name="item.slot" :rowData="Props.rowData"></slot>
         </template>
@@ -122,6 +122,7 @@
           @size-change="changePageSize"
           :size="tableSize"
           layout="total, sizes, prev, pager, next"
+          background
         ></el-pagination>
       </div>
     </div>
@@ -151,6 +152,10 @@ export default {
     },
     pageSize: {
       default: 20
+    },
+    stripe: {
+      type: Boolean,
+      default: true
     },
     showPage: {
       type: Boolean,
@@ -193,7 +198,7 @@ export default {
       default: true
     },
     responseName: {
-      type: String,
+      type: [String, Array],
       default: 'list'
     },
     isPrivate: { // 是否添加私有属性，用于某些情况直接添加私有属性无法生效问题
@@ -244,9 +249,7 @@ export default {
       timeout: {} // 请求防抖计时器
     }
   },
-  components: {
-    DataTable
-  },
+  components: { DataTable },
   computed: {
     isSingle () {
       return !(this.selection !== null && this.selection.length === 1)
@@ -269,17 +272,21 @@ export default {
         this.$emit('selection-change', null)
         this.loading = true
         const params = this.showPage
-          ? Object.assign(
-            {},
-            JSON.parse(JSON.stringify(this.pageParam)),
-            this.params
-          )
+          ? Object.assign({}, JSON.parse(JSON.stringify(this.pageParam)), this.params)
           : this.params
         apiGet(this.dataUrl, params).then((res) => {
           this.loading = false
           if (res.code === 1) {
+            let data = res.data
             this.total = res.pojoTotalCount
-            var data = res.data[this.responseName]
+            if (Array.isArray(this.responseName)) {
+              this.responseName.forEach(item => {
+                data = data[item]
+              })
+            } else {
+              data = res.data[this.responseName]
+            }
+
             if (this.isPrivate) {
               data.forEach(item => { // 添加私有属性，
                 item._disabled = 0
@@ -336,7 +343,6 @@ export default {
     getSlot () {
       var that = this
       const mColumns = this.mColumns
-
       function Maps (mColumns) {
         mColumns.forEach((item) => {
           const keys = Object.keys(item)
@@ -406,11 +412,10 @@ export default {
         if (this.showPage) {
           this.pageParam.pageIndex = 1
         }
-        // if (!this.lazyLoad) {
-        //   this.queryData()
-        // }
-        // this.lazyLoad = false
-        this.queryData()
+        if (!this.lazyLoad) {
+          this.queryData()
+        }
+        this.lazyLoad = false
       },
       deep: true
     },

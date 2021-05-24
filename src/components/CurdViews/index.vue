@@ -66,6 +66,7 @@
           :local="tableOptions.local"
           :height="tableOptions.height"
           :rowKey="tableOptions.rowKey"
+          :stripe="tableOptions.stripe"
           :treeProps="tableOptions.treeProps"
           :maxHeight="tableOptions.maxHeight"
           :showPage="tableOptions.showPage"

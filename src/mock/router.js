@@ -27,7 +27,7 @@ const routeArr = [
     }]
   },
   {
-    title: 'CURD布局',
+    title: 'CURD布局1',
     componentName: 'curd',
     componentPath: 'curd/pages/curd-view',
     icon: 'el-icon-coffee-cup',

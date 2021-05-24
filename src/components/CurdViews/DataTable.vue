@@ -91,12 +91,16 @@ export default {
       type: Function,
       default: function () {}
     },
-    rowKey: { type: String }, // 支持树类型的数据的显示,rowKey不为空时生效
+    rowKey: { type: String, default: 'id' }, // 支持树类型的数据的显示,rowKey不为空时生效
     treeProps: {
       type: Object,
       default: function () {
         return { children: 'children', hasChildren: 'hasChildren' }
       }
+    },
+    stripe: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
@@ -361,7 +365,7 @@ export default {
           showSummary: that.showSummary,
           summaryMethod: that.summaryMethod,
           spanMethod: that.spanMethod,
-          stripe: true
+          stripe: that.stripe
         },
         style: {
           width: '100%'

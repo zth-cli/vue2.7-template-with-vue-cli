@@ -3,35 +3,16 @@ import VueRouter from 'vue-router'
 import { getToken } from '@/utils/auth'
 import { Message } from 'element-ui'
 import Main from '@/components/Layout.vue'
+import getRoutes from './getRoutes'
 import routeArr from '@/mock/router.js'
-var addRoutes = []
 
-function addRouter (routeArr) {
-  routeArr.forEach(item => {
-    if (item.type === 1 && item.children.length > 0) {
-      addRouter(item.children)
-    } else if (item.type !== 1) {
-      addRoutes.push({
-        path: item.path,
-        name: item.componentName,
-        // component: (resolve) => require([`@/views/${item.componentPath}.vue`], resolve),
-        component: () => import(/* webpackChunkName: "[request]" */ `@/views/${item.componentPath}.vue`),
-        meta: {
-          title: item.title,
-          isCache: false,
-          requiresAuth: true
-        }
-      })
-    }
-  })
-}
-addRouter(routeArr)
+const sonRoute = getRoutes(routeArr)
 const routes = [{
   path: '/',
   name: 'Main',
   component: Main,
   redirect: '/home',
-  children: [...addRoutes]
+  children: [...sonRoute]
 },
 {
   path: '/login',

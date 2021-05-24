@@ -1,19 +1,22 @@
 
 <template>
   <div class="tags" v-if="showTags">
-    <ul>
-      <li
-        class="tags-li"
-        v-for="(item,index) in tagsList"
-        :class="{'active': isActive(item.path)}"
-        :key="index"
-      >
-        <router-link :to="item.fullPath" class="tags-li-title" :title="item.title">{{item.title}}</router-link>
-        <span class="tags-li-icon" @click="closeTags(index)">
-          <i class="el-icon-close"></i>
-        </span>
-      </li>
-    </ul>
+    <el-tabs
+      :closable="!(tagsList.length==1)"
+      @tab-click="changeTab"
+      @tab-remove="closeTags"
+      type="card"
+      v-model="activeValue"
+      size="mini"
+    >
+      <el-tab-pane
+        :key="item.path"
+        :label="item.title"
+        :name="item.title"
+        :tab="item"
+        v-for="item in tagsList"
+      ></el-tab-pane>
+    </el-tabs>
     <div class="tags-close-box">
       <el-dropdown @command="handleTags">
         <el-button size="mini" type="primary">
@@ -34,15 +37,20 @@ import bus from '@/utils/bus'
 export default {
   data () {
     return {
-      tagsList: []
+      tagsList: [],
+      activeValue: ''
     }
   },
   methods: {
-    isActive (path) {
-      return path === this.$route.path
+    changeTab (component) {
+      const tab = component.$attrs.tab
+      this.$router.push(tab.path)
     },
     // 关闭单个标签
-    closeTags (index) {
+    closeTags (tabName) {
+      const index = this.tagsList.findIndex(
+        item => item.title === tabName
+      )
       const delItem = this.tagsList.splice(index, 1)[0]
       // 剩余的tags
       const item = this.tagsList[index]
@@ -85,7 +93,7 @@ export default {
       } else {
         this.tagsList.push(routeObj)
       }
-
+      this.activeValue = route.meta.title
       bus.$emit('tags', this.tagsList)
     },
     handleTags (command) {
@@ -122,69 +130,61 @@ export default {
   @include content-background();
   padding-right: 120px;
   @include box-shadow();
-}
-
-.tags ul {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-}
-
-.tags-li {
-  float: left;
-  margin: 3px 5px 2px 3px;
-  border-radius: 3px;
-  font-size: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  height: 23px;
-  line-height: 23px;
-  border: 1px solid transparent;
-  @include border-color();
-  @include  sec-content-background();
-  padding: 0 5px 0 12px;
-  vertical-align: middle;
-  @include font_color(#fff);
-  transition: all 0.3s ease-in;
-}
-
-.tags-li:not(.active):hover {
-  @include tool-bar-color();
-}
-
-.tags-li.active {
-  @include font_color(#fff);
-}
-.tags-li.active {
-  @include tool-bar-color();
-
-}
-.tags-li-title {
-  float: left;
-  max-width: 80px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin-right: 5px;
-  @include font_color(#fff);
-}
-
-.tags-li.active .tags-li-title {
-  @include font_color(#fff);
-}
-.tags-li.active .tags-li-icon i {
-  color: #fff !important;
-}
-.tags-close-box {
-  position: absolute;
-  right: 0;
-  top: 0;
-  box-sizing: border-box;
-  padding-top: 1px;
-  text-align: center;
-  width: 110px;
-  height: 30px;
-  box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  .el-tabs--top.el-tabs--card>.el-tabs__header .el-tabs__item:nth-child(2) {
+    padding-left: 5px;
+  }
+  .el-tabs--top.el-tabs--card>.el-tabs__header .el-tabs__item:last-child {
+    padding-right: 5px;
+  }
+  .el-tabs--card>.el-tabs__header .el-tabs__item.is-active.is-closable {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .el-tabs__header {
+    border: none;
+    .el-tabs__item {
+      margin: 3px 5px 3px 3px;
+      border-radius: 3px;
+      font-size: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      height: 23px;
+      line-height: 23px;
+      border: 1px solid transparent;
+      @include border-color();
+      @include sec-content-background();
+      padding: 0 5px 0 10px;
+      vertical-align: middle;
+      @include font-color(#fff);
+      transition: all 0.3s ease-in;
+      border: none;
+      padding: 0 5px;
+      .el-icon-close:hover {
+        background: transparent;
+      }
+    }
+    .el-tabs__nav-next, .el-tabs__nav-prev {
+      line-height: 30px;
+    }
+    .el-tabs__item.is-active {
+      @include font-color(#fff);
+      @include tool-bar-color();
+    }
+    .el-tabs__nav {
+        border: none;
+    }
+  }
+  .tags-close-box {
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-sizing: border-box;
+    padding-top: 1px;
+    text-align: center;
+    width: 110px;
+    height: 30px;
+    box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
 }
 </style>

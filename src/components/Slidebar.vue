@@ -1,9 +1,11 @@
 <template>
   <div
-    class="horizontal-menu-main"
-    :class="[mode ? 'vertical-menu-main' : '']"
-    :style="{ width: isCollapse ? 'auto' : '' }"
+     class="horizontal-menu-main"
+    :class="[mode ? 'vertical-menu-main' : 'horizontal-menu',isCollapse?'isCollapse':'']"
   >
+   <div class="slide-logo" v-if="mode">
+      <img src="@/assets/img/logo.png" />
+    </div>
     <el-menu
       class="sidebar-el-menu"
       :default-active="onRoutes"
@@ -109,6 +111,7 @@ export default {
   @include header-background();
   height: 100%;
   width: auto;
+  overflow-y: auto;
   .el-menu {
     @include header-background();
     border-right: none;
@@ -134,5 +137,12 @@ export default {
 }
 .vertical-menu-main {
   width: 200px;
+}
+.slide-logo{
+  margin-left: 10px;
+  margin-top: 12px;
+}
+.isCollapse{
+  width: 64px; overflow: hidden;
 }
 </style>
