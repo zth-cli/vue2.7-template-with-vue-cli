@@ -4,11 +4,19 @@
       <slot name="ltool"></slot>
       <div class="curd_tools" ref="tools" :class="{ellipsis_curd_tools:expend}">
         <template v-for="(item, index) in searchDynamic">
-          <template v-if="!item.dateSwitch&&(item.type === 'date' || item.type === 'datetime'||item.type === 'month'||item.type === 'year')">
+          <template v-if="!item.dateSwitch&&(item.type === 'date' ||item.type === 'month'||item.type === 'year')">
             <div :key="'item' + index" class="curd_tool_item" ref="tool">
               <label class="label" v-if="mode !=='simple'">{{ item.label }}：</label>
               <el-date-picker :type="item.type" :disabled="item.disabled" :placeholder="getPlaceholder(item)" clearable
                 v-model="fromData[item.name]" size="mini" :style="{width: width}" :value-format="item.format">
+              </el-date-picker>
+            </div>
+          </template>
+          <template v-else-if=" item.type === 'datetime'">
+             <div :key="'item' + index" class="curd_tool_item" ref="tool">
+              <label class="label" v-if="mode !== 'simple'" >{{ item.label }}：</label>
+              <el-date-picker type="datetime" :disabled="item.disabled" :placeholder="getPlaceholder(item)"  clearable
+               v-model="fromData[item.name]" size="mini" :style="{ width: width }" :format="item.format" :value-format="item.format" >
               </el-date-picker>
             </div>
           </template>
