@@ -8,18 +8,21 @@
         </v-header>
       </el-header>
       <div class="dashborad">
-        <div class="content-wrapper-layout">
-          <template>
-            <keep-alive v-if="isShow">
-              <router-view v-if="$route.meta.isCache"></router-view>
-            </keep-alive>
-          </template>
-          <template v-if="isShow">
-            <router-view v-if="!$route.meta.isCache"></router-view>
-          </template>
-        </div>
         <div class="tag-nav-wrapper">
-          <v-tags v-if="tagsBar&&$route.path!='/home'"></v-tags>
+          <v-tags v-if="tagsBar && $route.path != '/home'"></v-tags>
+        </div>
+        <div class="content-wrapper-layout">
+          <Bread-nav v-if="$route.path != '/home'"></Bread-nav>
+          <div class="content-main">
+            <template>
+              <keep-alive v-if="isShow">
+                <router-view v-if="$route.meta.isCache"></router-view>
+              </keep-alive>
+            </template>
+            <template v-if="isShow">
+              <router-view v-if="!$route.meta.isCache"></router-view>
+            </template>
+          </div>
         </div>
       </div>
     </div>
@@ -94,9 +97,9 @@ export default {
     .tag-nav-wrapper {
       z-index: 10;
       width: 100%;
-      position: absolute;
-      bottom: 0;
-      left: 0;
+      // position: absolute;
+      // bottom: 0;
+      // left: 0;
     }
     .mini_tag_nav {
       margin-left: 50px;
@@ -111,18 +114,28 @@ export default {
   // text-align: center;
   height: 50px !important;
   box-sizing: border-box;
-  padding: 0
+  padding: 0;
   // line-height: 60px;
 }
 .el-layout {
   @include base-background();
-  @include font_color(#666);
+  @include font-color(#666);
   padding: 0 !important;
 }
 .content-wrapper-layout {
-  height: calc(100% - 32px);
+  height: calc(100% - 36px);
   overflow: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  // padding: 0 18px;
+  .content-main {
+    box-sizing: border-box;
+    padding: 0 18px;
+    flex: 1;
+    overflow: auto;
+    height: calc(100% - 40px);
+  }
 }
 .full-content-wrapper {
   position: fixed;

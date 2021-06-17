@@ -7,8 +7,7 @@
       @tab-remove="closeTags"
       type="card"
       v-model="activeValue"
-      size="mini"
-    >
+      size="mini">
       <el-tab-pane
         :key="item.path"
         :label="item.title"
@@ -49,7 +48,7 @@ export default {
     // 关闭单个标签
     closeTags (tabName) {
       const index = this.tagsList.findIndex(
-        item => item.title === tabName
+        item => item.title == tabName
       )
       const delItem = this.tagsList.splice(index, 1)[0]
       // 剩余的tags

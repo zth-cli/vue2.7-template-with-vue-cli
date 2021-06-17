@@ -18,17 +18,25 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-width: 1000px;
 }
 .content {
   box-sizing: border-box;
-  padding: 0 18px;
+  /* padding: 0 18px; */
   width: 100%;
   height: 100%;
-  overflow: auto;
+}
+.header_tool {
+  @include border-color();
+}
+.tool_bar {
+  @include tool-bar-color();
+  line-height: 25px;
+    padding: 0 4px;
 }
 </style>

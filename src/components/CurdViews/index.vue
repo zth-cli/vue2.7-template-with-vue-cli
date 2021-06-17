@@ -105,29 +105,6 @@
         </CurdTable>
       </div>
     </div>
-    <overlay
-      v-if="fromSumit"
-      :close="fromSumit.showtype"
-      :title="fromSumit.titlename"
-      @changeSatus="changeSatus"
-      oheight="50vh"
-    >
-      <FromData
-        v-if="fromSumit.showtype"
-        :fromItem="fromSumit.fromItem"
-        :postUrl="fromSumit.postUrl"
-        :rowData="fromSumit.rowData"
-        :postParams="fromSumit.postParams"
-        :rulesprops="fromSumit.rules"
-        @change-groupinput="changeGroupinput"
-        @from-change="fromChange"
-        @submit="submit"
-        ref="FromData">
-         <template v-for="item in fromSlotArr" v-slot:[item.slot]="Props">
-            <slot :name="item.slot" :fromData='Props.fromData'></slot>
-          </template>
-      </FromData>
-    </overlay>
   </div>
 </template>
 
@@ -136,14 +113,11 @@ import Tree from './Tree'
 import LazyTree from './LazyTree'
 import CurdTable from './CurdTable'
 import FromDynamic from './FromDynamic'
-import FromData from '../FromData/index'
-import overlay from '../overlay.vue'
 
 export default {
   data () {
     return {
       slotArr: [],
-      fromSlotArr: [], // 表单slot合集
       headerSlotArr: [],
       toggle: true
     }
@@ -157,7 +131,6 @@ export default {
         return []
       }
     }, // 查询条件item，Array类型
-    fromSumit: {},
     fromWidth: {}, // 查询框得长度，String类型
     showSearchDynamic: { // 是否显示查询框，提供某些情况下查询完全自定义
       type: Boolean,
@@ -168,20 +141,13 @@ export default {
     CurdTable,
     Tree,
     FromDynamic,
-    LazyTree,
-    FromData,
-    overlay
+    LazyTree
   },
   created () {
     this.getSlot()
-    this.getFromSlot()
     this.getHeaderSlot()
   },
   methods: {
-    // 关闭弹框
-    changeSatus () {
-      this.fromSumit.showtype = false
-    },
     // 获取table数据,推荐此做法获取tableData
     getTableData (rows) {
       this.$emit('getTableData', rows)
@@ -214,17 +180,11 @@ export default {
     deleteRows (rows) {
       this.$emit('row-delete', rows)
     },
-    submit (form) {
-      this.$emit('submit', form)
-    },
     editRow (row) {
       this.$emit('row-edit', row)
     },
     addRow (bool) {
       this.$emit('row-add', bool)
-    },
-    fromChange (bool) {
-      this.$emit('from-change', bool)
     },
     paramsChange (params) {
       this.$emit('params-change', params)
@@ -264,20 +224,6 @@ export default {
       }
       Maps(mColumns)
     },
-    getFromSlot () {
-      var that = this
-      if (!that.fromSumit) {
-        return
-      }
-      that.fromSlotArr = []
-      const fromItems = that.fromSumit.fromItem
-      fromItems.forEach(item => {
-        if (item.prepend || item.append) {
-          item.slot = item.prepend || item.append
-          that.fromSlotArr.push(item)
-        }
-      })
-    },
     getHeaderSlot () {
       var that = this
       const mColumns = this.tableOptions.columns
@@ -299,9 +245,6 @@ export default {
     },
     tabClick (val) {
       this.$emit('tab-click', val)
-    },
-    changeGroupinput (val) {
-      this.$emit('change-groupinput', val)
     }
   }
   // watch: {

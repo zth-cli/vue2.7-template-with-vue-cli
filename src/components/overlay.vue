@@ -2,13 +2,14 @@
   <transition name="fade">
     <div class="overlay" v-show="close">
       <div
-        :style="{height:oheight,width:owidth}"
+       v-dialogDrag="{dialogDrag: isDialogDrag, handle:'.overlay_head'}"
+        ref="overlay_main"
+        :style="{height:oheight,width:width}"
         :class="{full_screen:isFullScreen}"
         class="overlay_main"
-        @click.stop
-      >
+        @click.stop>
         <!-- <span class="close" title="关闭" @click="switchs();changeSatus()"></span> -->
-        <div class="overlay_head">
+        <div class="overlay_head" @dblclick.stop="fullScreen()">
           {{title}}
           <div class="fr close_btn">
             <!-- <span><svg-icon icon="zuixiaohua" class="ol_icon"></svg-icon></span> -->
@@ -35,7 +36,12 @@ export default {
   name: 'overlay',
   data () {
     return {
-      isFullScreen: false
+      isFullScreen: false,
+      sizeArr: {
+        mini: '30vw',
+        small: '60vw',
+        large: '90vw'
+      }
     }
   },
   props: {
@@ -43,17 +49,35 @@ export default {
       type: Boolean,
       default: false
     },
-    oheight: String,
-    owidth: String,
+    oheight: {
+      type: String,
+      default: ''
+    },
+    owidth: {
+      type: String,
+      default: ''
+    },
     title: String,
     lazy: {
       type: Boolean,
       default: false
+    },
+    isDialogDrag: { // 控制弹框拖拽
+      type: Boolean,
+      default: true
+    },
+    size: {
+      type: String,
+      default: 'small'
     }
   },
   methods: {
     fullScreen () {
       this.isFullScreen = !this.isFullScreen
+      if (this.isFullScreen) {
+        this.$refs.overlay_main.style.left = '0px'
+        this.$refs.overlay_main.style.top = '0px'
+      }
     },
     switchs () {
       this.$emit('update:close', false)
@@ -61,6 +85,11 @@ export default {
     changeSatus () {
       // 事件
       this.$emit('changeSatus', this.close) // 触发自定义事件
+    }
+  },
+  computed: {
+    width: function () {
+      return this.owidth ? this.owidth : this.sizeArr[this.size]
     }
   }
 }
@@ -80,8 +109,9 @@ export default {
   align-items: center;
   min-height: 600px;
   .full_screen {
-    width: 100% !important;
-    height: 100% !important;
+    transition: all .21s ease-in-out;
+    width: 100vw !important;
+    height: 100vh !important;
   }
   .overlay_main {
     position: relative;
@@ -89,16 +119,20 @@ export default {
     box-shadow: 0 2px 5px 5px rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     overflow-x: hidden;
-    transition: all 0.2s ease-in;
+    // transition: all 0.2s ease-in;  //拖拽延迟
+    box-sizing: content-box;
+    margin: 0 auto ;
+    // transition: all .21s ease-in-out;
     .overlay_head {
       @include tool-bar-color();
       @include border-color();
       border-bottom: 1px solid transparent;
       text-align: start;
       height: 30px;
-      padding: 2px 4px;
+      padding: 2px 8px;
       line-height: 30px;
       font-size: 16px;
+      cursor: pointer;
       .close_btn {
         cursor: pointer;
         .ol_icon {
@@ -116,6 +150,13 @@ export default {
       height: calc(100% - 35px);
       overflow: auto;
       // padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      // justify-content: center;
+      .form_btn {
+        text-align: center;
+      }
     }
   }
 }

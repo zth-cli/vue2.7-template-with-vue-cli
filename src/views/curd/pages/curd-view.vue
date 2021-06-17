@@ -1,6 +1,5 @@
 <template>
   <div class="content">
-    <Bread-nav></Bread-nav>
     <CurdView
       :tableOptions="tableOptions"
       :fromOptions="fromOptions"

@@ -9,7 +9,7 @@ import '@/assets/scss/base.scss'
 import plugin from '@/utils/install' // 全局组件
 import echarts from 'echarts'
 // 防抖节流全局指令
-import Directives from './utils/directive.js'
+import Directives from './directive/index.js'
 Vue.use(Directives)
 Vue.use(plugin)
 

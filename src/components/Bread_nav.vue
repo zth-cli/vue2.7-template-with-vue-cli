@@ -36,10 +36,11 @@ export default {
   line-height: 40px;
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   box-sizing: border-box;
-   border-bottom: 2px solid transparent;
+  border-bottom: 2px solid transparent;
   @include border-color();
+  padding: 0 18px;
 }
 
 </style>
