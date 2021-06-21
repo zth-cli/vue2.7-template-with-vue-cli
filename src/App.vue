@@ -1,19 +1,17 @@
 <template>
   <div id="app">
-   <router-view />
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
   name: 'app',
-  created () {
+  created() {
     var theme = localStorage.getItem('theme')
     if (!theme) return
     document.documentElement.setAttribute('data-theme', theme)
-    document
-      .getElementById('theme')
-      .setAttribute('href', `${process.env.BASE_URL}theme/${theme}/index.css`)
+    document.getElementById('theme').setAttribute('href', `${process.env.BASE_URL}theme/${theme}/index.css`)
   }
 }
 </script>
@@ -37,6 +35,6 @@ export default {
 .tool_bar {
   @include tool-bar-color();
   line-height: 25px;
-    padding: 0 4px;
+  padding: 0 4px;
 }
 </style>
