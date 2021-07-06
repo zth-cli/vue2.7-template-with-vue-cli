@@ -5,7 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:auto": "node autoDeploy.js",
+    "build:dev": "node autoDeploy.js dev",
+    "build:pro": "node autoDeploy.js pro"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -61,7 +64,8 @@
           "asyncArrow": "always"
         }
       ]
-    }
+    },
+    "no-eval": "error"
   },
   "browserslist": [
     "> 1%",

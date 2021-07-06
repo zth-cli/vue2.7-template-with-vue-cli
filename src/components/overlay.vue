@@ -1,22 +1,28 @@
 <template>
-  <transition name="fade">
+  <transition name="slide-fade">
     <div class="overlay" v-show="close">
       <div
-       v-dialogDrag="{dialogDrag: isDialogDrag, handle:'.overlay_head'}"
+        v-dialogDrag="{ dialogDrag: isDialogDrag, handle: '.overlay_head' }"
         ref="overlay_main"
-        :style="{height:oheight,width:width}"
-        :class="{full_screen:isFullScreen}"
+        :style="{ height: oheight, width: width }"
+        :class="{ full_screen: isFullScreen }"
         class="overlay_main"
-        @click.stop>
+        @click.stop
+      >
         <!-- <span class="close" title="关闭" @click="switchs();changeSatus()"></span> -->
         <div class="overlay_head" @dblclick.stop="fullScreen()">
-          {{title}}
+          {{ title }}
           <div class="fr close_btn">
             <!-- <span><svg-icon icon="zuixiaohua" class="ol_icon"></svg-icon></span> -->
-            <span @click="fullScreen();">
+            <span @click="fullScreen()">
               <i class="ol_icon el-icon-full-screen"></i>
             </span>
-            <span @click="switchs();changeSatus();">
+            <span
+              @click="
+                switchs()
+                changeSatus()
+              "
+            >
               <i class="ol_icon el-icon-close"></i>
             </span>
 
@@ -34,7 +40,7 @@
 <script>
 export default {
   name: 'overlay',
-  data () {
+  data() {
     return {
       isFullScreen: false,
       sizeArr: {
@@ -62,7 +68,8 @@ export default {
       type: Boolean,
       default: false
     },
-    isDialogDrag: { // 控制弹框拖拽
+    isDialogDrag: {
+      // 控制弹框拖拽
       type: Boolean,
       default: true
     },
@@ -72,17 +79,17 @@ export default {
     }
   },
   methods: {
-    fullScreen () {
+    fullScreen() {
       this.isFullScreen = !this.isFullScreen
       if (this.isFullScreen) {
         this.$refs.overlay_main.style.left = '0px'
         this.$refs.overlay_main.style.top = '0px'
       }
     },
-    switchs () {
+    switchs() {
       this.$emit('update:close', false)
     },
-    changeSatus () {
+    changeSatus() {
       // 事件
       this.$emit('changeSatus', this.close) // 触发自定义事件
     }
@@ -109,7 +116,7 @@ export default {
   align-items: center;
   min-height: 600px;
   .full_screen {
-    transition: all .21s ease-in-out;
+    transition: all 0.21s ease-in-out;
     width: 100vw !important;
     height: 100vh !important;
   }
@@ -121,7 +128,7 @@ export default {
     overflow-x: hidden;
     // transition: all 0.2s ease-in;  //拖拽延迟
     box-sizing: content-box;
-    margin: 0 auto ;
+    margin: 0 auto;
     // transition: all .21s ease-in-out;
     .overlay_head {
       @include tool-bar-color();
@@ -160,4 +167,17 @@ export default {
     }
   }
 }
+ .slide-fade-enter-active {
+    transition: all .2s ease-out;
+  }
+
+  .slide-fade-leave-active {
+    transition: all .2s ease;
+  }
+
+  .slide-fade-enter-from,
+  .slide-fade-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
 </style>

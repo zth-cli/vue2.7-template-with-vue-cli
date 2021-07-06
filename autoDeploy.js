@@ -26,8 +26,8 @@ const pro = {
 const fileConfig = {
   url: './public/config.js',
   replaceRegx: /proApiUrl:\s*["|'](.*?)["|']/g,
-  dev: 'proApiUrl: \'http://10.172.246.234:9095\'',
-  pro: 'proApiUrl: \'http://103.24.179.134:9095\''
+  dev: "proApiUrl: 'http://10.172.246.234:9095'",
+  pro: "proApiUrl: 'http://103.24.179.134:9095'"
 }
 
 // 全局配置
@@ -40,13 +40,11 @@ const Config = {
   deleteFile: true // 是否删除线上上传的dist压缩包
 }
 
-const {
-  exec
-} = require('child_process')
+const { exec } = require('child_process')
 const path = require('path')
-const archiver = require('archiver')
+const archiver = require('archiver') // 问价压缩
 const fs = require('fs')
-const Client = require('ssh2').Client
+const Client = require('ssh2').Client // 链接远程主机
 
 // 前端打包文件的目录
 // const dir = path.resolve(__dirname, Config.buildDist);
@@ -55,19 +53,8 @@ const Client = require('ssh2').Client
  * ssh连接
  */
 class SSH {
-  constructor ({
-    host,
-    port,
-    username,
-    password,
-    agent
-  }) {
-    this.server = {
-      host,
-      port,
-      username,
-      password
-    }
+  constructor({ host, port, username, password, agent }) {
+    this.server = { host, port, username, password }
 
     this.hasAgent = agent && agent.host && agent.port && agent.username
     if (this.hasAgent) {
@@ -80,88 +67,81 @@ class SSH {
   }
 
   // 连接服务器
-  connectServer () {
+  connectServer() {
     return new Promise((resolve, reject) => {
       let conn = this.conn
       if (this.hasAgent) {
         conn = this.connAgent
       }
-      conn.on('ready', () => {
-        if (this.hasAgent) {
-          // Alternatively, you could use netcat or socat with exec() instead of
-          // forwardOut()
-          console.log('----连接跳板机成功----')
-          conn.forwardOut('127.0.0.1', 12345, this.agent.host, this.agent.port, (err, stream) => {
-            if (err) {
-              conn.end()
-              reject({
-                success: false,
-                error: err
-              })
-            }
-            // 连接目标机
-            this.conn.on('ready', () => {
-              console.log('----连接目标机成功----')
-              resolve({
-                success: true
-              })
-            }).on('error', (err) => {
-              reject({
-                success: false,
-                error: err
-              })
-            }).on('end', () => {
-              console.log('target ssh connect end!')
-            }).on('close', (had_error) => {
-              console.log('target ssh connect close')
-            }).connect({
-              sock: stream,
-              username: this.agent.username,
-              password: this.agent.password
+      conn
+        .on('ready', () => {
+          if (this.hasAgent) {
+            // Alternatively, you could use netcat or socat with exec() instead of
+            // forwardOut()
+            console.log('----连接跳板机成功----')
+            conn.forwardOut('127.0.0.1', 12345, this.agent.host, this.agent.port, (err, stream) => {
+              if (err) {
+                conn.end()
+                reject({
+                  success: false,
+                  error: err
+                })
+              }
+              // 连接目标机
+              this.conn
+                .on('ready', () => {
+                  console.log('----连接目标机成功----')
+                  resolve({
+                    success: true
+                  })
+                })
+                .on('error', err => {
+                  reject({
+                    success: false,
+                    error: err
+                  })
+                })
+                .on('end', () => {
+                  console.log('target ssh connect end!')
+                })
+                .on('close', had_error => {
+                  console.log('target ssh connect close')
+                })
+                .connect({
+                  sock: stream,
+                  username: this.agent.username,
+                  password: this.agent.password
+                })
             })
-          })
-        } else {
-          resolve({
-            success: true
-          })
-        }
-      }).on('error', (err) => {
-        reject({
-          success: false,
-          error: err
+          } else {
+            resolve({ success: true })
+          }
         })
-      }).on('end', () => {
-        console.log('----SSH连接已结束----')
-      }).on('close', (had_error) => {
-        console.log('----SSH连接已关闭----')
-      }).connect(this.server)
+        .on('error', err => {
+          reject({ success: false, error: err })
+        })
+        .on('end', () => {
+          console.log('----SSH连接已结束----')
+        })
+        .on('close', had_error => {
+          console.log('----SSH连接已关闭----')
+        })
+        .connect(this.server)
     })
   }
 
   // 上传文件
-  uploadFile ({
-    localPath,
-    remotePath
-  }) {
+  uploadFile({ localPath, remotePath }) {
     return new Promise((resolve, reject) => {
       return this.conn.sftp((err, sftp) => {
         if (err) {
-          reject({
-            success: false,
-            error: err
-          })
+          reject({ success: false, error: err })
         } else {
           sftp.fastPut(localPath, remotePath, (err, result) => {
             if (err) {
-              reject({
-                success: false,
-                error: err
-              })
+              reject({ success: false, error: err })
             }
-            resolve({
-              success: true,
-              result
-            })
+            resolve({ success: true, result })
           })
         }
       })
@@ -169,34 +149,34 @@ class SSH {
   }
 
   // 执行ssh命令
-  execSsh (command) {
+  execSsh(command) {
     return new Promise((resolve, reject) => {
       return this.conn.exec(command, (err, stream) => {
         if (err || !stream) {
-          reject({
-            success: false,
-            error: err
-          })
+          reject({ success: false, error: err })
         } else {
-          stream.on('close', (code, signal) => {
-            resolve({
-              success: true
+          stream
+            .on('close', (code, signal) => {
+              resolve({
+                success: true
+              })
             })
-          }).on('data', function (data) {
-            console.log(data.toString())
-          }).stderr.on('data', function (data) {
-            resolve({
-              success: false,
-              error: data.toString()
+            .on('data', function(data) {
+              console.log(data.toString())
             })
-          })
+            .stderr.on('data', function(data) {
+              resolve({
+                success: false,
+                error: data.toString()
+              })
+            })
         }
       })
     })
   }
 
   // 结束连接
-  endConn () {
+  endConn() {
     this.conn.end()
     if (this.connAgent) {
       this.connAgent.end()
@@ -208,14 +188,14 @@ class SSH {
  * 本地操作,文件的打包，压缩，删除
  * */
 class File {
-  constructor (fileName) {
+  constructor(fileName) {
     this.fileName = fileName
   }
 
   // 删除本地文件
-  deleteLocalFile () {
+  deleteLocalFile() {
     return new Promise((resolve, reject) => {
-      fs.unlink(this.fileName, function (error) {
+      fs.unlink(this.fileName, function(error) {
         if (error) {
           reject({
             success: false,
@@ -231,7 +211,7 @@ class File {
   }
 
   // 压缩文件夹下的所有文件
-  zipFile (filePath) {
+  zipFile(filePath) {
     return new Promise((resolve, reject) => {
       // 创建文件输出流
       const output = fs.createWriteStream(__dirname + '/' + this.fileName)
@@ -241,7 +221,7 @@ class File {
         } // 设置压缩级别
       })
       // 文件输出流结束
-      output.on('close', function () {
+      output.on('close', function() {
         console.log(`----压缩文件总共 ${archive.pointer()} 字节----`)
         console.log('----压缩文件夹完毕----')
         resolve({
@@ -249,12 +229,12 @@ class File {
         })
       })
       // 数据源是否耗尽
-      output.on('end', function () {
+      output.on('end', function() {
         console.error('----压缩失败，数据源已耗尽----')
         reject()
       })
       // 存档警告
-      archive.on('warning', function (err) {
+      archive.on('warning', function(err) {
         if (err.code === 'ENOENT') {
           console.error('----stat故障和其他非阻塞错误----')
         } else {
@@ -263,7 +243,7 @@ class File {
         reject(err)
       })
       // 存档出错
-      archive.on('error', function (err) {
+      archive.on('error', function(err) {
         console.error('----存档错误，压缩失败----')
         console.error(err)
         reject(err)
@@ -281,16 +261,13 @@ class File {
   }
 
   // 打包本地前端文件
-  buildProject () {
+  buildProject() {
     console.log('----开始编译打包文件，请耐心等待----')
     return new Promise((resolve, reject) => {
       exec(Config.buildCommand, async (error, stdout, stderr) => {
         if (error) {
           console.error(error)
-          reject({
-            error,
-            success: false
-          })
+          reject(new Error(error))
         } else if (stdout) {
           resolve({
             stdout,
@@ -298,28 +275,27 @@ class File {
           })
         } else {
           console.error(stderr)
-          reject({
-            error: stderr,
-            success: false
-          })
+          reject(new Error(stderr))
         }
       })
     })
   }
 
   // 停止程序之前需删除本地压缩包文件
-  stopProgress () {
-    this.deleteLocalFile().catch((e) => {
-      console.error('----删除本地文件失败，请手动删除----')
-      console.error(e)
-    }).then(() => {
-      console.log('----已删除本地压缩包文件----')
-    })
+  stopProgress() {
+    this.deleteLocalFile()
+      .catch(e => {
+        console.error('----删除本地文件失败，请手动删除----')
+        console.error(e)
+      })
+      .then(() => {
+        console.log('----已删除本地压缩包文件----')
+      })
   }
 }
 
 // SSH连接，上传，解压，删除等相关操作
-async function sshUpload (sshConfig, fileName) {
+async function sshUpload(sshConfig, fileName) {
   const sshCon = new SSH(sshConfig)
   const sshRes = await sshCon.connectServer().catch(e => {
     console.error(e)
@@ -331,12 +307,14 @@ async function sshUpload (sshConfig, fileName) {
 
   console.log('----连接服务器成功，开始上传文件----')
 
-  const uploadRes = await sshCon.uploadFile({
-    localPath: path.resolve(__dirname, fileName),
-    remotePath: sshConfig.catalog + '/' + fileName
-  }).catch(e => {
-    console.error(e)
-  })
+  const uploadRes = await sshCon
+    .uploadFile({
+      localPath: path.resolve(__dirname, fileName),
+      remotePath: sshConfig.catalog + '/' + fileName
+    })
+    .catch(e => {
+      console.error(e)
+    })
 
   if (!uploadRes || !uploadRes.success) {
     console.error('----上传文件失败，请重新上传----')
@@ -344,8 +322,9 @@ async function sshUpload (sshConfig, fileName) {
   }
   console.log('----上传文件成功，开始解压文件----')
 
-  const zipRes = await sshCon.execSsh(`unzip -o ${sshConfig.catalog + '/' + fileName} -d ${sshConfig.catalog}`)
-    .catch((e) => {})
+  const zipRes = await sshCon
+    .execSsh(`unzip -o ${sshConfig.catalog + '/' + fileName} -d ${sshConfig.catalog}`)
+    .catch(e => {})
   if (!zipRes || !zipRes.success) {
     console.error('----解压文件失败，请手动解压zip文件----')
     console.error(`----错误原因：${zipRes.error}----`)
@@ -354,7 +333,7 @@ async function sshUpload (sshConfig, fileName) {
     console.log('----解压文件成功，开始删除上传的压缩包----')
 
     // 注意：rm -rf为危险操作，请勿对此段代码做其他非必须更改
-    const deleteZipRes = await sshCon.execSsh(`rm -rf ${sshConfig.catalog + '/' + fileName}`).catch((e) => {})
+    const deleteZipRes = await sshCon.execSsh(`rm -rf ${sshConfig.catalog + '/' + fileName}`).catch(e => {})
     if (!deleteZipRes || !deleteZipRes.success) {
       console.error('----删除文件失败，请手动删除zip文件----')
       console.error(`----错误原因：${deleteZipRes.error}----`)
@@ -365,7 +344,7 @@ async function sshUpload (sshConfig, fileName) {
 }
 
 // 根据环境自动替换接口IP地址
-async function replaceIP (env, fileConfig) {
+async function replaceIP(env, fileConfig) {
   fs.readFile(path.resolve(__dirname, fileConfig.url), 'utf8', (err, data) => {
     if (err) {
       console.error('读取错误' + err)
@@ -383,9 +362,10 @@ async function replaceIP (env, fileConfig) {
 }
 
 // 执行前端部署
-(async () => {
+;(async () => {
   const argv = process.argv.slice(2)
-  argv ? Config.publishEnv = eval(argv[0]) : ''
+  console.log(eval(argv[0]))
+  Config.publishEnv = argv ? eval(argv[0]) : ''
   // 替换接口IP地址
   await replaceIP(argv[0], fileConfig)
   // 压缩包的名字
@@ -394,7 +374,14 @@ async function replaceIP (env, fileConfig) {
   const month = date.getMonth() + 1
   const day = date.getDate()
   const timeStr = `${year}_${month}_${day}`
-  const fileName = `${Config.buildDist}-` + timeStr + '-' + Math.random().toString(16).slice(2) + '.zip'
+  const fileName =
+    `${Config.buildDist}-` +
+    timeStr +
+    '-' +
+    Math.random()
+      .toString(16)
+      .slice(2) +
+    '.zip'
 
   const file = new File(fileName)
 
