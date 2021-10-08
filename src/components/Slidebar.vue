@@ -1,9 +1,9 @@
 <template>
   <div
-     class="horizontal-menu-main"
-    :class="[mode ? 'vertical-menu-main' : 'horizontal-menu',isCollapse?'isCollapse':'']"
+    class="horizontal-menu-main"
+    :class="[mode ? 'vertical-menu-main' : 'horizontal-menu', isCollapse ? 'isCollapse' : '']"
   >
-   <div class="slide-logo" v-if="mode">
+    <div class="slide-logo" v-if="mode">
       <img src="@/assets/img/logo.png" />
     </div>
     <el-menu
@@ -15,34 +15,23 @@
       unique-opened
       :collapse="isCollapse"
       router
-      :mode="mode?'vertical':'horizontal'"
+      :mode="mode ? 'vertical' : 'horizontal'"
     >
       <template v-for="item in menuData">
         <template v-if="item.children">
           <el-submenu :index="item.title" :key="item.index">
             <template slot="title">
-              <i
-                class="icons"
-                :class="item.icon"
-                :style="{ color: menuConfig.textColor }"
-              ></i>
+              <i class="icons" :class="item.icon" :style="{ color: menuConfig.textColor }"></i>
               <span slot="title">{{ item.title }}</span>
             </template>
-            <el-menu-item
-              v-for="(subItem, i) in item.children"
-              :key="i"
-              :index="subItem.path"
-              >{{ subItem.title }}</el-menu-item
-            >
+            <el-menu-item v-for="(subItem, i) in item.children" :key="i" :index="subItem.path">{{
+              subItem.title
+            }}</el-menu-item>
           </el-submenu>
         </template>
         <template v-else>
           <el-menu-item :index="item.path" :key="item.index">
-            <i
-              class="icons"
-              :class="item.icon"
-              :style="{ color: menuConfig.textColor }"
-            ></i>
+            <i class="icons" :class="item.icon" :style="{ color: menuConfig.textColor }"></i>
             <span slot="title">{{ item.title }}</span>
           </el-menu-item>
         </template>
@@ -55,7 +44,7 @@ import bus from '@/utils/bus'
 import { menuColorObj } from '@/assets/scss/_variables'
 import routeArr from '@/mock/router.js'
 export default {
-  data () {
+  data() {
     return {
       menuConfig: {
         textColor: '',
@@ -70,43 +59,43 @@ export default {
     mode: {
       type: Boolean,
       default: true
-    },
+    }
   },
   computed: {
-    onRoutes () {
+    onRoutes() {
       return this.$route.path.replace('/', '')
     }
   },
   methods: {
-    changeMebuColor () {
+    changeMebuColor() {
       var themeStr = document.documentElement.getAttribute('data-theme')
       this.menuConfig = menuColorObj[themeStr]
     }
   },
-  created () {
+  created() {
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-    bus.$on('collapse', (msg) => {
+    bus.$on('collapse', msg => {
       // this.collapse = msg;
     })
     this.changeMebuColor()
   },
-  mounted () {
+  mounted() {
     var that = this
-    setTimeout(function () {
+    setTimeout(function() {
       that.collapse = true
     }, 500)
     // eslint-disable-next-line no-unused-vars
-    bus.$on('changMenuColor', (theme) => {
+    bus.$on('changMenuColor', theme => {
       this.changeMebuColor()
     })
-    bus.$on('handleCollapse', (bool) => {
+    bus.$on('handleCollapse', bool => {
       this.isCollapse = bool
     })
   }
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 .horizontal-menu-main {
   @include header-background();
   height: 100%;
@@ -124,6 +113,18 @@ export default {
     vertical-align: middle;
     // color: rgb(214, 106, 87);
   }
+  .el-menu .el-submenu__title .el-submenu__icon-arrow {
+    @include font_color(#fff);
+  }
+  .el-menu .el-submenu__title:hover {
+    @include header-active-background();
+  }
+  .el-menu .el-menu-item:hover {
+    @include header-active-background();
+  }
+  .el-menu .el-menu-item.is-active {
+    @include header-active-background();
+  }
   .el-menu--horizontal > .el-submenu .el-submenu__title,
   .el-menu--horizontal > .el-menu-item {
     height: 50px !important;
@@ -137,12 +138,14 @@ export default {
 }
 .vertical-menu-main {
   width: 200px;
+  transition: width .2s ease-in;
 }
-.slide-logo{
+.slide-logo {
   margin-left: 10px;
   margin-top: 12px;
 }
-.isCollapse{
-  width: 64px; overflow: hidden;
+.isCollapse {
+  width: 64px;
+  overflow: hidden;
 }
 </style>

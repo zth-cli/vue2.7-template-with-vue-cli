@@ -1,13 +1,13 @@
-
 <template>
   <div class="tags" v-if="showTags">
     <el-tabs
-      :closable="!(tagsList.length==1)"
+      :closable="!(tagsList.length == 1)"
       @tab-click="changeTab"
       @tab-remove="closeTags"
       type="card"
       v-model="activeValue"
-      size="mini">
+      size="mini"
+    >
       <el-tab-pane
         :key="item.path"
         :label="item.title"
@@ -18,10 +18,11 @@
     </el-tabs>
     <div class="tags-close-box">
       <el-dropdown @command="handleTags">
-        <el-button size="mini" type="primary">
+        <!-- <el-button size="mini" type="primary">
           标签选项
           <i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
+        </el-button> -->
+        <i class="el-icon-menu drop-icon"></i>
         <el-dropdown-menu size="small" slot="dropdown">
           <el-dropdown-item command="other">关闭其他</el-dropdown-item>
           <el-dropdown-item command="all">关闭所有</el-dropdown-item>
@@ -34,49 +35,44 @@
 <script>
 import bus from '@/utils/bus'
 export default {
-  data () {
+  data() {
     return {
       tagsList: [],
       activeValue: ''
     }
   },
   methods: {
-    changeTab (component) {
+    changeTab(component) {
       const tab = component.$attrs.tab
       this.$router.push(tab.path)
     },
     // 关闭单个标签
-    closeTags (tabName) {
-      const index = this.tagsList.findIndex(
-        item => item.title == tabName
-      )
+    closeTags(tabName) {
+      const index = this.tagsList.findIndex(item => item.title == tabName)
       const delItem = this.tagsList.splice(index, 1)[0]
       // 剩余的tags
-      const item = this.tagsList[index]
-        ? this.tagsList[index]
-        : this.tagsList[index - 1]
+      const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1]
       if (item) {
         // 更改路由，watch监听，调用setTags,触发自定义事件tags
-        delItem.fullPath === this.$route.fullPath &&
-          this.$router.push(item.fullPath)
+        delItem.fullPath === this.$route.fullPath && this.$router.push(item.fullPath)
       } else {
         this.$router.push('/')
       }
     },
     // 关闭全部标签
-    closeAll () {
+    closeAll() {
       this.tagsList = []
       this.$router.push('/') // 路由变更
     },
     // 关闭其他标签
-    closeOther () {
+    closeOther() {
       const curItem = this.tagsList.filter(item => {
         return item.fullPath === this.$route.fullPath // 路由变更
       })
       this.tagsList = curItem
     },
     // 设置标签route
-    setTags (route) {
+    setTags(route) {
       const routeObj = {
         title: route.meta.title,
         fullPath: route.fullPath,
@@ -95,21 +91,21 @@ export default {
       this.activeValue = route.meta.title
       bus.$emit('tags', this.tagsList)
     },
-    handleTags (command) {
+    handleTags(command) {
       command === 'other' ? this.closeOther() : this.closeAll()
     }
   },
   computed: {
-    showTags () {
+    showTags() {
       return this.tagsList.length > 0
     }
   },
   watch: {
-    $route (newValue) {
+    $route(newValue) {
       this.setTags(newValue)
     }
   },
-  created () {
+  created() {
     this.setTags(this.$route)
   }
 }
@@ -121,26 +117,30 @@ export default {
  */
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 .tags {
   position: relative;
   height: 30px;
   overflow: hidden;
+  padding: 0 10px;
   @include content-background();
-  padding-right: 120px;
-  @include box-shadow();
-  .el-tabs--top.el-tabs--card>.el-tabs__header .el-tabs__item:nth-child(2) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // @include box-shadow();
+  .el-tabs--top.el-tabs--card > .el-tabs__header .el-tabs__item:nth-child(2) {
     padding-left: 5px;
   }
-  .el-tabs--top.el-tabs--card>.el-tabs__header .el-tabs__item:last-child {
+  .el-tabs--top.el-tabs--card > .el-tabs__header .el-tabs__item:last-child {
     padding-right: 5px;
   }
-  .el-tabs--card>.el-tabs__header .el-tabs__item.is-active.is-closable {
+  .el-tabs--card > .el-tabs__header .el-tabs__item.is-active.is-closable {
     padding-left: 5px;
     padding-right: 5px;
   }
   .el-tabs__header {
     border: none;
+    margin: 0;
     .el-tabs__item {
       margin: 3px 5px 3px 3px;
       border-radius: 3px;
@@ -162,7 +162,8 @@ export default {
         background: transparent;
       }
     }
-    .el-tabs__nav-next, .el-tabs__nav-prev {
+    .el-tabs__nav-next,
+    .el-tabs__nav-prev {
       line-height: 30px;
     }
     .el-tabs__item.is-active {
@@ -170,20 +171,25 @@ export default {
       @include tool-bar-color();
     }
     .el-tabs__nav {
-        border: none;
+      border: none;
     }
   }
   .tags-close-box {
-    position: absolute;
-    right: 0;
-    top: 0;
     box-sizing: border-box;
     padding-top: 1px;
     text-align: center;
-    width: 110px;
-    height: 30px;
-    box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
+
+    line-height: 30px;
+    // box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
     z-index: 10;
+    cursor: pointer;
+    .drop-icon {
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        @include sec-font-color();
+        transform: rotate(90deg);
+      }
+    }
   }
 }
 </style>
