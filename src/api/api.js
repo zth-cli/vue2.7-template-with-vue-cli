@@ -1,7 +1,7 @@
 /*
  * @Author: 阮志雄
  * @Date: 2021-07-08 14:29:08
- * @LastEditTime: 2021-07-31 00:29:26
+ * @LastEditTime: 2021-11-16 23:16:52
  * @LastEditors: 阮志雄
  * @Description: In User Settings Edit
  * @FilePath: \vue-template-with-elementui\src\api\api.js
@@ -41,7 +41,7 @@ export async function apiGet (url, params) {
   return res
 }
 // post
-export async function apiPost (url, params) {
-  const res = await http.post(url, params)
+export async function apiPost (url, params, config) {
+  const res = await http.post(url, params, config)
   return res
 }

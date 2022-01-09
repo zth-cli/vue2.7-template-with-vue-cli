@@ -10,6 +10,7 @@ http.interceptors.request.use(
     if (!config.url.match('login') && !window.hiddenBar) {
       // 除开登录逻辑，其他接口自动添加token请求头
       config.headers.Authorization = token
+
       params = { sign: token }
     }
     config.params = {
