@@ -1,249 +1,205 @@
 <template>
   <div class="from_data_main" ref="data_ref">
-    <el-form
-      :model="fromData"
-      :rules="rules"
-      ref="ruleForm"
-      label-width="100px"
-      size="mini"
-      :class="[
-        fromItems.length > 5
-          ? 'from_data_content_lg'
-          : 'from_data_content_mini',
-        mediaStyle === 'lg'
-          ? 'from_data_content_lg'
-          : mediaStyle === 'md'
-          ? 'from_data_content_md'
-          : 'from_data_content_sm',
-      ]"
-    >
-      <template v-for="item in fromItems">
-        <template v-if="item.type === 'date' || item.type === 'datetime'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-date-picker
-              :style="{ width: item.width ? item.width + 'px' : '178px' }"
-              :type="item.type"
-              :disabled="item.disabled"
-              :placeholder="getPlaceholder(item)"
-              clearable
-              v-model="fromData[item.name]"
-
-              :value-format="item.format"
-              default-time="12:00:00"
-            ></el-date-picker>
-          </el-form-item>
-        </template>
-        <template v-else-if="item.type === 'month' || item.type === 'year'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-date-picker
-              :style="{ width: item.width ? item.width + 'px' : '178px' }"
-              :type="item.type"
-              :disabled="item.disabled"
-              :placeholder="getPlaceholder(item)"
-              clearable
-              v-model="fromData[item.name]"
-
-              :value-format="item.format"
-            ></el-date-picker>
-          </el-form-item>
-        </template>
-        <template v-else-if="item.type === 'daterange'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-date-picker
-              :style="{ width: item.width ? item.width + 'px' : '178px' }"
-              v-model="fromData[item.name]"
-              :type="item.type"
-              :disabled="item.disabled"
-              :value-format="item.format"
-              clearable
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-
-            ></el-date-picker>
-          </el-form-item>
-        </template>
-        <template v-else-if="item.type === 'select'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-select
-              v-model="fromData[item.name]"
-              filterable
-              :disabled="item.disabled"
-              clearable
-              :style="{ width: item.width ? item.width + 'px' : '178px' }"
-              :multiple="item.multiple"
-              :collapse-tags="item.multiple"
-              value-key="value"
-            >
-              <el-option
-                v-for="ele in item.options ? item.options : []"
-                :value="item.isValueKey ? ele : ele.value"
-                :label="ele.label"
-                :key="ele.value"
-                :disabled="ele.disabled"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </template>
-        <template v-else-if="item.type === 'radio'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-radio-group v-model="fromData[item.name]">
-              <template v-for="ele in item.options">
-                <el-radio
+    <el-form :model="fromData" :rules="rules" ref="ruleForm" size="medium" label-width="100px">
+      <el-row>
+        <template v-for="item in fromItems">
+          <template v-if="item.type === 'date' || item.type === 'datetime'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item class="from_item" :label="item.label" :prop="item.name">
+                <el-date-picker
+                  style="width: 100%"
+                  :type="item.type"
                   :disabled="item.disabled"
-                  :label="ele.value"
-                  :key="ele.value"
-                  >{{ ele.label }}</el-radio
-                >
-              </template>
-            </el-radio-group>
-          </el-form-item>
-        </template>
-        <template v-else-if="item.type === 'checkbox'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-checkbox-group v-model="fromData[item.name]">
-              <template v-for="ele in item.options">
-                <el-checkbox
+                  :placeholder="getPlaceholder(item)"
+                  clearable
+                  v-model="fromData[item.name]"
+                  :value-format="item.format || 'yyyy-MM-dd'"
+                  default-time="12:00:00"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'month' || item.type === 'year'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <el-date-picker
+                  style="width: 100%"
+                  :type="item.type"
                   :disabled="item.disabled"
-                  :label="ele.value"
-                  :key="ele.value"
-                  >{{ ele.label }}</el-checkbox
+                  :placeholder="getPlaceholder(item)"
+                  clearable
+                  v-model="fromData[item.name]"
+                  :value-format="item.format"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'daterange'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <el-date-picker
+                  style="width: 100%"
+                  v-model="fromData[item.name]"
+                  :type="item.type"
+                  :disabled="item.disabled"
+                  :value-format="item.format"
+                  clearable
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'select'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <el-select
+                  style="width: 100%"
+                  v-model="fromData[item.name]"
+                  filterable
+                  :disabled="item.disabled"
+                  clearable
+                  :multiple="item.multiple"
+                  :collapse-tags="item.multiple"
+                  value-key="value"
                 >
-              </template>
-            </el-checkbox-group>
-          </el-form-item>
-        </template>
-        <template v-else-if="item.type === 'groupinput'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-input
-              placeholder="请输入内容"
-              v-model="fromData[item.name]"
-              :disabled="item.disabled"
-              :style="{ width: item.width ? item.width + 'px' : '178px' }"
-            >
-              <el-button
-                slot="append"
-                icon="el-icon-connection"
-                @click="changeGroupinput"
-              ></el-button>
-            </el-input>
-          </el-form-item>
-        </template>
-        <template v-else-if="item.type === 'doubleinput'">
-          <el-form-item
-            :key="item.name"
-            class="from_item"
-            :label="item.label"
-            :style="{ width: item.width ? item.width + 'px' : '270px' }"
-          >
-            <el-col :span="11">
-              <el-input
-                placeholder="请输入内容"
-                v-model="fromData[item.son[0].name]"
-                :disabled="item.son[0].disabled"
-                :style="{ width: item.width ? item.width + 'px' : '90px' }"
-
-              >
-              </el-input>
+                  <el-option
+                    v-for="ele in item.options ? item.options : []"
+                    :value="item.isValueKey ? ele : ele.value"
+                    :label="ele.label"
+                    :key="ele.value"
+                    :disabled="ele.disabled"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
-            <el-col class="line" :span="2"
-              >{{ item.link }} </el-col
-            >
-            <el-col :span="11">
-              <el-input
-                placeholder="请输入内容"
-                v-model="fromData[item.son[1].name]"
-                :disabled="item.son[1].disabled"
-                :style="{ width: item.width ? item.width + 'px' : '90px' }"
-
-              >
-              </el-input>
+          </template>
+          <template v-else-if="item.type === 'radio'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <el-radio-group v-model="fromData[item.name]">
+                  <template v-for="ele in item.options">
+                    <el-radio :disabled="item.disabled" :label="ele.value" :key="ele.value">{{ ele.label }}</el-radio>
+                  </template>
+                </el-radio-group>
+              </el-form-item>
             </el-col>
-          </el-form-item>
+          </template>
+          <template v-else-if="item.type === 'checkbox'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <el-checkbox-group v-model="fromData[item.name]">
+                  <template v-for="ele in item.options">
+                    <el-checkbox :disabled="item.disabled" :label="ele.value" :key="ele.value">{{
+                      ele.label
+                    }}</el-checkbox>
+                  </template>
+                </el-checkbox-group>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'groupinput'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <el-input placeholder="请输入内容" v-model="fromData[item.name]" :disabled="item.disabled">
+                  <el-button slot="append" icon="el-icon-connection" @click="changeGroupinput"></el-button>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'doubleinput'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :style="{ width: item.width ? item.width + 'px' : '270px' }"
+              >
+                <el-col :span="11">
+                  <el-input
+                    placeholder="请输入内容"
+                    v-model="fromData[item.son[0].name]"
+                    :disabled="item.son[0].disabled"
+                    :style="{ width: item.width ? item.width + 'px' : '90px' }"
+                  >
+                  </el-input>
+                </el-col>
+                <el-col class="line" :span="2">{{ item.link }} </el-col>
+                <el-col :span="11">
+                  <el-input
+                    placeholder="请输入内容"
+                    v-model="fromData[item.son[1].name]"
+                    :disabled="item.son[1].disabled"
+                    :style="{ width: item.width ? item.width + 'px' : '90px' }"
+                  >
+                  </el-input>
+                </el-col>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'editTable'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <edit-table :columns="item.columns" v-model="fromData[item.name]"></edit-table>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'input'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
+                <el-input
+                  :disabled="item.disabled"
+                  :type="item.type"
+                  v-model="fromData[item.name]"
+                  :placeholder="getPlaceholder(item)"
+                >
+                  <template v-if="item.append" slot="append">
+                    <slot :name="item.append" :fromData="{ data: fromData, key: item.name }"></slot>
+                  </template>
+                  <template v-if="item.prepend" slot="prepend">
+                    <slot :name="item.prepend" :fromData="{ data: fromData, key: item.name }"></slot>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else>
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
+                <el-input
+                  :disabled="item.disabled"
+                  :type="item.type"
+                  v-model="fromData[item.name]"
+                  :placeholder="getPlaceholder(item)"
+                >
+                  <template v-if="item.append" slot="append">
+                    <slot :name="item.append" :fromData="{ data: fromData, key: item.name }"></slot>
+                  </template>
+                  <template v-if="item.prepend" slot="prepend">
+                    <slot :name="item.prepend" :fromData="{ data: fromData, key: item.name }"></slot>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </template>
         </template>
-        <template v-else>
-          <el-form-item
-            class="from_item"
-            :key="item.name"
-            :label="item.label"
-            :prop="item.name"
-          >
-            <el-input
-              :disabled="item.disabled"
-              :type="item.type"
-              v-model="fromData[item.name]"
-              :style="{ width: item.width ? item.width + 'px' : '178px' }"
-              :placeholder="getPlaceholder(item)"
-
-            >
-              <template v-if="item.append" slot="append">
-                <slot
-                  :name="item.append"
-                  :fromData="{ data: fromData, key: item.name }"
-                ></slot>
-              </template>
-              <template v-if="item.prepend" slot="prepend">
-                <slot
-                  :name="item.prepend"
-                  :fromData="{ data: fromData, key: item.name }"
-                ></slot>
-              </template>
-            </el-input>
-          </el-form-item>
-        </template>
-      </template>
+      </el-row>
     </el-form>
     <div class="btns" v-show="postUrl ? true : false">
-      <el-button size='mini' type="primary" @click="submitForm('ruleForm')"
-        >提交</el-button
-      >
-      <el-button size='mini' @click="resetForm('ruleForm')" class="warning"
-        >重置</el-button
-      >
+      <el-button size="mini" type="primary" @click="submitForm('ruleForm')">提交</el-button>
+      <el-button size="mini" @click="resetForm('ruleForm')" class="warning">重置</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import EditTable from '../CurdViews/EditTable.vue'
 import { apiPost } from '@/api'
 export default {
-  data () {
+  components: { EditTable },
+  data() {
     return {
       fromData: {},
       fromItems: this.fromItem,
@@ -264,18 +220,10 @@ export default {
         'text',
         'number',
         'input',
-        'textarea'
+        'textarea',
+        'editTable'
       ],
-      dateType: [
-        'date',
-        'daterange',
-        'datetime',
-        'datetimerange',
-        'year',
-        'month',
-        'time',
-        'timerange'
-      ],
+      dateType: ['date', 'daterange', 'datetime', 'datetimerange', 'year', 'month', 'time', 'timerange'],
       mediaStyle: 'lg'
     }
   },
@@ -295,11 +243,22 @@ export default {
     toolAlign: {
       default: 'left'
     },
-
-    rulesprops: {} // 表单验证规则
+    rulesprops: {}, // 表单验证规则
+    beforeSubmit: {
+      type: Function,
+      default: function (fromData) {
+        // 提交前,对value为Array类型的进行字符串拼接
+        for (const key in fromData) {
+          if (fromData[key] instanceof Array) {
+            fromData[key] = fromData[key].join(',')
+          }
+        }
+        return fromData
+      }
+    }
   },
   methods: {
-    getPlaceholder (item) {
+    getPlaceholder(item) {
       if (this.placeholderLabel) {
         return item.label
       }
@@ -334,7 +293,7 @@ export default {
       }
       return result
     },
-    defaultData () {
+    defaultData() {
       //  时间控件初始值
       this.invaildArr = []
       this.fromItem.forEach((item) => {
@@ -351,7 +310,9 @@ export default {
             this.invaildArr.push(item.name)
           }
           if (key === 'remoteMethod' && item.remoteMethod && item.type === 'select') {
-            item.remoteMethod.then((res) => { item.options = res })
+            item.remoteMethod.then((res) => {
+              item.options = res
+            })
           }
           if (key === 'son' && item.type === 'doubleinput') {
             for (const son of item[key]) {
@@ -368,73 +329,71 @@ export default {
           const defaultValue = keys.includes(item.name)
             ? this.postParams[item.name]
             : item.default !== 'undefined'
-              ? item.default
-              : null
+            ? item.default
+            : null
           this.fromData[item.name] = defaultValue
           if (item.multiple) {
             // eslint-disable-next-line no-unused-expressions
-            const mulValue = typeof (defaultValue) === 'string' ? defaultValue.split(',') : defaultValue
+            const mulValue = typeof defaultValue === 'string' ? defaultValue.split(',') : defaultValue
             this.fromData[item.name] = mulValue || []
           }
           if (this.dateType.includes(item.type)) {
-            this.fromData[item.name] = item.default
-              ? item.default
-              : this.$day().format(item.format.toUpperCase())
+            this.fromData[item.name] = item.default ? item.default : this.$day().format(item.format.toUpperCase())
           }
         }
         if (this.rowData) {
           // eslint-disable-next-line no-unused-expressions
-          this.rowData[item.name]
-            ? (this.fromData[item.name] = this.rowData[item.name])
-            : '' // 赋值对应key
+          this.rowData[item.name] ? (this.fromData[item.name] = this.rowData[item.name]) : '' // 赋值对应key
         }
       })
     },
-    changeGroupinput (row) {
+    changeGroupinput(row) {
       this.$emit('change-groupinput', row)
     },
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm(formName) {
+      this.$refs[formName].validate(async (valid) => {
         var fromData = Object.assign({}, this.postParams, this.fromData)
         for (const key in fromData) {
           if (this.invaildArr.includes(key)) {
             delete fromData[key]
           } else {
-            if (fromData[key] instanceof Array) { // 对value为Array类型的进行字符串拼接
-              fromData[key] = fromData[key].join(',')
-            }
+            // if (fromData[key] instanceof Array) {
+            //   // 对value为Array类型的进行字符串拼接
+            //   fromData[key] = fromData[key].join(',')
+            // }
           }
         }
+        fromData = await this.beforeSubmit(fromData)
+        console.log(fromData)
         if (this.postUrl && this.postUrl !== 'simulationdata') {
           if (valid) {
-            apiPost(this.postUrl, fromData)
-              .then((res) => {
-                if (res.code === 1) {
-                  this.$emit('submit', fromData, res.data)
-                  this.$notify({
-                    title: '提示',
-                    message: '已提交',
-                    duration: 1500,
-                    type: 'success'
-                  })
-                } else {
-                  this.$notify({
-                    title: '提示',
-                    message: res.msg,
-                    duration: 1500,
-                    type: 'error'
-                  })
-                }
-              })
-              // 跟http.js中提示重复
-              // .catch(() => {
-              //   this.$notify({
-              //     title: '提示',
-              //     message: '提交异常',
-              //     duration: 1500,
-              //     type: 'error'
-              //   })
-              // })
+            apiPost(this.postUrl, fromData).then((res) => {
+              if (res.code === 1) {
+                this.$emit('submit', fromData, res.data)
+                this.$notify({
+                  title: '提示',
+                  message: '已提交',
+                  duration: 1500,
+                  type: 'success'
+                })
+              } else {
+                this.$notify({
+                  title: '提示',
+                  message: res.msg,
+                  duration: 1500,
+                  type: 'error'
+                })
+              }
+            })
+            // 跟http.js中提示重复
+            // .catch(() => {
+            //   this.$notify({
+            //     title: '提示',
+            //     message: '提交异常',
+            //     duration: 1500,
+            //     type: 'error'
+            //   })
+            // })
           } else {
             console.log('error submit!!')
             return false
@@ -449,10 +408,10 @@ export default {
         }
       })
     },
-    resetForm (formName) {
+    resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    fromMediaQuery () {
+    fromMediaQuery() {
       if (this.$refs.data_ref) {
         var parent = this.$refs.data_ref
         if (parent.offsetWidth <= 600) {
@@ -464,7 +423,7 @@ export default {
         }
       }
     },
-    debounce (fn, wait) {
+    debounce(fn, wait) {
       var timeout = null
       return function () {
         if (timeout !== null) clearTimeout(timeout)
@@ -472,7 +431,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     if (this.fromItem) {
       if (this.rulesprops) {
         this.rules = this.rulesprops
@@ -504,7 +463,7 @@ export default {
       deep: true
     }
   },
-  mounted () {
+  mounted() {
     this.fromMediaQuery()
     window.addEventListener('resize', this.debounce(this.fromMediaQuery, 500))
   }
@@ -517,6 +476,7 @@ export default {
   overflow: auto;
   /* background-color: #ffffff; */
   box-sizing: border-box;
+  padding: 18px;
 }
 
 .from_data_content_mini .from_item {
