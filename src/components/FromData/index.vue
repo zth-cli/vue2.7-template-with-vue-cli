@@ -195,7 +195,7 @@
 </template>
 
 <script>
-import EditTable from '../CurdViews/EditTable.vue'
+import EditTable from '../CurdViews/EditTable/'
 import { apiPost } from '@/api'
 export default {
   components: { EditTable },

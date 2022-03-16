@@ -4,6 +4,7 @@
       :tableOptions="tableOptions"
       :fromOptions="fromOptions"
       :treeOptions="treeOptions"
+      :beforeQuery="beforeQuery"
       @row-click="rowClick"
       @row-dblclick="rowDblclick"
       @selection-change="selectionChange"
@@ -232,7 +233,11 @@ export default {
     subFunc(data) {
       data['user'] = 'rzx'
       return data
-    }
+    },
+    beforeQuery(params) {
+      const newParams = {testId:1, ...params}
+      return newParams
+    } 
   }
 }
 </script>

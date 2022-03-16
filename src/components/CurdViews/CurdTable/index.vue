@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import DataTable from './DataTable'
+import DataTable from '../DataTable'
 import { apiGet } from '@/api'
 export default {
   props: {

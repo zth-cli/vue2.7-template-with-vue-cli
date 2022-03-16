@@ -35,11 +35,12 @@
           { mb: tableOptions.mode !== 'simple' },
         ]"
       >
-        <FromDynamic
+        <ConditionBar
           v-if="showSearchDynamic"
           :width="fromWidth"
           :mode="tableOptions.mode"
           :searchDynamic="fromOptions"
+          :beforeQuery='beforeQuery'
           @query="query"
           @params-change="paramsChange">
           <template v-slot:tool>
@@ -51,7 +52,7 @@
           <template v-slot:ltool>
             <slot name="ltool"></slot>
           </template>
-        </FromDynamic>
+        </ConditionBar>
       </div>
       <div :class="{ boxShadow: tableOptions.mode !== 'simple' }">
         <CurdTable
@@ -112,7 +113,7 @@
 import Tree from './Tree'
 import LazyTree from './LazyTree'
 import CurdTable from './CurdTable'
-import FromDynamic from './FromDynamic'
+import ConditionBar from './ConditionBar'
 
 export default {
   data () {
@@ -131,6 +132,12 @@ export default {
         return []
       }
     }, // 查询条件item，Array类型
+    beforeQuery: {
+      type: Function,
+      default: function (fromData) {
+        return fromData
+      }
+    }, // 查询前,请求前参数钩子
     fromWidth: {}, // 查询框得长度，String类型
     showSearchDynamic: { // 是否显示查询框，提供某些情况下查询完全自定义
       type: Boolean,
@@ -140,7 +147,7 @@ export default {
   components: {
     CurdTable,
     Tree,
-    FromDynamic,
+    ConditionBar,
     LazyTree
   },
   created () {
