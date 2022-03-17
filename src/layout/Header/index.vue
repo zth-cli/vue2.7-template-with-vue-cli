@@ -120,7 +120,7 @@
 </template>
 <script>
 import { removeToken, getToken } from '@/utils/auth'
-import ThemeBar from '@/components/ThemeBar'
+import ThemeBar from './ThemeBar'
 import { updataPassword } from '@/api'
 import { title } from '@/settings'
 import bus from '@/utils/bus'

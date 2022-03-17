@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { getToken } from '@/utils/auth'
 import { Message } from 'element-ui'
-import Main from '@/components/Layout.vue'
+import Layout from '@/layout/index.vue'
 import getRoutes from './getRoutes'
 import routeArr from '@/mock/router.js'
 
@@ -10,8 +10,8 @@ const sonRoute = getRoutes(routeArr)
 const routes = [
   {
     path: '/',
-    name: 'Main',
-    component: Main,
+    name: 'Layout',
+    component: Layout,
     redirect: '/home',
     children: [...sonRoute]
   },

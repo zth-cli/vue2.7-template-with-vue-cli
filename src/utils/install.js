@@ -1,10 +1,9 @@
 // import foot from '@/components/footer.vue';
-import svgIcon from '@/components/Svg-icon.vue'
+import svgIcon from '@/components/SvgIcon'
 // import sideTree from '@/components/Side-tree.vue';
-import overlay from '@/components/overlay'
+import overlay from '@/components/Overlay'
 import CurdView from '@/components/CurdViews/index'
-import BreadNav from '@/components/Bread_nav'
-const components = { svgIcon, overlay, CurdView, BreadNav }
+const components = { svgIcon, overlay, CurdView }
 
 function plugin (Vue) {
   if (plugin.installed) {

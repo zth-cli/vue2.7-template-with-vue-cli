@@ -1,10 +1,10 @@
 <template>
   <div class="layout">
-    <v-slidebar v-if="mode" :mode='mode'></v-slidebar>
+    <v-slidebar v-if="mode" :mode="mode"></v-slidebar>
     <div class="right_container">
       <el-header>
-        <v-header :mode='mode'>
-           <v-slidebar v-if="!mode" :mode='mode'></v-slidebar>
+        <v-header :mode="mode">
+          <v-slidebar v-if="!mode" :mode="mode"></v-slidebar>
         </v-header>
       </el-header>
       <div class="dashborad">
@@ -12,17 +12,8 @@
           <v-tags v-if="tagsBar && $route.path != '/home'"></v-tags>
         </div>
         <div class="content-wrapper-layout">
-          <Bread-nav v-if="$route.path != '/home'"></Bread-nav>
-          <div class="content-main">
-            <template>
-              <keep-alive v-if="isShow">
-                <router-view v-if="$route.meta.isCache"></router-view>
-              </keep-alive>
-            </template>
-            <template v-if="isShow">
-              <router-view v-if="!$route.meta.isCache"></router-view>
-            </template>
-          </div>
+          <v-bread v-if="$route.path != '/home'"></v-bread>
+          <v-main></v-main>
         </div>
       </div>
     </div>
@@ -31,33 +22,25 @@
 
 <script>
 import bus from '@/utils/bus'
-import vSlidebar from '@/components/Slidebar.vue'
-import vTags from '@/components/Tags.vue'
-import vHeader from '@/components/Header.vue'
+import vSlidebar from './Menu'
+import vTags from './TagsView'
+import vHeader from './Header'
+import vMain from './Mian'
+import vBread from './Breadcrumb'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Layout',
-  data () {
+  data() {
     return {
       isMini: false,
-      tagsList: [],
-      isShow: true // 控制router-view的隐藏与展示,达到刷新效果
+      tagsList: []
     }
   },
-  // 提供可注入子组件属性
-  provide () { return { reload: this.reload } },
-  components: { vTags, vHeader, vSlidebar },
+
+  components: { vTags, vHeader, vSlidebar, vMain, vBread },
   computed: { ...mapGetters(['mode', 'showThemeBar', 'tagsBar']) }, // mode为true时，侧边栏菜单
-  methods: {
-    reload () {
-      this.isShow = false
-      // $nextTick() 将回调延迟到下次 DOM 更新循环之后执行
-      this.$nextTick(() => {
-        this.isShow = true
-      })
-    }
-  },
-  created () {
+  methods: {},
+  created() {
     // 只有在标签页列表里的页面才使用keep-alive，即关闭标签之后就不保存到内存中了。
     bus.$on('tags', msg => {
       console.log(msg)
@@ -72,7 +55,7 @@ export default {
       this.isMini = !bol
     })
   },
-  mounted () {
+  mounted() {
     console.log(this.tagsBar)
     bus.$on('showMini', bol => {
       this.isMini = !bol
