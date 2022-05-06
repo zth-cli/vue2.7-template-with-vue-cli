@@ -25,6 +25,7 @@
         :renderFunction="treeOptions.renderContent"
         :dataUrl="treeOptions.dataUrl"
         :search="treeOptions.search"
+        :defaultProps="treeOptions.defaultProps"
       ></Tree>
     </div>
 

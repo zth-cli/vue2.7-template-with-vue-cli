@@ -6,7 +6,7 @@
       :treeOptions="treeOptions"
       @selection-change="selectionChange"
       @node-click="treeNodeClick"
-      @row-add='rowAdd'
+      @row-add="rowAdd"
     >
       <template v-slot:action="Props">
         <el-button size="small" @click="getRow(Props)">action</el-button>
@@ -18,8 +18,8 @@
         <el-button size="small" @click="getRow(Props)">operation</el-button>
       </template>
     </CurdView>
-    <overlay :close.sync='close' owidth='60vw' oheight='50vh' title="新增">
-      <StepsFromData :stepsForm='stepsForm' :stepsLabel='stepsLabel'></StepsFromData>
+    <overlay :close.sync="close" owidth="60vw" oheight="50vh" title="新增">
+      <StepsFromData :stepsForm="stepsForm" :stepsLabel="stepsLabel"></StepsFromData>
     </overlay>
   </div>
 </template>
@@ -59,6 +59,18 @@ const fromOptions = [
     format: 'yyyy-MM-dd'
   },
   {
+    name: 'date',
+    label: '日期',
+    type: 'date',
+    dateSwitch: [
+      { type: 'date', typeName: 'day' },
+      { type: 'month', typeName: 'month' },
+      { type: 'year', typeName: 'year' }
+    ],
+    dateTypeParamName: 'timeUnit',
+    format: 'yyyy-MM-dd',
+  },
+  {
     name: 'code',
     label: '电压等级',
     type: 'select',
@@ -69,19 +81,21 @@ const treeOptions = {
   dataUrl: '/data-project-management-service/project/getProject'
 }
 export default {
-  data () {
+  data() {
     return {
       tableOptions,
       fromOptions,
       treeOptions,
       stepsForm: [
         [{ name: 'description', label: '角色描述', type: 'text' }],
-        [{
-          name: 'code',
-          label: '电压等级',
-          type: 'select',
-          options: []
-        }],
+        [
+          {
+            name: 'code',
+            label: '电压等级',
+            type: 'select',
+            options: []
+          }
+        ],
         [{ name: 'des', label: '角色描述', type: 'text' }]
       ],
       stepsLabel: ['步骤一', '步骤二', '步骤三'],
@@ -90,16 +104,16 @@ export default {
   },
   components: { CurdView, StepsFromData },
   methods: {
-    rowAdd () {
+    rowAdd() {
       this.close = true
     },
-    selectionChange (selection) {
+    selectionChange(selection) {
       console.log(selection)
     },
-    getRow (row) {
+    getRow(row) {
       console.log(row)
     },
-    treeNodeClick ({ data, node }) {
+    treeNodeClick({ data, node }) {
       console.log(data, node)
       //  合并操作，强制触发响应反应
       this.tableOptions.params = Object.assign({}, this.tableOptions.params, {
@@ -109,5 +123,4 @@ export default {
   }
 }
 </script>
-<style lang='scss'>
-</style>
+<style lang="scss"></style>
