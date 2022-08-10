@@ -209,7 +209,7 @@ export default {
     },
     searchDynamic: {
       type: Array,
-      default: function() {
+      default: function () {
         return []
       }
     },
@@ -222,7 +222,7 @@ export default {
     },
     beforeQuery: {
       type: Function,
-      default: function(fromData) {
+      default: function (fromData) {
         return fromData
       }
     }
@@ -288,14 +288,14 @@ export default {
       if (this.searchDynamic.length < 1) {
         return
       }
-      this.searchDynamic.forEach(item => {
+      this.searchDynamic.forEach((item) => {
         for (const key in item) {
           if (key === 'name') {
             const str = item[key]
             this.$set(this.fromData, [str], '')
           }
           if (key === 'remoteMethod' && item.remoteMethod && item.type === 'select') {
-            item.remoteMethod.then(res => {
+            item.remoteMethod.then((res) => {
               item.options = res
             })
           }
@@ -331,7 +331,7 @@ export default {
         if (!sonElements) {
           return
         }
-        sonElements.forEach(item => {
+        sonElements.forEach((item) => {
           sonWidth += Number(item.offsetWidth)
         })
         if (sonWidth >= parentWidth - 50) {
@@ -341,7 +341,7 @@ export default {
     },
     debounce(fn, wait) {
       var timeout = null
-      return function() {
+      return function () {
         if (timeout !== null) clearTimeout(timeout)
         timeout = setTimeout(fn, wait)
       }
@@ -354,7 +354,7 @@ export default {
   },
   watch: {
     fromData: {
-      handler: async function(params) {
+      handler: async function (params) {
         const fromData = {}
         for (const key in params) {
           if (params[key] instanceof Array) {
@@ -377,14 +377,10 @@ export default {
   color: #409eff;
 }
 .curd_tool_bar {
-  // background-color: #fff;
   @include content-background();
   @include border-color();
-  // @include box-shadow();
-  padding: 10px;
-  border-radius: 4px;
-  // border: 1px solid #ebeef5;
-  // margin-bottom: 12px;
+  padding: 14px;
+  border-radius: 4px 4px 0 0;
 }
 
 .curd_tool_content {

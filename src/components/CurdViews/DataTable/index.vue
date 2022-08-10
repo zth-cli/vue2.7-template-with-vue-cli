@@ -1,15 +1,15 @@
  <!--<template>
   <div>
     <template v-for="(item,index) in columns">
-      <el-table-column
+      <TableColumn
         v-if="item.type==='selection'"
         type="selection"
         :key="index+'selection'"
         :width="item.width"
         fixed
-      ></el-table-column>
+      ></TableColumn>
       <template v-else>
-        <el-table-column
+        <TableColumn
           v-if="!item.slot"
           :type="item.type"
           :prop="item.prop"
@@ -20,22 +20,24 @@
           <template v-if="item.children&&item.children.length > 0">
             <DataTable :columns="item.children"></DataTable>
           </template>
-        </el-table-column>
-        <el-table-column v-else :label="item.label" :key="index">
+        </TableColumn>
+        <TableColumn v-else :label="item.label" :key="index">
           <template slot-scope="scope">
             {{item.slot}}
             <slot :name="item.slot" :rowData="{row:scope.row,index:scope.$index}"></slot>
           </template>
-        </el-table-column>
+        </TableColumn>
       </template>
     </template>
   </div>
 </template>-->
 
 <script>
+import { Table, TableColumn } from 'element-ui'
 export default {
   name: 'DataTable',
-  data () {
+  components: { Table, TableColumn },
+  data() {
     return {}
   },
   props: {
@@ -84,10 +86,12 @@ export default {
       type: Boolean,
       default: false
     },
-    summaryMethod: { // 合计自定义方法
+    summaryMethod: {
+      // 合计自定义方法
       type: Function
     },
-    spanMethod: { // 合并单元格
+    spanMethod: {
+      // 合并单元格
       type: Function,
       default: function () {}
     },
@@ -104,7 +108,7 @@ export default {
     }
   },
   methods: {
-    renderFunc (columns, h) {
+    renderFunc(columns, h) {
       var that = this
       let children = []
       const elememtArr = columns.map((item) => {
@@ -129,7 +133,7 @@ export default {
           columnProps.filterMethod = item.filterMethod ? item.filterMethod : that.filterHandler
         }
         if (item.type === 'index') {
-          return h('el-table-column', {
+          return h('TableColumn', {
             props: { ...columnProps },
             scopedSlots: {
               // scope 就相当于 slot-scope="{title}" 里面的值
@@ -137,7 +141,9 @@ export default {
                 let index = null
                 let indexEle = ''
                 // eslint-disable-next-line no-unused-expressions
-                that.showPage ? (index = (that.pageIndex - 1) * that.pageSize + scope.$index + 1) : index = scope.$index + 1
+                that.showPage
+                  ? (index = (that.pageIndex - 1) * that.pageSize + scope.$index + 1)
+                  : (index = scope.$index + 1)
                 if (item.slot) {
                   // type为index 且有slot，提供插槽功能
                   indexEle = that.$scopedSlots[item.slot]({
@@ -148,15 +154,13 @@ export default {
                     }
                   })
                 }
-                return [
-                  h('p', [indexEle, h('span', index)])
-                ]
+                return [h('p', [indexEle, h('span', index)])]
               }
             }
           })
         }
         if (item.type === 'selection') {
-          return h('el-table-column', {
+          return h('TableColumn', {
             props: {
               ...columnProps,
               type: item.type
@@ -164,7 +168,7 @@ export default {
           })
         }
         if (item.type === 'expand') {
-          return h('el-table-column', {
+          return h('TableColumn', {
             props: { ...columnProps, type: item.type },
             scopedSlots: {
               // scope 就相当于 slot-scope="{title}" 里面的值
@@ -186,7 +190,7 @@ export default {
         }
         if (item.headerSlot && !item.slot) {
           // slot,自定义列模板
-          return h('el-table-column', {
+          return h('TableColumn', {
             props: {
               label: item.label,
               width: item.width,
@@ -212,7 +216,7 @@ export default {
         }
         if (item.headerSlot && item.slot) {
           // slot,自定义列模板
-          return h('el-table-column', {
+          return h('TableColumn', {
             props: {
               label: item.label,
               width: item.width,
@@ -251,7 +255,7 @@ export default {
         }
         if (!item.headerSlot && item.slot) {
           // slot,自定义列模板
-          return h('el-table-column', {
+          return h('TableColumn', {
             props: {
               label: item.label,
               width: item.width,
@@ -278,7 +282,7 @@ export default {
         if (item.prop && item.enum) {
           const enums = item.enum
 
-          return h('el-table-column', {
+          return h('TableColumn', {
             props: {
               label: item.label,
               width: item.width,
@@ -314,7 +318,7 @@ export default {
           children = []
         }
         return h(
-          'el-table-column',
+          'TableColumn',
           {
             props: {
               prop: item.prop,
@@ -327,9 +331,9 @@ export default {
       })
       return elememtArr
     },
-    toggleRowSelection (rows) {
+    toggleRowSelection(rows) {
       if (rows) {
-        rows.forEach(row => {
+        rows.forEach((row) => {
           setTimeout(() => {
             this.$refs.tableView.toggleRowSelection(row)
           }, 0)
@@ -338,19 +342,19 @@ export default {
         this.$refs.tableView.clearSelection()
       }
     },
-    toggleAllSelection () {
+    toggleAllSelection() {
       this.$refs.tableView.toggleAllSelection()
     },
-    filterHandler (value, row, column) {
+    filterHandler(value, row, column) {
       const property = column.property
       return row[property] === value
     }
   },
-  render (h) {
+  render(h) {
     var that = this
     const elememtArr = this.renderFunc(that.columns, that.$createElement)
     return this.$createElement(
-      'el-table',
+      Table,
       {
         ref: 'tableView',
         props: {
@@ -371,16 +375,16 @@ export default {
           width: '100%'
         },
         on: {
-          'row-click': row => {
+          'row-click': (row) => {
             that.$emit('row-click', row)
           },
-          'row-dblclick': row => {
+          'row-dblclick': (row) => {
             that.$emit('row-dblclick', row)
           },
-          'selection-change': selection => {
+          'selection-change': (selection) => {
             that.$emit('selection-change', selection)
           },
-          'current-change': row => {
+          'current-change': (row) => {
             that.$emit('current-change', row)
           }
         }
@@ -388,7 +392,7 @@ export default {
       elememtArr
     )
   },
-  updated () {
+  updated() {
     this.$nextTick(() => {
       this.$refs.tableView.doLayout()
     })

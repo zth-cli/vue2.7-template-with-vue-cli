@@ -1,3 +1,11 @@
+/*
+ * @Author: 阮志雄
+ * @Date: 2022-05-06 11:12:43
+ * @LastEditTime: 2022-08-10 16:49:37
+ * @LastEditors: 阮志雄
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-template-with-elementui\src\mock\router.js
+ */
 const routeArr = [
   {
     title: '首页',
@@ -9,8 +17,9 @@ const routeArr = [
     type: 3,
     path: '/home'
   },
+
   {
-    title: '例子',
+    title: '列表页面',
     icon: 'el-icon-coffee-cup',
     parentId: 0,
     id: '0514',
@@ -24,6 +33,16 @@ const routeArr = [
       id: '05141',
       type: 3,
       path: '/curd'
+    },
+    {
+      title: '基础列表',
+      componentName: 'curd',
+      componentPath: 'curd/pages/curd-view',
+      icon: 'el-icon-coffee-cup',
+      parentId: 0,
+      id: '05142',
+      type: 3,
+      path: '/curd-view'
     }]
   },
   {

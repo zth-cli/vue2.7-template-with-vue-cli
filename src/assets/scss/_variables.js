@@ -1,7 +1,7 @@
 /*
  * @Author: 阮志雄
  * @Date: 2021-07-08 14:29:08
- * @LastEditTime: 2021-10-08 13:52:05
+ * @LastEditTime: 2022-08-10 14:07:25
  * @LastEditors: 阮志雄
  * @Description: In User Settings Edit
  * @FilePath: \vue-template-with-elementui\src\assets\scss\_variables.js
@@ -58,7 +58,7 @@ var menuColorObj = {
   theme3: {
     textColor: '#fff',
     activeTextColor: '#fff',
-    backgroundColor: '#275050'
+    backgroundColor: '#007d7b'
   },
   theme4: {
     textColor: '#B0B0B0',

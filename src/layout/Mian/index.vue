@@ -1,12 +1,10 @@
 <template>
   <div class="content-main">
-    <transition v-if="$route.meta.isCache" :name="mode ? 'slide-fade-Y' : 'slide-fade-X'">
-      <keep-alive v-if="isShow">
+    <transition  :name="mode ? 'slide-fade-Y' : 'slide-fade-X'">
+      <keep-alive v-if="$route.meta.isCache">
         <router-view></router-view>
       </keep-alive>
-    </transition>
-    <transition :name="mode ? 'slide-fade-Y' : 'slide-fade-X'" v-else>
-      <router-view v-if="isShow"></router-view>
+      <router-view v-else></router-view>
     </transition>
   </div>
 </template>

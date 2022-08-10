@@ -11,7 +11,6 @@
       :default-active="onRoutes"
       :text-color="menuConfig.textColor"
       :active-text-color="menuConfig.activeTextColor"
-      :background-color="menuConfig.backgroundColor"
       unique-opened
       :collapse="isCollapse"
       router
@@ -74,21 +73,21 @@ export default {
   },
   created() {
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-    bus.$on('collapse', msg => {
+    bus.$on('collapse', (msg) => {
       // this.collapse = msg;
     })
     this.changeMebuColor()
   },
   mounted() {
     var that = this
-    setTimeout(function() {
+    setTimeout(function () {
       that.collapse = true
     }, 500)
     // eslint-disable-next-line no-unused-vars
-    bus.$on('changMenuColor', theme => {
+    bus.$on('changMenuColor', (theme) => {
       this.changeMebuColor()
     })
-    bus.$on('handleCollapse', bool => {
+    bus.$on('handleCollapse', (bool) => {
       this.isCollapse = bool
     })
   }
@@ -96,15 +95,22 @@ export default {
 </script>
 
 <style lang="scss">
+.el-menu {
+  @include header-background();
+  border-right: none;
+}
+.el-menu--horizontal .el-menu .el-menu-item,
+.el-menu--horizontal .el-menu .el-submenu__title {
+  @include header-background();
+}
+.el-menu-item:focus,
+.el-menu-item:hover {
+  @include header-active-background();
+}
 .horizontal-menu-main {
   @include header-background();
   height: 100%;
   width: auto;
-  overflow-y: auto;
-  .el-menu {
-    @include header-background();
-    border-right: none;
-  }
   .icons {
     margin-right: 5px;
     width: 24px;
@@ -116,6 +122,7 @@ export default {
   .el-menu .el-submenu__title .el-submenu__icon-arrow {
     @include font_color(#fff);
   }
+
   .el-menu .el-submenu__title:hover {
     @include header-active-background();
   }
@@ -127,8 +134,6 @@ export default {
   }
   .el-menu--horizontal > .el-submenu .el-submenu__title,
   .el-menu--horizontal > .el-menu-item {
-    height: 50px !important;
-    line-height: 50px !important;
     padding: 0 12px !important;
     font-size: 12px;
   }
@@ -137,8 +142,14 @@ export default {
   }
 }
 .vertical-menu-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   width: 200px;
-  transition: width .2s ease-in;
+  transition: width 0.2s ease-in;
+  .sidebar-el-menu {
+    flex: 1;
+  }
 }
 .slide-logo {
   margin-left: 10px;

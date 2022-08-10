@@ -6,7 +6,6 @@
       @tab-remove="closeTags"
       type="card"
       v-model="activeValue"
-      size="mini"
     >
       <el-tab-pane
         :key="item.path"
@@ -48,7 +47,7 @@ export default {
     },
     // 关闭单个标签
     closeTags(tabName) {
-      const index = this.tagsList.findIndex(item => item.title == tabName)
+      const index = this.tagsList.findIndex((item) => item.title == tabName)
       const delItem = this.tagsList.splice(index, 1)[0]
       // 剩余的tags
       const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1]
@@ -66,7 +65,7 @@ export default {
     },
     // 关闭其他标签
     closeOther() {
-      const curItem = this.tagsList.filter(item => {
+      const curItem = this.tagsList.filter((item) => {
         return item.fullPath === this.$route.fullPath // 路由变更
       })
       this.tagsList = curItem
@@ -80,7 +79,7 @@ export default {
         path: route.path,
         meta: route.meta
       }
-      const existIndex = this.tagsList.findIndex(item => {
+      const existIndex = this.tagsList.findIndex((item) => {
         return item.path === route.path
       })
       if (existIndex > -1) {
@@ -123,11 +122,15 @@ export default {
   height: 30px;
   overflow: hidden;
   padding: 0 10px;
-  @include content-background();
+  @include base-background();
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 6px 19px 8px 10px;
   // @include box-shadow();
+  .el-tabs--top.el-tabs--card > .el-tabs__header {
+    border: none;
+  }
   .el-tabs--top.el-tabs--card > .el-tabs__header .el-tabs__item:nth-child(2) {
     padding-left: 5px;
   }
@@ -138,6 +141,9 @@ export default {
     padding-left: 5px;
     padding-right: 5px;
   }
+  .el-tabs--card > .el-tabs__header .el-tabs__nav {
+    border: none;
+  }
   .el-tabs__header {
     border: none;
     margin: 0;
@@ -147,29 +153,27 @@ export default {
       font-size: 12px;
       overflow: hidden;
       cursor: pointer;
-      height: 23px;
-      line-height: 23px;
-      border: 1px solid transparent;
-      @include border-color();
-      @include sec-content-background();
-      padding: 0 5px 0 10px;
+      height: 32px;
+      padding: 6px 12px 4px !important;
+      @include content-background();
       vertical-align: middle;
-      @include font-color(#fff);
+
       transition: all 0.3s ease-in;
-      border: none;
-      padding: 0 5px;
+      line-height: 22px;
+      text-align: center;
+      border: none !important;
       .el-icon-close:hover {
         background: transparent;
       }
     }
     .el-tabs__nav-next,
     .el-tabs__nav-prev {
-      line-height: 30px;
+      line-height: 32px;
     }
-    .el-tabs__item.is-active {
-      @include font-color(#fff);
-      @include tool-bar-color();
-    }
+    // .el-tabs__item.is-active {
+    //   @include font-color(#fff);
+    //   @include tool-bar-color();
+    // }
     .el-tabs__nav {
       border: none;
     }
@@ -184,10 +188,12 @@ export default {
     z-index: 10;
     cursor: pointer;
     .drop-icon {
+      font-size: 18px;
+      font-weight: bolder;
       transition: all 0.2s ease-in-out;
       &:hover {
         @include sec-font-color();
-        transform: rotate(90deg);
+        // transform: rotate(90deg);
       }
     }
   }

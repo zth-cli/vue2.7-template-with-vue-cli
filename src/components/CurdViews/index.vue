@@ -1,6 +1,6 @@
 <template>
   <div class="curd_view">
-    <div class=" curd_tree_view" v-if="treeOptions">
+    <div class="curd_tree_view" v-if="treeOptions">
       <lazy-tree
         v-if="treeOptions.isLazyLoad"
         @changeSatus="trigger"
@@ -30,82 +30,71 @@
     </div>
 
     <div class="curd_table_view">
-      <div
-        :class="[
-          { boxShadow: tableOptions.mode !== 'simple' },
-          { mb: tableOptions.mode !== 'simple' },
-        ]"
+      <ConditionBar
+        v-if="showSearchDynamic"
+        :width="fromWidth"
+        :mode="tableOptions.mode"
+        :searchDynamic="fromOptions"
+        :beforeQuery="beforeQuery"
+        @query="query"
+        @params-change="paramsChange"
       >
-        <ConditionBar
-          v-if="showSearchDynamic"
-          :width="fromWidth"
-          :mode="tableOptions.mode"
-          :searchDynamic="fromOptions"
-          :beforeQuery='beforeQuery'
-          @query="query"
-          @params-change="paramsChange">
-          <template v-slot:tool>
-            <slot name="tool"></slot>
-          </template>
-          <template v-slot:rtool>
-            <slot name="rtool"></slot>
-          </template>
-          <template v-slot:ltool>
-            <slot name="ltool"></slot>
-          </template>
-        </ConditionBar>
-      </div>
-      <div :class="{ boxShadow: tableOptions.mode !== 'simple' }">
-        <CurdTable
-          ref="tableView"
-          :highlightCurrentRow="tableOptions.highlightCurrentRow"
-          :columns="tableOptions.columns"
-          :lazy="tableOptions.lazy"
-          :dataUrl="tableOptions.dataUrl"
-          :pageSize="tableOptions.pageSize"
-          :isPrivate="tableOptions.isPrivate"
-          :params="tableOptions.params"
-          :local="tableOptions.local"
-          :height="tableOptions.height"
-          :rowKey="tableOptions.rowKey"
-          :stripe="tableOptions.stripe"
-          :treeProps="tableOptions.treeProps"
-          :maxHeight="tableOptions.maxHeight"
-          :showPage="tableOptions.showPage"
-          :showPanelTool="tableOptions.showPanelTool"
-          :mode="tableOptions.mode"
-          :defaultPanel="tableOptions.defaultPanel"
-          :border="tableOptions.border"
-          :showSummary="tableOptions.showSummary"
-          :summaryMethod="tableOptions.summaryMethod"
-          :spanMethod="tableOptions.spanMethod"
-          :showSettingTool="tableOptions.showSettingTool"
-          :responseName="tableOptions.responseName"
-          @row-click="rowClick"
-          @row-dblclick="rowDblclick"
-          @row-add="addRow"
-          @row-edit="editRow"
-          @row-delete="deleteRows"
-          @selection-change="selectionChange"
-          @getTableData="getTableData"
-          @current-change="handleCurrentChange"
-        >
-          <!-- 自定义表格slot -->
-          <template v-for="item in slotArr" v-slot:[item.slot]="Props">
-            <!--  父组件调用  老版本为：slot-scope="{ row, index }" -->
-            <slot :name="item.slot" :rowData="Props.rowData"></slot>
-          </template>
-          <template
-            v-for="item in headerSlotArr"
-            v-slot:[item.headerSlot]="Props"
-          >
-            <slot :name="item.headerSlot" :rowData="Props.rowData"></slot>
-          </template>
-          <template v-slot:panel>
-            <slot name="panel"></slot>
-          </template>
-        </CurdTable>
-      </div>
+        <template v-slot:tool>
+          <slot name="tool"></slot>
+        </template>
+        <template v-slot:rtool>
+          <slot name="rtool"></slot>
+        </template>
+        <template v-slot:ltool>
+          <slot name="ltool"></slot>
+        </template>
+      </ConditionBar>
+      <CurdTable
+        ref="tableView"
+        :highlightCurrentRow="tableOptions.highlightCurrentRow"
+        :columns="tableOptions.columns"
+        :lazy="tableOptions.lazy"
+        :dataUrl="tableOptions.dataUrl"
+        :pageSize="tableOptions.pageSize"
+        :isPrivate="tableOptions.isPrivate"
+        :params="tableOptions.params"
+        :local="tableOptions.local"
+        :height="tableOptions.height"
+        :rowKey="tableOptions.rowKey"
+        :stripe="tableOptions.stripe"
+        :treeProps="tableOptions.treeProps"
+        :maxHeight="tableOptions.maxHeight"
+        :showPage="tableOptions.showPage"
+        :showPanelTool="tableOptions.showPanelTool"
+        :mode="tableOptions.mode"
+        :defaultPanel="tableOptions.defaultPanel"
+        :border="tableOptions.border"
+        :showSummary="tableOptions.showSummary"
+        :summaryMethod="tableOptions.summaryMethod"
+        :spanMethod="tableOptions.spanMethod"
+        :showSettingTool="tableOptions.showSettingTool"
+        :responseName="tableOptions.responseName"
+        @row-click="rowClick"
+        @row-dblclick="rowDblclick"
+        @row-add="addRow"
+        @row-edit="editRow"
+        @row-delete="deleteRows"
+        @selection-change="selectionChange"
+        @getTableData="getTableData"
+        @current-change="handleCurrentChange"
+      >
+        <!-- 自定义表格slot -->
+        <template v-for="item in slotArr" v-slot:[item.slot]="Props">
+          <!--  父组件调用  老版本为：slot-scope="{ row, index }" -->
+          <slot :name="item.slot" :rowData="Props.rowData"></slot>
+        </template>
+        <template v-for="item in headerSlotArr" v-slot:[item.headerSlot]="Props">
+          <slot :name="item.headerSlot" :rowData="Props.rowData"></slot>
+        </template>
+        <template v-slot:panel>
+          <slot name="panel"></slot>
+        </template>
+      </CurdTable>
     </div>
   </div>
 </template>
@@ -117,7 +106,7 @@ import CurdTable from './CurdTable'
 import ConditionBar from './ConditionBar'
 
 export default {
-  data () {
+  data() {
     return {
       slotArr: [],
       headerSlotArr: [],
@@ -140,7 +129,8 @@ export default {
       }
     }, // 查询前,请求前参数钩子
     fromWidth: {}, // 查询框得长度，String类型
-    showSearchDynamic: { // 是否显示查询框，提供某些情况下查询完全自定义
+    showSearchDynamic: {
+      // 是否显示查询框，提供某些情况下查询完全自定义
       type: Boolean,
       default: true
     }
@@ -151,74 +141,70 @@ export default {
     ConditionBar,
     LazyTree
   },
-  created () {
+  created() {
     this.getSlot()
     this.getHeaderSlot()
   },
   methods: {
     // 获取table数据,推荐此做法获取tableData
-    getTableData (rows) {
+    getTableData(rows) {
       this.$emit('getTableData', rows)
     },
-    tableData () {
+    tableData() {
       // 此方法会直接暴露tableData，可对表格数据直接增删操作，建议在getTableData事件之后获取数据
       return this.$refs.tableView.tableData
     },
-    rowClick (row) {
+    rowClick(row) {
       this.$emit('row-click', row)
     },
-    rowDblclick (row) {
+    rowDblclick(row) {
       this.$emit('row-dblclick', row)
     },
-    selectionChange (selection) {
+    selectionChange(selection) {
       if (selection) {
         this.$emit('selection-change', selection)
       }
     },
-    toggleRowSelection (rows) {
+    toggleRowSelection(rows) {
       this.$refs.tableView.toggleRowSelection(rows)
     },
-    toggleAllSelection () {
+    toggleAllSelection() {
       // 全选
       this.$refs.tableView.toggleAllSelection()
     },
-    handleCurrentChange (row) {
+    handleCurrentChange(row) {
       this.$emit('current-change', row)
     },
-    deleteRows (rows) {
+    deleteRows(rows) {
       this.$emit('row-delete', rows)
     },
-    editRow (row) {
+    editRow(row) {
       this.$emit('row-edit', row)
     },
-    addRow (bool) {
+    addRow(bool) {
       this.$emit('row-add', bool)
     },
-    paramsChange (params) {
+    paramsChange(params) {
       this.$emit('params-change', params)
-      this.tableOptions.params = Object.assign(
-        {},
-        this.tableOptions.params,
-        params
-      )
+      this.tableOptions.params = Object.assign({}, this.tableOptions.params, params)
       console.log(this.tableOptions.params)
     },
-    trigger (toggle) {
+    trigger(toggle) {
       this.toggle = toggle
     },
-    treeNodeClick ({ data, node }) {
+    treeNodeClick({ data, node }) {
       this.$emit('node-click', { data, node })
     },
-    query () {
+    query() {
       this.$refs.tableView.queryData()
     },
-    refresh () {
+    refresh() {
       this.$refs.tableView.queryData()
     },
-    getSlot () {
+    getSlot() {
       var that = this
       const mColumns = this.tableOptions.columns
-      function Maps (mColumns) {
+      function Maps(mColumns) {
         mColumns.forEach((item) => {
           const keys = Object.keys(item)
           if (keys.includes('slot')) {
@@ -232,10 +218,10 @@ export default {
       }
       Maps(mColumns)
     },
-    getHeaderSlot () {
+    getHeaderSlot() {
       var that = this
       const mColumns = this.tableOptions.columns
-      function Maps (mColumns) {
+      function Maps(mColumns) {
         mColumns.forEach((item) => {
           const keys = Object.keys(item)
           if (keys.includes('headerSlot')) {
@@ -248,23 +234,13 @@ export default {
       }
       Maps(mColumns)
     },
-    nodeExpand (data, node) {
+    nodeExpand(data, node) {
       this.$emit('node-expand', data, node)
     },
-    tabClick (val) {
+    tabClick(val) {
       this.$emit('tab-click', val)
     }
   }
-  // watch: {
-  //   tableOptions: {
-  //     handler: function (val) {
-  //       console.log(val.params,'默认参数改变')
-  //       this.$refs.tableView.queryData();
-  //     },
-  //     deep: true,
-  //   },
-
-  // },
 }
 </script>
 <style lang='scss'>

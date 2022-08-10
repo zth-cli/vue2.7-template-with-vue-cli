@@ -229,7 +229,6 @@ function renderContent (h, { node }) {
 .curd_tree_wrap {
   /* background-color: #fff; */
   @include content-background();
-  @include box-shadow();
   height: 100%;
   position: relative;
   border-radius: 0 4px 4px 0;
