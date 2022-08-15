@@ -1,13 +1,15 @@
 /***
-   * 防抖 单位时间只触发最后一次
-   *  例： v-dialogDrag="{dialogDrag: isDialogDrag, handle:'.mover'}"
-   *  dialogDrag为可选属性，true为可拖拽，false不可拖拽，缺醒默认为true，
-   *  handle =".mover" ,必选  只有当鼠标移动到css为mover类的元素上才能拖动
-   */
+ * 防抖 单位时间只触发最后一次
+ *  例： v-dialogDrag="{dialogDrag: isDialogDrag, handle:'.mover'}"
+ *  dialogDrag为可选属性，true为可拖拽，false不可拖拽，缺醒默认为true，
+ *  handle =".mover" ,必选  只有当鼠标移动到css为mover类的元素上才能拖动
+ */
 const dialogDrag = {
-  bind (el, binding, vnode, oldVnode) {
+  bind(el, binding) {
     const isDragable = binding.value.dialogDrag === undefined ? true : binding.value.dialogDrag // 缺醒dialogDrag时 默认可以拖拽
-    if (!isDragable) return
+    if (!isDragable) {
+      return
+    }
     const dialogHeaderEl = binding.value.handle ? el.querySelector(binding.value.handle) : el
     const dragDom = el
     dialogHeaderEl.style.cssText += ';cursor:move;'
@@ -17,9 +19,8 @@ const dialogDrag = {
     const sty = (function () {
       if (window.document.currentStyle) {
         return (dom, attr) => dom.currentStyle[attr]
-      } else {
-        return (dom, attr) => getComputedStyle(dom, false)[attr]
       }
+      return (dom, attr) => getComputedStyle(dom, false)[attr]
     })()
 
     dialogHeaderEl.onmousedown = (e) => {
@@ -45,12 +46,14 @@ const dialogDrag = {
 
       // 注意在ie中 第一次获取到的值为组件自带50% 移动之后赋值为px
       if (styL.includes('%')) {
+        // eslint-disable-next-line no-useless-escape
         styL = +document.body.clientWidth * (+styL.replace(/\%/g, '') / 100)
+        // eslint-disable-next-line no-useless-escape
         styT = +document.body.clientHeight * (+styT.replace(/\%/g, '') / 100)
       } else {
         styL = +styL.replace(/\px/g, '')
         styT = +styT.replace(/\px/g, '')
-      };
+      }
 
       document.onmousemove = function (e) {
         // 通过事件委托，计算移动的距离
@@ -58,14 +61,14 @@ const dialogDrag = {
         let top = e.clientY - disY
 
         // 边界处理
-        if (-(left) > minDragDomLeft) {
-          left = -(minDragDomLeft)
+        if (-left > minDragDomLeft) {
+          left = -minDragDomLeft
         } else if (left > maxDragDomLeft) {
           left = maxDragDomLeft
         }
 
-        if (-(top) > minDragDomTop) {
-          top = -(minDragDomTop)
+        if (-top > minDragDomTop) {
+          top = -minDragDomTop
         } else if (top > maxDragDomTop) {
           top = maxDragDomTop
         }
@@ -74,12 +77,12 @@ const dialogDrag = {
         dragDom.style.cssText += `;left:${left + styL}px;top:${top + styT}px;`
       }
 
-      document.onmouseup = function (e) {
+      document.onmouseup = function () {
         document.onmousemove = null
         document.onmouseup = null
       }
     }
-  }
+  },
 }
 
 export default dialogDrag

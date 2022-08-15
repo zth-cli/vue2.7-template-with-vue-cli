@@ -7,12 +7,12 @@
 <script>
 export default {
   name: 'svg-icon',
-  data () {
+  data() {
     return {
-      name: '#icon-' + this.icon
+      name: '#icon-' + this.icon,
     }
   },
-  props: ['icon']
+  props: ['icon'],
 }
 </script>
 <style lang="scss">

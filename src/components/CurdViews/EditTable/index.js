@@ -1,2 +1,2 @@
-import EditTable from "./index.vue";
-export default EditTable;
+import EditTable from './index.vue'
+export default EditTable

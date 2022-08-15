@@ -1,9 +1,8 @@
-
 // 使用 Vue.extend构造组件子类
-const LoadingContructor = Vue.extend({ template: '<p>loading</p>'})
+const LoadingContructor = Vue.extend({ template: '<p>loading</p>' })
 
 // 定义一个名为loading的指令
-const loading  = {
+const loading = {
   /**
    * 只调用一次，在指令第一次绑定到元素时调用，可以在这里做一些初始化的设置
    * @param {*} el 指令要绑定的元素
@@ -12,7 +11,7 @@ const loading  = {
   bind(el, binding) {
     const instance = new LoadingContructor({
       el: document.createElement('div'),
-      data: {}
+      data: {},
     })
     el.appendChild(instance.$el)
     el.instance = instance
@@ -42,6 +41,6 @@ const loading  = {
     }
     el.instance.$destroy()
     el.instance = undefined
-  }
+  },
 }
 export default loading

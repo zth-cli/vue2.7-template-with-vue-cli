@@ -106,11 +106,12 @@ import CurdTable from './CurdTable'
 import ConditionBar from './ConditionBar'
 
 export default {
+  name: 'CurdViews',
   data() {
     return {
       slotArr: [],
       headerSlotArr: [],
-      toggle: true
+      toggle: true,
     }
   },
   props: {
@@ -120,26 +121,26 @@ export default {
       type: Array,
       default: function () {
         return []
-      }
+      },
     }, // 查询条件item，Array类型
     beforeQuery: {
       type: Function,
-      default: function (fromData) {
-        return fromData
-      }
+      default: function (formData) {
+        return formData
+      },
     }, // 查询前,请求前参数钩子
     fromWidth: {}, // 查询框得长度，String类型
     showSearchDynamic: {
       // 是否显示查询框，提供某些情况下查询完全自定义
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   components: {
     CurdTable,
     Tree,
     ConditionBar,
-    LazyTree
+    LazyTree,
   },
   created() {
     this.getSlot()
@@ -186,8 +187,8 @@ export default {
     },
     paramsChange(params) {
       this.$emit('params-change', params)
+      // eslint-disable-next-line vue/no-mutating-props
       this.tableOptions.params = Object.assign({}, this.tableOptions.params, params)
-      console.log(this.tableOptions.params)
     },
     trigger(toggle) {
       this.toggle = toggle
@@ -202,7 +203,7 @@ export default {
       this.$refs.tableView.queryData()
     },
     getSlot() {
-      var that = this
+      const that = this
       const mColumns = this.tableOptions.columns
       function Maps(mColumns) {
         mColumns.forEach((item) => {
@@ -219,7 +220,7 @@ export default {
       Maps(mColumns)
     },
     getHeaderSlot() {
-      var that = this
+      const that = this
       const mColumns = this.tableOptions.columns
       function Maps(mColumns) {
         mColumns.forEach((item) => {
@@ -239,11 +240,11 @@ export default {
     },
     tabClick(val) {
       this.$emit('tab-click', val)
-    }
-  }
+    },
+  },
 }
 </script>
-<style lang='scss'>
+<style lang="scss">
 .curd_view {
   display: flex;
   height: 100%;

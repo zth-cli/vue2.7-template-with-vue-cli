@@ -1,10 +1,7 @@
 <template>
   <div class="curd_tree_wrap">
     <span class="toggle">
-      <i
-        :class="[toggle ? 'el-icon-arrow-left' : 'el-icon-arrow-right']"
-        @click="changeSatus"
-      ></i>
+      <i :class="[toggle ? 'el-icon-arrow-left' : 'el-icon-arrow-right']" @click="changeSatus"></i>
     </span>
     <div class="tree_main" v-show="toggle">
       <el-input
@@ -36,7 +33,8 @@
 <script>
 import { apiGet } from '@/api'
 export default {
-  data () {
+  name: 'ZthTree',
+  data() {
     return {
       loading: false,
       treeData: [
@@ -51,7 +49,7 @@ export default {
               children: [
                 {
                   id: 9,
-                  label: '三级 1-1-1'
+                  label: '三级 1-1-1',
                 },
                 {
                   id: 10,
@@ -59,17 +57,17 @@ export default {
                   children: [
                     {
                       id: 9,
-                      label: '三级 1-1-1'
+                      label: '三级 1-1-1',
                     },
                     {
                       id: 10,
-                      label: '三级 1-1-2'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+                      label: '三级 1-1-2',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           id: 2,
@@ -77,13 +75,13 @@ export default {
           children: [
             {
               id: 5,
-              label: '二级 2-1'
+              label: '二级 2-1',
             },
             {
               id: 6,
-              label: '二级 2-2'
-            }
-          ]
+              label: '二级 2-2',
+            },
+          ],
         },
         {
           id: 3,
@@ -91,17 +89,17 @@ export default {
           children: [
             {
               id: 7,
-              label: '二级 3-1'
+              label: '二级 3-1',
             },
             {
               id: 8,
-              label: '二级 3-2'
-            }
-          ]
-        }
+              label: '二级 3-2',
+            },
+          ],
+        },
       ],
       toggle: true,
-      filterText: ''
+      filterText: '',
     }
   },
   props: {
@@ -109,39 +107,39 @@ export default {
     param: {},
     search: {
       type: Boolean,
-      default: true
+      default: true,
     },
     defaultProps: {
       type: Object,
       default: function () {
         return {
           children: 'children',
-          label: 'name'
+          label: 'name',
         }
-      }
+      },
     },
     renderFunction: {
       type: Function,
-      default: renderContent
+      default: renderContent,
     },
     defaultExpandAll: {
       type: Boolean,
-      default: false
+      default: false,
     },
     expandOnclickNode: {
       type: Boolean,
-      default: true
+      default: true,
     },
     resDataName: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
-  created () {
+  created() {
     this.queryData()
   },
   methods: {
-    queryData () {
+    queryData() {
       if (!this.dataUrl || this.loading === true) {
         return
       }
@@ -158,32 +156,34 @@ export default {
           this.loading = false
         })
     },
-    changeSatus () {
+    changeSatus() {
       this.toggle = !this.toggle
       this.$emit('changeSatus', this.toggle) // 触发自定义事件
     },
-    filterNode (value, data) {
-      if (!value) return true
+    filterNode(value, data) {
+      if (!value) {
+        return true
+      }
       return data.label.indexOf(value) !== -1
     },
 
-    nodeClick (data, node) {
+    nodeClick(data, node) {
       this.$emit('nodeClick', {
         data,
-        node
+        node,
       })
-    }
+    },
   },
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.tree.filter(val)
-    }
-  }
+    },
+  },
 }
 
-function renderContent (h, { node, data }) {
+function renderContent(h, { node, data }) {
   // console.log(data.label)
-  var icon = 'el-icon-folder'
+  let icon = 'el-icon-folder'
   switch (node.level) {
     case 1:
       icon = 'el-icon-folder'
@@ -202,7 +202,7 @@ function renderContent (h, { node, data }) {
       break
   }
   return (
-    <span class="custom-tree-node">
+    <span class='custom-tree-node'>
       <span>
         <i class={icon}> </i> {data.label}{' '}
       </span>{' '}
@@ -210,15 +210,15 @@ function renderContent (h, { node, data }) {
   )
 }
 </script>
-<style lang='scss'>
+<style lang="scss">
 .curd_tree_wrap {
   /* background-color: #fff; */
   @include content-background();
   height: 100%;
   position: relative;
   border-radius: 0 4px 4px 0;
-  .el-tree{
-   background-color: transparent;
+  .el-tree {
+    background-color: transparent;
   }
 }
 

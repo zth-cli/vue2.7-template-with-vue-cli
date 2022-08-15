@@ -1,6 +1,6 @@
 <template>
   <div class="content-main">
-    <transition  :name="mode ? 'slide-fade-Y' : 'slide-fade-X'">
+    <transition :name="mode ? 'slide-fade-Y' : 'slide-fade-X'">
       <keep-alive v-if="$route.meta.isCache">
         <router-view></router-view>
       </keep-alive>
@@ -12,9 +12,10 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  name: 'ZthMain',
   data() {
     return {
-      isShow: true // 控制router-view的隐藏与展示,达到刷新效果
+      isShow: true, // 控制router-view的隐藏与展示,达到刷新效果
     }
   },
   // 提供可注入子组件属性
@@ -29,8 +30,8 @@ export default {
       this.$nextTick(() => {
         this.isShow = true
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss"></style>

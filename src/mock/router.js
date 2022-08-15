@@ -15,7 +15,7 @@ const routeArr = [
     parentId: 0,
     id: '0515',
     type: 3,
-    path: '/home'
+    path: '/home',
   },
 
   {
@@ -24,26 +24,28 @@ const routeArr = [
     parentId: 0,
     id: '0514',
     type: 1,
-    children: [{
-      title: 'CURD布局',
-      componentName: 'curd',
-      componentPath: 'curd/index',
-      icon: 'el-icon-coffee-cup',
-      parentId: 0,
-      id: '05141',
-      type: 3,
-      path: '/curd'
-    },
-    {
-      title: '基础列表',
-      componentName: 'curd',
-      componentPath: 'curd/pages/curd-view',
-      icon: 'el-icon-coffee-cup',
-      parentId: 0,
-      id: '05142',
-      type: 3,
-      path: '/curd-view'
-    }]
+    children: [
+      {
+        title: 'CURD布局',
+        componentName: 'curd',
+        componentPath: 'curd/index',
+        icon: 'el-icon-coffee-cup',
+        parentId: 0,
+        id: '05141',
+        type: 3,
+        path: '/curd',
+      },
+      {
+        title: '基础列表',
+        componentName: 'curd',
+        componentPath: 'curd/pages/curd-view',
+        icon: 'el-icon-coffee-cup',
+        parentId: 0,
+        id: '05142',
+        type: 3,
+        path: '/curd-view',
+      },
+    ],
   },
   {
     title: '组件错误',
@@ -53,7 +55,7 @@ const routeArr = [
     parentId: 0,
     id: '05143',
     type: 3,
-    path: '/sdd'
-  }
+    path: '/sdd',
+  },
 ]
 export default routeArr

@@ -5,8 +5,8 @@ import dialogDrag from './dialogdrag'
 const directives = { debounce, throttle, copy, dialogDrag }
 export default {
   install(Vue) {
-    Object.keys(directives).forEach(key => {
+    Object.keys(directives).forEach((key) => {
       Vue.directive(key, directives[key])
     })
-  }
+  },
 }

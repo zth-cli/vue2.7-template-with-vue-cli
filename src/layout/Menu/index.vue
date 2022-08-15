@@ -43,43 +43,44 @@ import bus from '@/utils/bus'
 import { menuColorObj } from '@/assets/scss/_variables'
 import routeArr from '@/mock/router.js'
 export default {
+  name: 'ZthMenu',
   data() {
     return {
       menuConfig: {
         textColor: '',
         activeTextColor: '',
-        backgroundColor: ''
+        backgroundColor: '',
       },
       isCollapse: false,
-      menuData: [...routeArr]
+      menuData: [...routeArr],
     }
   },
   props: {
     mode: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   computed: {
     onRoutes() {
       return this.$route.path.replace('/', '')
-    }
+    },
   },
   methods: {
     changeMebuColor() {
-      var themeStr = document.documentElement.getAttribute('data-theme')
+      const themeStr = document.documentElement.getAttribute('data-theme')
       this.menuConfig = menuColorObj[themeStr]
-    }
+    },
   },
   created() {
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-    bus.$on('collapse', (msg) => {
+    bus.$on('collapse', () => {
       // this.collapse = msg;
     })
     this.changeMebuColor()
   },
   mounted() {
-    var that = this
+    const that = this
     setTimeout(function () {
       that.collapse = true
     }, 500)
@@ -90,7 +91,7 @@ export default {
     bus.$on('handleCollapse', (bool) => {
       this.isCollapse = bool
     })
-  }
+  },
 }
 </script>
 

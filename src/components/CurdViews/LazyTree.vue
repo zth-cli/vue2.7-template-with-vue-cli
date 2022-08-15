@@ -1,10 +1,7 @@
 <template>
   <div class="curd_tree_wrap">
     <span class="toggle">
-      <i
-        :class="[toggle ? 'el-icon-arrow-left' : 'el-icon-arrow-right']"
-        @click="changeSatus"
-      ></i>
+      <i :class="[toggle ? 'el-icon-arrow-left' : 'el-icon-arrow-right']" @click="changeSatus"></i>
     </span>
     <div class="tree_main" v-show="toggle">
       <!-- {{dataUrlArr}} -->
@@ -29,7 +26,7 @@
       <div class="lazy_tree_list" v-loading="loading">
         <el-scrollbar
           class="treescrollbar"
-          style="height: 100%; background: #fff; overflow-y: hidden;overflow-x: hidden"
+          style="height: 100%; background: #fff; overflow-y: hidden; overflow-x: hidden"
         >
           <el-tree
             v-if="isShow"
@@ -55,14 +52,14 @@
 <script>
 import { apiGet } from '@/api'
 export default {
-  data () {
+  data() {
     return {
       loading: false,
       toggle: true,
       filterText: '',
       isShow: true,
       activeName: this.dataUrlArr[0].value,
-      activeIndex: 0
+      activeIndex: 0,
     }
   },
   props: {
@@ -70,12 +67,12 @@ export default {
       type: Array,
       default: function () {
         return []
-      }
+      },
     },
     param: {},
     search: {
       type: Boolean,
-      default: true
+      default: true,
     },
     defaultProps: {
       type: Object,
@@ -83,27 +80,26 @@ export default {
         return {
           children: 'children',
           label: 'name',
-          isLeaf: 'leaf'
+          isLeaf: 'leaf',
         }
-      }
+      },
     },
     renderFunction: {
       type: Function,
-      default: renderContent
+      default: renderContent,
     },
     defaultExpandedNodes: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     isLazyLoad: {
       // true: 表示树为异步加载，用slot自定义搜索框，否则用input过滤搜索
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  created () {},
   methods: {
-    queryData (resolve, index) {
+    queryData(resolve, index) {
       if (!this.dataUrlArr || this.loading === true) {
         return
       }
@@ -117,19 +113,15 @@ export default {
       )
         .then((res) => {
           this.loading = false
-          if (res.code === 0) {
-          } else {
-            const data =
-              res.data[
-                this.dataUrlArr[this.activeIndex].urlArr[index].responseName
-              ]
-
+          if (res.code !== 0) {
+            const data = res.data[this.dataUrlArr[this.activeIndex].urlArr[index].responseName]
             if (index === this.dataUrlArr[this.activeIndex].urlArr.length - 1) {
               data.forEach((item) => {
                 item.leaf = true
               })
             } else {
-              data.forEach((item) => { // 暂时兼容书上查询公式
+              data.forEach((item) => {
+                // 暂时兼容书上查询公式
                 if (item.attribute === 'formulaId') {
                   item.leaf = true
                 }
@@ -142,18 +134,20 @@ export default {
           this.loading = false
         })
     },
-    changeSatus () {
+    changeSatus() {
       this.toggle = !this.toggle
       this.$emit('changeSatus', this.toggle) // 触发自定义事件
     },
-    filterNode (value, data) {
-      if (!value) return true
+    filterNode(value, data) {
+      if (!value) {
+        return true
+      }
       return data.name.indexOf(value) !== -1
     },
-    nodeClick (data, node) {
+    nodeClick(data, node) {
       this.$emit('nodeClick', { data, node })
     },
-    loadNode (node, resolve) {
+    loadNode(node, resolve) {
       const urlArr = this.dataUrlArr[this.activeIndex].urlArr
       for (let index = 0; index < urlArr.length; index++) {
         if (node.level === index) {
@@ -164,10 +158,10 @@ export default {
         }
       }
     },
-    nodeExpand (data, node) {
+    nodeExpand(data, node) {
       this.$emit('node-expand', data, node)
     },
-    handleClick (tab) {
+    handleClick(tab) {
       this.isShow = false
       this.dataUrlArr.forEach((item, index) => {
         if (item.value === tab.name) {
@@ -178,12 +172,12 @@ export default {
           })
         }
       })
-    }
+    },
   },
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.tree.filter(val)
-    }
+    },
     // dataUrlArr: {
     //   handler(val) {
     //     this.$nextTick(() => {
@@ -192,13 +186,13 @@ export default {
     //   },
     //   deep: true
     // }
-  }
+  },
 }
 
-function renderContent (h, { node }) {
+function renderContent(h, { node }) {
   // console.log(node);
   // eslint-disable-next-line no-unused-vars
-  var icon = 'el-icon-folder'
+  let icon = 'el-icon-folder'
   switch (node.level) {
     case 1:
       icon = 'el-icon-folder'
@@ -217,7 +211,7 @@ function renderContent (h, { node }) {
       break
   }
   return (
-    <span class="custom-tree-node">
+    <span class='custom-tree-node'>
       <span>
         <i class={icon}> </i> {node.label}{' '}
       </span>{' '}
@@ -267,7 +261,7 @@ function renderContent (h, { node }) {
   overflow-y: auto;
   overflow-x: hidden;
 }
-.treescrollbar{
+.treescrollbar {
   background-color: transparent !important;
 }
 </style>

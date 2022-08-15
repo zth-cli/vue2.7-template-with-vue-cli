@@ -22,7 +22,7 @@
       <div class="loginbox">
         <h2 style="text-align: center">
           <!-- <img src="../assets/logo.jpg" width="163" height="54" alt /> -->
-          {{slogan}}
+          {{ slogan }}
         </h2>
         <div class="formbox">
           <!--用户名-->
@@ -44,11 +44,7 @@
               prefix-icon="el-icon-c-scale-to-original"
             ></el-input>
           </div>
-          <el-button
-            type="primary"
-            v-debounce="loginajax"
-            :loading="isLoging"
-            class="login_btn"
+          <el-button type="primary" v-debounce="loginajax" :loading="isLoging" class="login_btn"
             >登录</el-button
           >
         </div>
@@ -61,6 +57,7 @@ import { setToken } from '@/utils/auth'
 import { login } from '@/api'
 import { title } from '@/settings'
 export default {
+  name: 'ZthLogin',
   data: function () {
     return {
       slogan: title,
@@ -68,16 +65,13 @@ export default {
       lguserpwd: '',
       lgButton: false,
       lgtoken: '',
-      isLoging: false
+      isLoging: false,
     }
   },
   watch: {
     lgusername: function () {
-      var a = this.lgusername.slice(
-        this.lgusername.length - 1,
-        this.lgusername.length
-      )
-      var re = /[A-Za-z]|[\u4e00-\u9fa5]|[0-9]/
+      const a = this.lgusername.slice(this.lgusername.length - 1, this.lgusername.length)
+      const re = /[A-Za-z]|[\u4e00-\u9fa5]|[0-9]/
       if (!re.test(a)) {
         this.lgusername = this.lgusername.slice(0, this.lgusername.length - 1)
       }
@@ -93,15 +87,15 @@ export default {
       } else {
         this.lgButton = false
       }
-    }
+    },
   },
   methods: {
-    loginajax () {
+    loginajax() {
       // 登录验证返回token
       if (!this.lgusername || !this.lguserpwd) {
         this.$message({
           message: '请输入用户名和密码',
-          type: 'warning'
+          type: 'warning',
         })
         return
       }
@@ -112,7 +106,7 @@ export default {
       this.isLoging = true
       const params = {
         userName: this.lgusername,
-        password: this.lguserpwd
+        password: this.lguserpwd,
       }
       login(params)
         .then((res) => {
@@ -126,7 +120,7 @@ export default {
           this.isLoging = false
         })
     },
-    enterLoginajax (e) {
+    enterLoginajax(e) {
       // 检测密码是否为空之后进行enter事件的监控
       if (e.keyCode === 13) {
         if (this.lgusername !== '' && this.lguserpwd !== '') {
@@ -134,10 +128,11 @@ export default {
         }
       }
     },
-    debounce (fn, wait) {
+    debounce(fn, wait) {
       let timer
       return function () {
         const that = this
+        // eslint-disable-next-line prefer-rest-params
         const args = arguments
         if (timer) {
           clearTimeout(timer)
@@ -146,11 +141,11 @@ export default {
           fn.apply(that, args)
         }, wait)
       }
-    }
-  }
+    },
+  },
 }
 </script>
-<style lang='scss'>
+<style lang="scss">
 .login_main {
   width: 100%;
   height: 100vh;
@@ -181,7 +176,7 @@ export default {
     @include box-shadow();
     // background: #0e9b92 linear-gradient(135deg, #0b827c, #11bab0);
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;

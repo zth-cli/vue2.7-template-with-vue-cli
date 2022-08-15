@@ -1,11 +1,3 @@
-<!--
- * @Author: 阮志雄
- * @Date: 2021-07-08 14:29:08
- * @LastEditTime: 2021-11-16 23:59:38
- * @LastEditors: 阮志雄
- * @Description: In User Settings Edit
- * @FilePath: \vue-template-with-elementui\src\views\Home\index.vue
--->
 <template>
   <div class="x-upload-mian" :class="collspe ? 'x-upload-mian-collspe' : 'x-upload-mian-nocollspe'">
     <p class="x-upload-title" @click="collspe = !collspe">
@@ -13,7 +5,8 @@
       <i :class="collspe ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
     </p>
     <el-select v-model="cameraId" placeholder="选择相机" style="width: 100%; margin-bottom: 12px">
-      <el-option v-for="item in cameraList" :key="item.id" :label="item.imeival" :value="item.id"> </el-option>
+      <el-option v-for="item in cameraList" :key="item.id" :label="item.imeival" :value="item.id">
+      </el-option>
     </el-select>
     <div class="x-upload-content">
       <el-upload
@@ -37,8 +30,8 @@
 
 <script>
 import { apiPost } from '@/api'
-import qs from 'qs'
 export default {
+  name: 'ZthHome',
   data() {
     return {
       cameraId: '',
@@ -47,15 +40,13 @@ export default {
       fileList: [
         {
           name: 'food.jpeg',
-          url:
-            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
         },
         {
           name: 'food2.jpeg',
-          url:
-            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
-      ]
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+        },
+      ],
     }
   },
   methods: {
@@ -66,18 +57,21 @@ export default {
       console.log(file)
     },
     uploadFile(params) {
-      const { file, data } = params
+      const { file } = params
       // 通过 FormData 对象上传文件
-      var formData = new FormData()
+      const formData = new FormData()
       formData.append('file', file)
       formData.append('name', file.name)
-      formData.append('lastModifiedDate', this.$day(file.lastModified).format('YYYY-MM-DD HH:mm:ss'))
+      formData.append(
+        'lastModifiedDate',
+        this.$day(file.lastModified).format('YYYY-MM-DD HH:mm:ss')
+      )
       // this.$day(params.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss')
       // /admin/carousel/addFile
       apiPost('/admin/carousel/addFile', formData)
       console.log(params)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">

@@ -9,7 +9,8 @@ const directives = {
   antiSnake: {
     bind: (el, binding) => {
       let antiSnakeTime = binding.value // 节流时间
-      if (!antiSnakeTime) { // 用户若不设置节流时间，则默认2s
+      if (!antiSnakeTime) {
+        // 用户若不设置节流时间，则默认2s
         antiSnakeTime = 10000
       }
       let timer
@@ -17,9 +18,9 @@ const directives = {
         if (timer) {
           clearTimeout(timer)
         }
-        timer = setTimeout(() => timer = null, antiSnakeTime)
+        timer = setTimeout(() => (timer = null), antiSnakeTime)
       })
-    }
+    },
   },
 
   /***
@@ -31,20 +32,26 @@ const directives = {
   throttle: {
     bind: (el, binding) => {
       let throttleTime = binding.value // 防抖时间
-      if (!throttleTime) { // 用户若不设置防抖时间，则默认2s
+      if (!throttleTime) {
+        // 用户若不设置防抖时间，则默认2s
         throttleTime = 5000
       }
       let timer
-      el.addEventListener('click', event => {
-        if (!timer) { // 第一次执行
-          timer = setTimeout(() => {
-            timer = null
-          }, throttleTime)
-        } else {
-          event && event.stopImmediatePropagation()
-        }
-      }, true)
-    }
+      el.addEventListener(
+        'click',
+        (event) => {
+          if (!timer) {
+            // 第一次执行
+            timer = setTimeout(() => {
+              timer = null
+            }, throttleTime)
+          } else {
+            event && event.stopImmediatePropagation()
+          }
+        },
+        true
+      )
+    },
   },
 
   /***
@@ -53,7 +60,7 @@ const directives = {
    */
   debounce: {
     inserted: function (el, binding) {
-      var deTime = binding.arg ? binding.arg : 1000
+      const deTime = binding.arg ? binding.arg : 1000
       let timer
       el.addEventListener('click', () => {
         if (timer) {
@@ -63,7 +70,7 @@ const directives = {
           binding.value()
         }, deTime)
       })
-    }
+    },
   },
   /***
    * 复制文本
@@ -75,9 +82,7 @@ const directives = {
    * 在第一次调用时绑定事件，在解绑时移除事件
    */
   copy: {
-    bind (el, {
-      value
-    }) {
+    bind(el, { value }) {
       el.$value = value
       el.handler = () => {
         if (!el.$value) {
@@ -107,21 +112,19 @@ const directives = {
       el.addEventListener('click', el.handler)
     },
     // 当传进来的值更新的时候触发
-    componentUpdated (el, {
-      value
-    }) {
+    componentUpdated(el, { value }) {
       el.$value = value
     },
     // 指令与元素解绑的时候，移除事件绑定
-    unbind (el) {
+    unbind(el) {
       el.removeEventListener('click', el.handler)
-    }
-  }
+    },
+  },
 }
 export default {
-  install (Vue) {
+  install(Vue) {
     Object.keys(directives).forEach((key) => {
       Vue.directive(key, directives[key])
     })
-  }
+  },
 }

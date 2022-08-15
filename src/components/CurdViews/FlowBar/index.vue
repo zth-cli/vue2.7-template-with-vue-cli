@@ -2,17 +2,23 @@
   <div class="curd-condition-bar">
     <template v-for="(item, index) in options">
       <section class="condition-item" v-if="!item.type || item.type === 'list'" :key="index">
-        <div class="category-title ellipsis">{{ item.title }}：</div>
-        <div ref="categorys" :class="[switchData[item.name] ? 'category-content-auto' : '', 'category-content']">
+        <div class="category-title ellipsis">
+          <span class="title">{{ item.title }}：</span>
+        </div>
+        <div
+          ref="categorys"
+          :class="[switchData[item.name] ? 'category-content-auto' : '', 'category-content']"
+        >
           <el-button
             v-if="item.options.length > 1"
             size="small"
             style="margin-top: 6px"
+            :disabled="item.disabledAll"
             @click="
               resetItemActive(index)
-              fromData[item.name] = []
+              formData[item.name] = []
             "
-            :type="fromData[item.name].length ? 'text' : 'primary'"
+            :type="formData[item.name].length ? 'text' : 'primary'"
             >全部</el-button
           >
           <ul class="item-ul">
@@ -23,7 +29,9 @@
                   setActive(item, index, inde)
                   setValue(item, ele.value)
                 "
-                :type="item.options.length < 2 ? 'primary' : isActive(index, inde) ? 'primary' : 'text'"
+                :type="
+                  item.options.length < 2 ? 'primary' : isActive(index, inde) ? 'primary' : 'text'
+                "
               >
                 {{ ele.label }}
               </el-button>
@@ -36,7 +44,8 @@
             style="margin-top: 6px"
             @click="switchData[item.name] = !switchData[item.name]"
             type="text"
-            :icon="!switchData[item.name] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'">
+            :icon="!switchData[item.name] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'"
+          >
             {{ !switchData[item.name] ? '展开' : '收起' }}
           </el-button>
         </div>
@@ -63,73 +72,74 @@ export default {
   data() {
     return {
       anchor: [],
-      fromData: {},
-      switchData: {}
+      formData: {},
+      switchData: {},
     }
   },
   components: { ConditionBar },
   props: {
     multiple: {
       type: Boolean,
-      default: true
+      default: true,
     },
     options: {
       type: Array,
-      default: function() {
+      default: function () {
         return [
           {
             name: 'area',
             title: '接入电网',
-            options: [{ label: '省调公司', value: '1232213213' }]
-          }
+            disabledAll: false,
+            options: [{ label: '省调公司', value: '1232213213' }],
+          },
         ]
-      }
-    }
+      },
+    },
   },
   watch: {
     options: {
       deep: true,
       immediate: true,
-      handler: function() {
+      handler: function () {
         this.initFromData()
-      }
+      },
     },
     switchData: {
       // 重置scrolltop
       deep: true,
-      handler: function() {
+      handler: function () {
         this.$nextTick(() => {
           if (this.$refs.categorys) {
-            this.$refs.categorys.forEach(element => {
+            this.$refs.categorys.forEach((element) => {
               element.scrollTop = 0
             })
           }
         })
-      }
-    }
+      },
+    },
   },
   methods: {
     initFromData() {
-      this.options.forEach(item => {
+      this.options.forEach((item) => {
         if (item.type === 'list' || !item.type) {
-          this.$set(this.fromData, item.name, [])
+          this.$set(this.formData, item.name, [])
           this.$set(this.switchData, item.name, false)
         }
       })
     },
     setValue(item, val) {
       if (this.multiple) {
-        let index = this.fromData[item.name].indexOf(val)
+        const index = this.formData[item.name].indexOf(val)
         if (index > -1) {
           // 多选存在，删除值
-          this.fromData[item.name].splice(index, 1)
+          this.formData[item.name].splice(index, 1)
         } else {
-          this.fromData[item.name].push(val)
+          this.formData[item.name].push(val)
         }
       } else {
-        this.fromData[item.name] = [val]
+        this.formData[item.name] = [val]
       }
-      this.$emit('params-change', this.fromData)
+      this.$emit('params-change', this.formData)
     },
     setActive(item, index, i) {
       // if (!item.multiple) {
@@ -139,7 +149,7 @@ export default {
       //     }
       //   })
       // }
-      let id = String(index) + '~' + String(i)
+      const id = String(index) + '~' + String(i)
       if (this.multiple) {
         if (this.anchor.indexOf(id) < 0) {
           this.anchor.push(id)
@@ -152,24 +162,24 @@ export default {
       }
     },
     resetItemActive(index) {
-      const arr = this.anchor.filter((ele, indx) => {
+      const arr = this.anchor.filter((ele) => {
         return ele.split('~')[0] !== String(index)
       })
       this.anchor = arr
     },
-    resetAllActive() {},
+    // resetAllActive() {},
     isActive(index, i) {
       return this.anchor.includes(String(index) + '~' + String(i))
     },
     // 输入框
     paramsChange(params) {
-      this.fromData = Object.assign({}, this.fromData, params)
-      this.$emit('params-change', this.fromData)
+      this.formData = Object.assign({}, this.formData, params)
+      this.$emit('params-change', this.formData)
     },
     query(params) {
-      this.$emit('query', { ...params, ...this.fromData })
-    }
-  }
+      this.$emit('query', { ...params, ...this.formData })
+    },
+  },
 }
 </script>
 <style lang="scss">
@@ -191,8 +201,8 @@ $linehieht: 40px;
     .category-title {
       @include font_color(null);
       width: 130px;
-      display: flex;
-      align-items: center;
+      width: 130px;
+      line-height: 46px;
     }
     .category-more {
       @include font_color(null);

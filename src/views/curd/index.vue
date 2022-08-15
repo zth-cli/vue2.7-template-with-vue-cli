@@ -7,8 +7,8 @@
       <el-tab-pane label="CURD" :lazy="true" name="second">
         <curd-view></curd-view>
       </el-tab-pane>
-       <el-tab-pane label="FlowBar" :lazy="true" name="thrith">
-       <flow-view></flow-view>
+      <el-tab-pane label="FlowBar" :lazy="true" name="thrith">
+        <flow-view></flow-view>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -19,19 +19,18 @@ import CurdView from './pages/curd-view.vue'
 import FlowView from './pages/flow-view.vue'
 import PageData from './pages/page-data.vue'
 export default {
-  data () {
+  name: 'CurePage',
+  data() {
     return {
-      activeName: 'first'
+      activeName: 'first',
     }
   },
   methods: {
-    handleClick (tab, event) {
+    handleClick(tab, event) {
       console.log(tab, event)
-    }
+    },
   },
-  components: { PageData,CurdView, FlowView }
+  components: { PageData, CurdView, FlowView },
 }
 </script>
-<style lang='scss'>
-
-</style>
+<style lang="scss"></style>

@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 
 // request 拦截器
 http.interceptors.request.use(
-  config => {
+  (config) => {
     let params = {}
     const token = getToken('token')
     if (!config.url.match('login') && !window.hiddenBar) {
@@ -15,11 +15,11 @@ http.interceptors.request.use(
     }
     config.params = {
       ...params,
-      ...config.params
+      ...config.params,
     }
     return config
   },
-  error => {
+  (error) => {
     // eslint-disable-next-line no-console
     console.log(error) // for debug
     return Promise.reject(error)
@@ -28,25 +28,24 @@ http.interceptors.request.use(
 
 // respone 拦截器
 http.interceptors.response.use(
-  response => {
+  (response) => {
     const status = response.status
     const res = response.data
     if (status === 200) {
       return Promise.resolve(res)
-    } else {
-      Message({
-        message: res.msg || 'Error',
-        type: 'error',
-        duration: 1 * 1000
-      })
-      return Promise.reject(new Error(res.msg || 'Error'))
     }
+    Message({
+      message: res.msg || 'Error',
+      type: 'error',
+      duration: 1 * 1000,
+    })
+    return Promise.reject(new Error(res.msg || 'Error'))
   },
-  error => {
+  (error) => {
     Message({
       message: '服务异常！',
       type: 'error',
-      duration: 1 * 1000
+      duration: 1 * 1000,
     })
     return Promise.reject(error)
   }

@@ -15,7 +15,12 @@
               filterable
               :multiple="col.multiple ? col.multiple : false"
             >
-              <el-option v-for="item in col.options" :key="item.value" :label="item.label" :value="item.value">
+              <el-option
+                v-for="item in col.options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
               </el-option>
             </el-select>
           </template>
@@ -33,7 +38,9 @@
       </el-table-column>
       <el-table-column label="操作" width="120" align="center">
         <template v-slot="scope">
-          <el-button type="danger" size="mini" @click="TableData.splice(scope.$index, 1)">移除</el-button>
+          <el-button type="danger" size="mini" @click="TableData.splice(scope.$index, 1)"
+            >移除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -48,12 +55,12 @@ export default {
   data() {
     return {
       TableData: this.propData,
-      rowData: {}
+      rowData: {},
     }
   },
   model: {
     prop: 'propData',
-    event: 'change'
+    event: 'change',
   },
   emits: ['change'],
   props: {
@@ -61,7 +68,7 @@ export default {
       type: Array,
       default: function () {
         return []
-      }
+      },
     },
     columns: {
       type: Array,
@@ -71,17 +78,17 @@ export default {
             name: 'content',
             label: '评价',
             type: 'textarea',
-            with: 200
-          }
+            with: 200,
+          },
         ]
-      }
-    }
+      },
+    },
   },
   methods: {
     addInitData() {
       const rowData = Object.assign({}, this.rowData)
       this.TableData.push(rowData)
-    }
+    },
   },
   created() {
     this.columns.forEach((item) => {
@@ -96,18 +103,18 @@ export default {
       handler: function (data) {
         this.$emit('change', data)
       },
-      deep: true
+      deep: true,
     },
     propData: {
       handler: function (data) {
         this.TableData = data
       },
-      deep: true
-    }
-  }
+      deep: true,
+    },
+  },
 }
 </script>
-<style lang='scss'>
+<style lang="scss">
 ._Edit_table {
   .add-area {
     width: 100%;

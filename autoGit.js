@@ -6,12 +6,12 @@
  * @FilePath: \vue-template-with-elementui\autoGit.js
  * @Description: Do not edit
  */
-const util = require('util');
+const util = require('util')
 const { exec } = require('child_process')
-const build = util.promisify(exec);
+const build = util.promisify(exec)
 async function lsExample() {
-    const { stdout, stderr } = await build('npm run build');
-    console.log('stdout:', stdout);
-    console.error('stderr:', stderr);
+  const { stdout, stderr } = await build('npm run build')
+  console.log('stdout:', stdout)
+  console.error('stderr:', stderr)
 }
-lsExample();
+lsExample()

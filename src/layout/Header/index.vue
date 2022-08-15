@@ -10,7 +10,7 @@
         :class="[collapse ? 'el-icon-s-unfold' : 'el-icon-s-fold']"
       ></i>
     </div>
-    <Breadcrumb  v-if="mode" class="breadcrumb"></Breadcrumb>
+    <Breadcrumb v-if="mode" class="breadcrumb"></Breadcrumb>
     <div class="slogan ellipsis" @click="$router.push('/')" title="首页">
       {{ slogan }}
     </div>
@@ -53,8 +53,12 @@
             <i f class="el-icon-caret-bottom"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-mouse" command="updataPassword">密码修改</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-switch-button" command="loginout">注销</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-mouse" command="updataPassword"
+              >密码修改</el-dropdown-item
+            >
+            <el-dropdown-item icon="el-icon-switch-button" command="loginout"
+              >注销</el-dropdown-item
+            >
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -62,9 +66,20 @@
     <theme-bar :status="switchThemeBar" @visibleChange="toggleThemeBar"></theme-bar>
     <overlay :close.sync="close" owidth="400px" oheight="40vh" title="密码修改">
       <div v-if="close" class="addUser">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form
+          :model="ruleForm"
+          :rules="rules"
+          ref="ruleForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="登录名称" prop="userName">
-            <el-input v-model="ruleForm.userName" :disabled="true" size="mini" style="width: 220px"></el-input>
+            <el-input
+              v-model="ruleForm.userName"
+              :disabled="true"
+              size="mini"
+              style="width: 220px"
+            ></el-input>
           </el-form-item>
           <el-form-item label="旧密码">
             <el-input
@@ -94,7 +109,9 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="submitForm('ruleForm')">立即创建</el-button>
+            <el-button type="primary" size="mini" @click="submitForm('ruleForm')"
+              >立即创建</el-button
+            >
             <el-button @click="resetForm('ruleForm')" size="mini">重置</el-button>
           </el-form-item>
         </el-form>
@@ -110,12 +127,13 @@ import { updataPassword } from '@/api'
 import { title } from '@/settings'
 import bus from '@/utils/bus'
 export default {
+  name: 'ZthHeader',
   data() {
-    var validatePass = (rule, value, callback) => {
+    const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
-        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{10,}$/
+        const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{10,}$/
         const checkValue = reg.test(value)
         if (!checkValue) {
           callback(new Error('输入9位以上由数字和字母组成的密码'))
@@ -127,7 +145,7 @@ export default {
         }
       }
     }
-    var validatePass2 = (rule, value, callback) => {
+    const validatePass2 = (rule, value, callback) => {
       const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{10,}$/
       if (value === '') {
         callback(new Error('请再次输入密码'))
@@ -150,36 +168,36 @@ export default {
         userName: getToken('userName'),
         oldPwd: '',
         newPwd: '',
-        confirmNewPwd: ''
+        confirmNewPwd: '',
       },
       rules: {
         userName: [
           { required: true, message: '请输入用户别名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' },
         ],
         oldPwd: [{ required: true, validator: validatePass, trigger: 'blur' }],
         newPwd: [{ required: true, validator: validatePass, trigger: 'blur' }],
-        confirmNewPwd: [{ required: true, validator: validatePass2, trigger: 'blur' }]
+        confirmNewPwd: [{ required: true, validator: validatePass2, trigger: 'blur' }],
       },
-      switchThemeBar: false
+      switchThemeBar: false,
     }
   },
   props: {
     mode: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showThemeBar: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   components: { ThemeBar, Breadcrumb },
   computed: {
     username() {
       const username = localStorage.getItem('ms_username')
       return username || this.name
-    }
+    },
   },
   methods: {
     // 用户名下拉菜单选择事件
@@ -196,7 +214,7 @@ export default {
         if (res.resultCode === 0) {
           this.$message({
             message: '修改成功，重新登陆',
-            type: 'success'
+            type: 'success',
           })
           removeToken('token')
           removeToken('userName')
@@ -204,7 +222,7 @@ export default {
         } else {
           this.$message({
             message: '修改失败，请重试！',
-            type: 'warning'
+            type: 'warning',
           })
         }
       })
@@ -219,7 +237,7 @@ export default {
         } else {
           this.$message({
             message: '填写有误，请检查！',
-            type: 'warning'
+            type: 'warning',
           })
           console.log('error submit!!')
           return false
@@ -233,7 +251,7 @@ export default {
     // 刷新页面
     reloadPage() {
       this.$router.push({
-        path: '/redirect' + this.$route.fullPath
+        path: '/redirect' + this.$route.fullPath,
       })
     },
     // 全屏事件
@@ -249,17 +267,15 @@ export default {
         } else if (document.msExitFullscreen) {
           document.msExitFullscreen()
         }
-      } else {
-        if (element.requestFullscreen) {
-          element.requestFullscreen()
-        } else if (element.webkitRequestFullScreen) {
-          element.webkitRequestFullScreen()
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen()
-        } else if (element.msRequestFullscreen) {
-          // IE11
-          element.msRequestFullscreen()
-        }
+      } else if (element.requestFullscreen) {
+        element.requestFullscreen()
+      } else if (element.webkitRequestFullScreen) {
+        element.webkitRequestFullScreen()
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen()
+      } else if (element.msRequestFullscreen) {
+        // IE11
+        element.msRequestFullscreen()
       }
       this.fullscreen = !this.fullscreen
     },
@@ -268,8 +284,8 @@ export default {
     },
     handleCollapse() {
       bus.$emit('handleCollapse', this.collapse)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">

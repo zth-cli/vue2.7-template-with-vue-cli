@@ -1,2 +1,2 @@
-import DataTable from "./index.vue";
-export default DataTable;
+import DataTable from './index.vue'
+export default DataTable

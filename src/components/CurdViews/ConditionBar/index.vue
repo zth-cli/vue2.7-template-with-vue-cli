@@ -6,7 +6,10 @@
         <template v-for="(item, index) in searchDynamic">
           <template v-if="item.type && allowType.includes(item.type)">
             <template
-              v-if="!item.dateSwitch && (item.type === 'date' || item.type === 'month' || item.type === 'year')"
+              v-if="
+                !item.dateSwitch &&
+                (item.type === 'date' || item.type === 'month' || item.type === 'year')
+              "
             >
               <div :key="'item' + index" class="curd_tool_item" ref="tool">
                 <label class="label" v-if="mode !== 'simple'">{{ item.label }}：</label>
@@ -15,7 +18,7 @@
                   :disabled="item.disabled"
                   :placeholder="getPlaceholder(item)"
                   clearable
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   size="mini"
                   :style="{ width: width }"
                   :value-format="item.format"
@@ -31,7 +34,7 @@
                   :disabled="item.disabled"
                   :placeholder="getPlaceholder(item)"
                   clearable
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   size="mini"
                   :style="{ width: width }"
                   :format="item.format"
@@ -44,7 +47,7 @@
               <div :key="'item' + index" class="curd_tool_item" ref="tool">
                 <label class="label" v-if="mode !== 'simple'">{{ item.label }}：</label>
                 <el-date-picker
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :type="item.type"
                   :disabled="item.disabled"
                   :value-format="item.format"
@@ -62,7 +65,7 @@
               <div :key="'item' + index" class="curd_tool_item" ref="tool">
                 <label class="label" v-if="mode !== 'simple'">{{ item.label }}：</label>
                 <el-select
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :style="{ width: width }"
                   :placeholder="getPlaceholder(item)"
                   collapse-tags
@@ -84,7 +87,7 @@
             <template v-else-if="item.type === 'checkbox'">
               <div :key="'item' + index" class="curd_tool_item" ref="tool">
                 <template v-if="item.options && item.options.length > 0">
-                  <el-checkbox-group size="mini" v-model="fromData[item.name]">
+                  <el-checkbox-group size="mini" v-model="formData[item.name]">
                     <template v-for="ele in item.options">
                       <el-checkbox :disabled="item.disabled" :label="ele.value" :key="ele.value">{{
                         ele.label
@@ -93,13 +96,21 @@
                   </el-checkbox-group>
                 </template>
                 <template v-else>
-                  <el-checkbox size="mini" v-model="fromData[item.name]" true-label="1" false-label="0">{{
-                    item.label
-                  }}</el-checkbox>
+                  <el-checkbox
+                    size="mini"
+                    v-model="formData[item.name]"
+                    true-label="1"
+                    false-label="0"
+                    >{{ item.label }}</el-checkbox
+                  >
                 </template>
               </div>
             </template>
-            <template v-else-if="typeArr.includes(item.type) && item.dateSwitch && item.dateSwitch.length > 1">
+            <template
+              v-else-if="
+                typeArr.includes(item.type) && item.dateSwitch && item.dateSwitch.length > 1
+              "
+            >
               <div :key="'item' + index" class="curd_tool_item" ref="tool">
                 <el-button
                   class="mini_btns"
@@ -130,7 +141,7 @@
                   :disabled="item.disabled"
                   :placeholder="getPlaceholder(item)"
                   clearable
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   size="mini"
                   :value-format="
                     item.dateSwitch[switchIndex].type === 'date'
@@ -149,7 +160,7 @@
                 <label class="label" v-if="mode !== 'simple'">{{ item.label }}：</label>
                 <el-input
                   :style="{ width: width }"
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :placeholder="getPlaceholder(item)"
                   size="mini"
                 ></el-input>
@@ -164,7 +175,11 @@
         <i :class="[expend ? 'el-icon-arrow-up' : 'el-icon-arrow-down']"></i>
       </div>
       <div class="btns">
-        <el-button type="primary" v-if="searchDynamic.length > 0 && mode !== 'simple'" size="mini" @click="query()"
+        <el-button
+          type="primary"
+          v-if="searchDynamic.length > 0 && mode !== 'simple'"
+          size="mini"
+          @click="query()"
           >查询</el-button
         >
         <slot name="tool"></slot>
@@ -180,7 +195,7 @@ export default {
     return {
       ellipsis: false,
       expend: false,
-      fromData: {},
+      formData: {},
       allowType: [
         'date',
         'daterange',
@@ -194,38 +209,47 @@ export default {
         'radio',
         'checkbox',
         'select',
-        'switch'
+        'switch',
       ],
-      typeArr: ['date', 'daterange', 'datetime', 'datetimerange', 'year', 'month', 'time', 'timerange'],
+      typeArr: [
+        'date',
+        'daterange',
+        'datetime',
+        'datetimerange',
+        'year',
+        'month',
+        'time',
+        'timerange',
+      ],
       switchIndex: 0,
-      trigger: true
+      trigger: true,
     }
   },
   props: {
     mode: {
       // 添加场景选择，适应紧凑布局，充分利用空间
       type: String,
-      default: 'normal' // 'normal' 正常模式 'simple'简单模式，布局更紧凑
+      default: 'normal', // 'normal' 正常模式 'simple'简单模式，布局更紧凑
     },
     searchDynamic: {
       type: Array,
       default: function () {
         return []
-      }
+      },
     },
     toolAlign: {
-      default: 'left'
+      default: 'left',
     },
     width: {
       type: String,
-      default: '200px'
+      default: '200px',
     },
     beforeQuery: {
       type: Function,
-      default: function (fromData) {
-        return fromData
-      }
-    }
+      default: function (formData) {
+        return formData
+      },
+    },
   },
   mounted() {
     this.toolsMediaQuery()
@@ -234,7 +258,7 @@ export default {
   },
   methods: {
     switchDate(prop, typeObj, typeParamName) {
-      var format =
+      const format =
         typeObj.type === 'date'
           ? 'yyyy-MM-dd'
           : typeObj.type === 'month'
@@ -243,10 +267,11 @@ export default {
           ? 'yyyy'
           : 'yyyy-MM-dd'
       // 解决日期选择多日后，切换为日和月报错问题
-      var date = typeof this.fromData[prop] === 'string' ? this.fromData[prop] : this.fromData[prop][0]
-      this.fromData[prop] = this.$day(date).format(format.toUpperCase())
+      const date =
+        typeof this.formData[prop] === 'string' ? this.formData[prop] : this.formData[prop][0]
+      this.formData[prop] = this.$day(date).format(format.toUpperCase())
       if (typeParamName) {
-        this.fromData[typeParamName] = typeObj.typeName
+        this.formData[typeParamName] = typeObj.typeName
       }
     },
     getPlaceholder(item) {
@@ -254,7 +279,7 @@ export default {
         return item.label
       }
       let result
-      if (item.placeholder == null) {
+      if (item.placeholder === null) {
         switch (item.type) {
           case 'text':
             result = item.disabled || item.readonly ? '' : item.label
@@ -292,7 +317,7 @@ export default {
         for (const key in item) {
           if (key === 'name') {
             const str = item[key]
-            this.$set(this.fromData, [str], '')
+            this.$set(this.formData, [str], '')
           }
           if (key === 'remoteMethod' && item.remoteMethod && item.type === 'select') {
             item.remoteMethod.then((res) => {
@@ -300,34 +325,36 @@ export default {
             })
           }
         }
-        this.fromData[item.name] = item.default ? item.default : ''
+        this.formData[item.name] = item.default ? item.default : ''
         if (this.typeArr.includes(item.type)) {
-          this.fromData[item.name] = item.default ? item.default : this.$day().format(item.format.toUpperCase())
+          this.formData[item.name] = item.default
+            ? item.default
+            : this.$day().format(item.format.toUpperCase())
         }
       })
       // setInterval(() => { this.trigger = false }, 0)
     },
     async query() {
-      const fromData = {}
-      const params = this.fromData
+      const formData = {}
+      const params = this.formData
       for (const key in params) {
         if (params[key] instanceof Array) {
           // 对value为Array类型的进行字符串拼接
-          fromData[key] = params[key].join(',')
+          formData[key] = params[key].join(',')
         } else {
-          fromData[key] = params[key]
+          formData[key] = params[key]
         }
       }
-      const subFromData = await this.beforeQuery(fromData)
+      const subFromData = await this.beforeQuery(formData)
       this.$emit('query', subFromData)
     },
     toolsMediaQuery() {
       // 对查询条件过多，进行条件部分隐藏
       if (this.$refs.tools) {
         this.ellipsis = false
-        var sonWidth = 0
-        var parentWidth = this.$refs.tools.offsetWidth // 获取实例元素
-        var sonElements = this.$refs.tool
+        let sonWidth = 0
+        const parentWidth = this.$refs.tools.offsetWidth // 获取实例元素
+        const sonElements = this.$refs.tool
         if (!sonElements) {
           return
         }
@@ -340,12 +367,14 @@ export default {
       }
     },
     debounce(fn, wait) {
-      var timeout = null
+      let timeout = null
       return function () {
-        if (timeout !== null) clearTimeout(timeout)
+        if (timeout !== null) {
+          clearTimeout(timeout)
+        }
         timeout = setTimeout(fn, wait)
       }
-    }
+    },
   },
   created() {
     if (this.searchDynamic) {
@@ -353,23 +382,23 @@ export default {
     }
   },
   watch: {
-    fromData: {
+    formData: {
       handler: async function (params) {
-        const fromData = {}
+        const formData = {}
         for (const key in params) {
           if (params[key] instanceof Array) {
             // 对value为Array类型的进行字符串拼接
-            fromData[key] = params[key].join(',')
+            formData[key] = params[key].join(',')
           } else {
-            fromData[key] = params[key]
+            formData[key] = params[key]
           }
         }
-        const subFromData = await this.beforeQuery(fromData)
+        const subFromData = await this.beforeQuery(formData)
         this.$emit('params-change', subFromData)
       },
-      deep: true
-    }
-  }
+      deep: true,
+    },
+  },
 }
 </script>
 <style lang="scss">

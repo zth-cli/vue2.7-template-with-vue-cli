@@ -39,44 +39,44 @@
 
 <script>
 export default {
-  name: 'overlay',
+  name: 'OverLay',
   data() {
     return {
       isFullScreen: false,
       sizeArr: {
         mini: '30vw',
         small: '60vw',
-        large: '90vw'
-      }
+        large: '90vw',
+      },
     }
   },
   props: {
     close: {
       type: Boolean,
-      default: false
+      default: false,
     },
     oheight: {
       type: String,
-      default: ''
+      default: '',
     },
     owidth: {
       type: String,
-      default: ''
+      default: '',
     },
     title: String,
     lazy: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isDialogDrag: {
       // 控制弹框拖拽
       type: Boolean,
-      default: true
+      default: true,
     },
     size: {
       type: String,
-      default: 'small'
-    }
+      default: 'small',
+    },
   },
   methods: {
     fullScreen() {
@@ -92,13 +92,13 @@ export default {
     changeSatus() {
       // 事件
       this.$emit('changeSatus', this.close) // 触发自定义事件
-    }
+    },
   },
   computed: {
     width: function () {
       return this.owidth ? this.owidth : this.sizeArr[this.size]
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -167,17 +167,17 @@ export default {
     }
   }
 }
- .slide-fade-enter-active {
-    transition: all .2s ease-out;
-  }
+.slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
 
-  .slide-fade-leave-active {
-    transition: all .2s ease;
-  }
+.slide-fade-leave-active {
+  transition: all 0.2s ease;
+}
 
-  .slide-fade-enter-from,
-  .slide-fade-leave-to {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
 </style>

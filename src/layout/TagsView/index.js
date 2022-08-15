@@ -1,2 +1,2 @@
-import TagsVue from "./index.vue"
+import TagsVue from './index.vue'
 export default TagsVue

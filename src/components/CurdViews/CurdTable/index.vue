@@ -1,7 +1,12 @@
 <template>
   <div class="curd_table">
     <div class="panel_tool_left" v-if="showPanelTool && mode !== 'simple'">
-      <el-button icon="el-icon-plus" size="mini" v-if="defaultPanel.includes('add')" type="primary" @click="addRow()"
+      <el-button
+        icon="el-icon-plus"
+        size="mini"
+        v-if="defaultPanel.includes('add')"
+        type="primary"
+        @click="addRow()"
         >新增</el-button
       >
       <el-button
@@ -46,7 +51,12 @@
         <div style="margin: 5px 0">
           <div>
             <div v-for="(col, index) in columns" :key="index">
-              <el-checkbox @change="columnsChange" v-if="col.label" v-model="col.show" :label="col.label">
+              <el-checkbox
+                @change="columnsChange"
+                v-if="col.label"
+                v-model="col.show"
+                :label="col.label"
+              >
                 {{ col.label }}
               </el-checkbox>
             </div>
@@ -117,42 +127,43 @@
 import DataTable from '../DataTable'
 import { apiGet } from '@/api'
 export default {
+  name: 'curd-table',
   props: {
     mode: {
       // 添加场景选择，适应紧凑布局，充分利用空间
       type: String,
-      default: 'normal' // 'normal' 正常模式 'simple'简单模式，布局更紧凑
+      default: 'normal', // 'normal' 正常模式 'simple'简单模式，布局更紧凑
     },
     defaultPanel: {
       type: Array,
       default: function () {
         return ['add', 'edit', 'delete']
-      }
+      },
     },
     pageAlign: {
-      default: 'right'
+      default: 'right',
     },
     tableSize: {
-      default: 'mini'
+      default: 'mini',
     },
     pageSize: {
-      default: 20
+      default: 20,
     },
     stripe: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showPage: {
       type: Boolean,
-      default: true
+      default: true,
     },
     highlightCurrentRow: {
       type: Boolean,
-      default: false
+      default: false,
     },
     lazy: {
       type: Boolean,
-      default: false
+      default: false,
     },
     columns: {},
     dataUrl: {},
@@ -162,43 +173,43 @@ export default {
     showSummary: { default: false },
     summaryMethod: {
       // 合计自定义方法
-      type: Function
+      type: Function,
     },
     spanMethod: {
-      type: Function
+      type: Function,
     },
     border: {
       type: Boolean,
-      default: true
+      default: true,
     },
     resizable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showSettingTool: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showPanelTool: {
       type: Boolean,
-      default: true
+      default: true,
     },
     responseName: {
       type: [String, Array],
-      default: 'list'
+      default: 'list',
     },
     isPrivate: {
       // 是否添加私有属性，用于某些情况直接添加私有属性无法生效问题
       type: Boolean,
-      default: false
+      default: false,
     },
     rowKey: { type: String }, // 支持树类型的数据的显示,rowKey不为空时生效
     treeProps: {
       type: Object,
       default: function () {
         return { children: 'children', hasChildren: 'hasChildren' }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -214,7 +225,7 @@ export default {
                 projectName: 'name',
                 createDate: '12-11',
                 description: 'w21',
-                _disabled: 0
+                _disabled: 0,
               },
               {
                 creator: 'rzx007',
@@ -222,22 +233,22 @@ export default {
                 projectName: 'name',
                 createDate: '12-11',
                 description: 'w21',
-                _disabled: 0
-              }
+                _disabled: 0,
+              },
             ],
       mColumns: [],
       selection: [],
       total: 0,
       pageParam: {
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       slotArr: [], // slot
       headerSlotArr: [], // 自定义表头
       lazyLoad: this.lazy,
       columnList: [],
       key: 0,
-      timeout: {} // 请求防抖计时器
+      timeout: {}, // 请求防抖计时器
     }
   },
   components: { DataTable },
@@ -246,8 +257,8 @@ export default {
       return !(this.selection !== null && this.selection.length === 1)
     },
     isMultiple() {
-      return !(this.selection != null && this.selection.length > 0)
-    }
+      return !(this.selection !== null && this.selection.length > 0)
+    },
   },
   methods: {
     queryData() {
@@ -336,7 +347,7 @@ export default {
       this.$emit('row-delete', this.selection)
     },
     getSlot() {
-      var that = this
+      const that = this
       const mColumns = this.mColumns
       function Maps(mColumns) {
         mColumns.forEach((item) => {
@@ -352,7 +363,7 @@ export default {
       Maps(mColumns)
     },
     getHeaderSlot() {
-      var that = this
+      const that = this
       const mColumns = this.mColumns
       function Maps(mColumns) {
         mColumns.forEach((item) => {
@@ -380,7 +391,7 @@ export default {
         this.mColumns = list
         // this.$refs.tableView.doLayout();
       })
-    }
+    },
   },
   created() {
     if (!this.showPage) {
@@ -391,7 +402,7 @@ export default {
     this.getSlot()
     this.getHeaderSlot()
 
-    if (this.pageSize != null && this.showPage) {
+    if (this.pageSize !== null && this.showPage) {
       this.pageParam.pageSize = this.pageSize
     }
     if (!this.lazyLoad) {
@@ -403,7 +414,7 @@ export default {
   },
   watch: {
     params: {
-      handler(curVal) {
+      handler() {
         if (this.showPage) {
           this.pageParam.pageIndex = 1
         }
@@ -412,27 +423,27 @@ export default {
         }
         this.lazyLoad = false
       },
-      deep: true
+      deep: true,
     },
     columns: {
       handler(curVal) {
         this.mColumns = curVal
       },
-      deep: true
+      deep: true,
     },
     dataUrl: {
-      handler(curVal) {
+      handler() {
         if (this.showPage) {
           this.pageParam.pageIndex = 1
         }
         this.queryData()
       },
-      deep: true
-    }
-  }
+      deep: true,
+    },
+  },
 }
 </script>
-<style lang='scss'>
+<style lang="scss">
 .curd_table {
   // background-color: #fff;
   @include content-background();

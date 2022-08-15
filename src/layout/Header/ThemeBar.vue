@@ -1,58 +1,60 @@
 <template>
-  <div>
-    <el-drawer
-      title="主题配置"
-      append-to-body
-      :visible.sync="status"
-      :styles="styles"
-      @close='change'
-      size='300px'
-    >
-      <ul class="theme-list">
-        <li class="theme-item">
-          <p>菜单布局</p>
-          <div class="drawer-block-checkbox">
-            <div
-              class="drawer-block-checkbox-item drawer-block-checkbox-item-slide"
-              @click="layout.menuModeisVertical = true;saveTheme()"
-            >
-              <i
-                class="selectIcon el-icon-check"
-                v-show="layout.menuModeisVertical "
-              />
-            </div>
-            <div
-              class="drawer-block-checkbox-item drawer-block-checkbox-item-top"
-              @click="layout.menuModeisVertical = false;saveTheme()"
-            >
-              <i
-                class="selectIcon el-icon-check"
-                v-show="!layout.menuModeisVertical"
-              />
-            </div>
+  <el-drawer
+    title="主题配置"
+    append-to-body
+    :visible.sync="visible"
+    :styles="styles"
+    @close="change"
+    size="300px"
+  >
+    <ul class="theme-list">
+      <li class="theme-item">
+        <p>菜单布局</p>
+        <div class="drawer-block-checkbox">
+          <div
+            class="drawer-block-checkbox-item drawer-block-checkbox-item-slide"
+            @click="
+              layout.menuModeisVertical = true
+              saveTheme()
+            "
+          >
+            <i class="selectIcon el-icon-check" v-show="layout.menuModeisVertical" />
           </div>
-        </li>
-        <li class="theme-item">
-          <p>主题颜色</p>
-          <div class="drawer-block-checkbox">
-            <template v-for="(item, index) in colors">
-              <div
-                class="theme-color-block"
-                :style="{ background: item.color }"
-                :key="index"
-                @click="changeTheme(item.theme);themeName = item.theme" >
-                <i class="selectIcon el-icon-check" v-show="themeName === item.theme" />
-              </div>
-            </template>
+          <div
+            class="drawer-block-checkbox-item drawer-block-checkbox-item-top"
+            @click="
+              layout.menuModeisVertical = false
+              saveTheme()
+            "
+          >
+            <i class="selectIcon el-icon-check" v-show="!layout.menuModeisVertical" />
           </div>
-        </li>
-        <li class="theme-item">
-          <span>多标签</span>
-          <el-checkbox v-model="layout.tagsBar" @change='saveTheme()'></el-checkbox>
-        </li>
-      </ul>
-    </el-drawer>
-  </div>
+        </div>
+      </li>
+      <li class="theme-item">
+        <p>主题颜色</p>
+        <div class="drawer-block-checkbox">
+          <template v-for="(item, index) in colors">
+            <div
+              class="theme-color-block"
+              :style="{ background: item.color }"
+              :key="index"
+              @click="
+                changeTheme(item.theme)
+                themeName = item.theme
+              "
+            >
+              <i class="selectIcon el-icon-check" v-show="themeName === item.theme" />
+            </div>
+          </template>
+        </div>
+      </li>
+      <li class="theme-item">
+        <span>多标签</span>
+        <el-checkbox v-model="layout.tagsBar" @change="saveTheme()"></el-checkbox>
+      </li>
+    </ul>
+  </el-drawer>
 </template>
 
 <script>
@@ -61,37 +63,42 @@ import { mapActions, mapGetters } from 'vuex'
 import bus from '@/utils/bus'
 import themes from '@/utils/themeMap'
 export default {
-  data () {
+  data() {
     return {
       colors: themes,
       themeName: localStorage.getItem('theme') || 'theme2',
       layout: {
         menuModeisVertical: localStorage.getItem('menuModeisVertical') === 'true',
-        tagsBar: localStorage.getItem('tagsBar') === 'true'
+        tagsBar: localStorage.getItem('tagsBar') === 'true',
       },
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
         paddingBottom: '53px',
-        position: 'static'
-      }
+        position: 'static',
+      },
     }
   },
   props: {
     status: {
       defalut: false,
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
-  computed: { ...mapGetters(['mode', 'tagsBar']) },
+  computed: {
+    ...mapGetters(['mode', 'tagsBar']),
+    visible: function () {
+      return this.status
+    },
+  },
   methods: {
-    change (bool) {
+    change(bool) {
       this.$emit('visibleChange', bool)
     },
     ...mapActions({
-      changeSetting: 'settings/changeSetting'
+      changeSetting: 'settings/changeSetting',
     }),
-    saveTheme () {
+    saveTheme() {
       for (const key in this.layout) {
         // eslint-disable-next-line no-prototype-builtins
         if (this.layout.hasOwnProperty(key)) {
@@ -101,28 +108,25 @@ export default {
         }
       }
     },
-    changeTheme (theme) {
+    changeTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme)
       document
         .getElementById('theme')
-        .setAttribute(
-          'href',
-          `${process.env.BASE_URL}theme/${theme}/index.css`
-        )
+        .setAttribute('href', `${process.env.BASE_URL}theme/${theme}/index.css`)
       localStorage.setItem('theme', theme)
       bus.$emit('changMenuColor', theme)
-    }
-  }
+    },
+  },
 }
 </script>
-<style lang='scss'>
+<style lang="scss">
 .theme-list {
   box-sizing: border-box;
   padding: 0 18px;
-   @include font_color(null);
+  @include font_color(null);
   .theme-item {
     margin-bottom: 18px;
-    p{
+    p {
       margin-block: 12px;
     }
     .drawer-block-checkbox {
@@ -155,7 +159,7 @@ export default {
           width: 33%;
           height: 100%;
           @include header-background();
-          content: "";
+          content: '';
           z-index: 1;
         }
         &:after {
@@ -165,7 +169,7 @@ export default {
           width: 100%;
           height: 25%;
           @include header-background();
-          content: "";
+          content: '';
         }
       }
       .drawer-block-checkbox-item-top {
@@ -176,7 +180,7 @@ export default {
           width: 33%;
           height: 100%;
           background-color: transparent;
-          content: "";
+          content: '';
           z-index: 1;
         }
         &:after {
@@ -186,7 +190,7 @@ export default {
           width: 100%;
           height: 25%;
           @include header-background();
-          content: "";
+          content: '';
         }
       }
       .theme-color-block {

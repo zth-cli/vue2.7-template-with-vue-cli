@@ -43,11 +43,11 @@ const tableOptions = {
         { prop: 'creator', label: '角色名', align: 'center', width: 180 },
         { prop: 'creator', label: '用户年龄', align: 'center' },
         { label: '用户', slot: 'proflies', align: 'center' },
-        { label: '操作', slot: 'operation', width: 150, align: 'center' }
-      ]
+        { label: '操作', slot: 'operation', width: 150, align: 'center' },
+      ],
     },
-    { label: 'Action', slot: 'action', width: 150, align: 'center' }
-  ]
+    { label: 'Action', slot: 'action', width: 150, align: 'center' },
+  ],
 }
 const fromOptions = [
   { name: 'description', label: '角色描述', span: 6, type: 'text' },
@@ -56,7 +56,7 @@ const fromOptions = [
     label: '日期',
     span: 6,
     type: 'date',
-    format: 'yyyy-MM-dd'
+    format: 'yyyy-MM-dd',
   },
   {
     name: 'date',
@@ -65,7 +65,7 @@ const fromOptions = [
     dateSwitch: [
       { type: 'date', typeName: 'day' },
       { type: 'month', typeName: 'month' },
-      { type: 'year', typeName: 'year' }
+      { type: 'year', typeName: 'year' },
     ],
     dateTypeParamName: 'timeUnit',
     format: 'yyyy-MM-dd',
@@ -74,11 +74,11 @@ const fromOptions = [
     name: 'code',
     label: '电压等级',
     type: 'select',
-    options: []
-  }
+    options: [],
+  },
 ]
 const treeOptions = {
-  dataUrl: '/data-project-management-service/project/getProject'
+  dataUrl: '/data-project-management-service/project/getProject',
 }
 export default {
   data() {
@@ -93,13 +93,13 @@ export default {
             name: 'code',
             label: '电压等级',
             type: 'select',
-            options: []
-          }
+            options: [],
+          },
         ],
-        [{ name: 'des', label: '角色描述', type: 'text' }]
+        [{ name: 'des', label: '角色描述', type: 'text' }],
       ],
       stepsLabel: ['步骤一', '步骤二', '步骤三'],
-      close: false
+      close: false,
     }
   },
   components: { CurdView, StepsFromData },
@@ -117,10 +117,10 @@ export default {
       console.log(data, node)
       //  合并操作，强制触发响应反应
       this.tableOptions.params = Object.assign({}, this.tableOptions.params, {
-        stId: 1
+        stId: 1,
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss"></style>

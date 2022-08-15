@@ -7,9 +7,10 @@
 
 <script>
 export default {
+  name: 'BreadCrumb',
   data() {
     return {
-      currentPathName: this.$route.meta.title
+      currentPathName: this.$route.meta.title,
     }
   },
   watch: {
@@ -17,9 +18,8 @@ export default {
     $route(newValue, oldValue) {
       // console.log(oldValue);
       this.currentPathName = newValue.meta.title
-    }
-  }
+    },
+  },
 }
 </script>
-<style lang='scss'>
-</style>
+<style lang="scss"></style>

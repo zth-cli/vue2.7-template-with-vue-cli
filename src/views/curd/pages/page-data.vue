@@ -24,13 +24,20 @@
       </template>
     </CurdView>
     <overlay :close.sync="close" owidth="70%" oheight="70vh" title="分时底码">
-      <from-data v-if="close" :fromItem="fromItem" :before-submit="subFunc" :title="statusTitle" :postParams="postParams" :postUrl="postUrl1" />
+      <form-data
+        v-if="close"
+        :fromItem="fromItem"
+        :before-submit="subFunc"
+        :title="statusTitle"
+        :postParams="postParams"
+        :postUrl="postUrl1"
+      />
     </overlay>
   </div>
 </template>
 
 <script>
-import FromData from '@/components/FromData/index.vue'
+import FormData from '@/components/FormData/index.vue'
 const tableOptions = {
   pageSize: 20,
   showPanelTool: true,
@@ -49,8 +56,8 @@ const tableOptions = {
         { prop: 'creator', label: '正向有功', align: 'center' },
         { prop: 'creator', label: '反向有功', align: 'center' },
         { prop: 'creator', label: '反向无功', align: 'center' },
-        { prop: 'creator', label: '正向无功', align: 'center' }
-      ]
+        { prop: 'creator', label: '正向无功', align: 'center' },
+      ],
     },
     {
       label: '末冻结',
@@ -60,8 +67,8 @@ const tableOptions = {
         { prop: 'creator', label: '正向有功', align: 'center' },
         { prop: 'creator', label: '反向有功', align: 'center' },
         { prop: 'creator', label: '反向无功', align: 'center' },
-        { prop: 'creator', label: '正向无功', align: 'center' }
-      ]
+        { prop: 'creator', label: '正向无功', align: 'center' },
+      ],
     },
     {
       label: '采集电量',
@@ -71,10 +78,10 @@ const tableOptions = {
         { prop: 'creator', label: '正向有功', align: 'center' },
         { prop: 'creator', label: '反向有功', align: 'center' },
         { prop: 'creator', label: '反向无功', align: 'center' },
-        { prop: 'creator', label: '正向无功', align: 'center' }
-      ]
-    }
-  ]
+        { prop: 'creator', label: '正向无功', align: 'center' },
+      ],
+    },
+  ],
 }
 const fromOptions = [
   { name: 'description', label: '角色描述', span: 6, type: 'text' },
@@ -83,14 +90,14 @@ const fromOptions = [
     label: '日期',
     span: 6,
     type: 'date',
-    format: 'YYYY-MM-DD'
+    format: 'YYYY-MM-DD',
   },
   {
     name: 'code',
     label: '电压等级',
     type: 'select',
-    options: []
-  }
+    options: [],
+  },
 ]
 const treeOptions = {
   lazy: true,
@@ -102,9 +109,9 @@ const treeOptions = {
         { url: '/systemService/archive/getMeterTree?type=1', params: {} },
         {
           url: '/systemService/archive/getMeterTree?type=2',
-          params: { subNo: '' }
-        }
-      ]
+          params: { subNo: '' },
+        },
+      ],
     },
     {
       name: '用采档案',
@@ -113,11 +120,11 @@ const treeOptions = {
         { url: '/dataservice/query/v1/getOrgTree?type=1', params: {} },
         {
           url: '/dataservice/query/v1/getOrgTree?type=2',
-          params: { orgNo: '' }
-        }
-      ]
-    }
-  ]
+          params: { orgNo: '' },
+        },
+      ],
+    },
+  ],
 }
 const fromItem = [
   {
@@ -129,22 +136,22 @@ const fromItem = [
       {
         required: true,
         message: '请输入名称',
-        trigger: 'blur'
-      }
-    ]
+        trigger: 'blur',
+      },
+    ],
   },
   {
     name: 'stId',
     label: '所属厂站',
     type: 'select',
-    options: []
+    options: [],
   },
   {
     name: 'date',
     label: '日期',
     type: 'date',
     format: 'yyyy-MM-dd',
-    span: 12
+    span: 12,
   },
   {
     name: 'details',
@@ -156,14 +163,14 @@ const fromItem = [
         name: 'username',
         label: '用户',
         type: 'text',
-        with: 200
+        with: 200,
       },
       {
         name: 'username1',
         label: '用户1',
         type: 'textarea',
         with: 200,
-        maxlength: 100
+        maxlength: 100,
       },
       {
         name: 'content',
@@ -172,13 +179,13 @@ const fromItem = [
         multiple: true,
         options: [
           { label: '好评', value: '1' },
-          { label: '中评', value: '2' }
+          { label: '中评', value: '2' },
         ],
-        with: 200
-      }
+        with: 200,
+      },
     ],
     // default: [{ username: 'rzx', username1: '认真细致', content: ['1'] }]
-  }
+  },
 ]
 export default {
   data() {
@@ -192,10 +199,10 @@ export default {
       fromItem,
       postParams: { details: [{ username: 'rzx', username1: '认真细致', content: ['1'] }] },
       statusTitle: '测试',
-      postUrl1: './qw/12'
+      postUrl1: './qw/12',
     }
   },
-  components: { FromData },
+  components: { FormData },
   methods: {
     nodeClick({ data, node }) {
       console.log(data, node)
@@ -218,11 +225,11 @@ export default {
     nodeExpand(data, node) {
       console.log('expand==', data, node)
       if (node.level === 1) {
-        if (this.tabIndex == 0) {
+        if (this.tabIndex === 0) {
           this.treeOptions.dataUrlArr[this.tabIndex].urlArr[1].params.subNo = data.id
         }
 
-        if (this.tabIndex == 1) {
+        if (this.tabIndex === 1) {
           this.treeOptions.dataUrlArr[this.tabIndex].urlArr[1].params.orgNo = data.id
         }
       }
@@ -235,9 +242,9 @@ export default {
       return data
     },
     beforeQuery(params) {
-      const newParams = {testId:1, ...params}
+      const newParams = { testId: 1, ...params }
       return newParams
-    } 
-  }
+    },
+  },
 }
 </script>

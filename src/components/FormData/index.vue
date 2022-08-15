@@ -1,6 +1,6 @@
 <template>
   <div class="from_data_main" ref="data_ref">
-    <el-form :model="fromData" :rules="rules" ref="ruleForm" size="medium" label-width="100px">
+    <el-form :model="formData" :rules="rules" ref="ruleForm" size="medium" label-width="100px">
       <el-row>
         <template v-for="item in fromItems">
           <template v-if="item.type === 'date' || item.type === 'datetime'">
@@ -12,7 +12,7 @@
                   :disabled="item.disabled"
                   :placeholder="getPlaceholder(item)"
                   clearable
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :value-format="item.format || 'yyyy-MM-dd'"
                   default-time="12:00:00"
                 ></el-date-picker>
@@ -21,14 +21,19 @@
           </template>
           <template v-else-if="item.type === 'month' || item.type === 'year'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :prop="item.name"
+              >
                 <el-date-picker
                   style="width: 100%"
                   :type="item.type"
                   :disabled="item.disabled"
                   :placeholder="getPlaceholder(item)"
                   clearable
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :value-format="item.format"
                 ></el-date-picker>
               </el-form-item>
@@ -36,10 +41,15 @@
           </template>
           <template v-else-if="item.type === 'daterange'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :prop="item.name"
+              >
                 <el-date-picker
                   style="width: 100%"
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :type="item.type"
                   :disabled="item.disabled"
                   :value-format="item.format"
@@ -53,10 +63,15 @@
           </template>
           <template v-else-if="item.type === 'select'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :prop="item.name"
+              >
                 <el-select
                   style="width: 100%"
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   filterable
                   :disabled="item.disabled"
                   clearable
@@ -78,10 +93,17 @@
           </template>
           <template v-else-if="item.type === 'radio'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
-                <el-radio-group v-model="fromData[item.name]">
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :prop="item.name"
+              >
+                <el-radio-group v-model="formData[item.name]">
                   <template v-for="ele in item.options">
-                    <el-radio :disabled="item.disabled" :label="ele.value" :key="ele.value">{{ ele.label }}</el-radio>
+                    <el-radio :disabled="item.disabled" :label="ele.value" :key="ele.value">{{
+                      ele.label
+                    }}</el-radio>
                   </template>
                 </el-radio-group>
               </el-form-item>
@@ -89,8 +111,13 @@
           </template>
           <template v-else-if="item.type === 'checkbox'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
-                <el-checkbox-group v-model="fromData[item.name]">
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :prop="item.name"
+              >
+                <el-checkbox-group v-model="formData[item.name]">
                   <template v-for="ele in item.options">
                     <el-checkbox :disabled="item.disabled" :label="ele.value" :key="ele.value">{{
                       ele.label
@@ -102,9 +129,22 @@
           </template>
           <template v-else-if="item.type === 'groupinput'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
-                <el-input placeholder="请输入内容" v-model="fromData[item.name]" :disabled="item.disabled">
-                  <el-button slot="append" icon="el-icon-connection" @click="changeGroupinput"></el-button>
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :prop="item.name"
+              >
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="formData[item.name]"
+                  :disabled="item.disabled"
+                >
+                  <el-button
+                    slot="append"
+                    icon="el-icon-connection"
+                    @click="changeGroupinput"
+                  ></el-button>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -120,7 +160,7 @@
                 <el-col :span="11">
                   <el-input
                     placeholder="请输入内容"
-                    v-model="fromData[item.son[0].name]"
+                    v-model="formData[item.son[0].name]"
                     :disabled="item.son[0].disabled"
                     :style="{ width: item.width ? item.width + 'px' : '90px' }"
                   >
@@ -130,7 +170,7 @@
                 <el-col :span="11">
                   <el-input
                     placeholder="请输入内容"
-                    v-model="fromData[item.son[1].name]"
+                    v-model="formData[item.son[1].name]"
                     :disabled="item.son[1].disabled"
                     :style="{ width: item.width ? item.width + 'px' : '90px' }"
                   >
@@ -141,25 +181,38 @@
           </template>
           <template v-else-if="item.type === 'editTable'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
-                <edit-table :columns="item.columns" v-model="fromData[item.name]"></edit-table>
+              <el-form-item
+                :key="item.name"
+                class="from_item"
+                :label="item.label"
+                :prop="item.name"
+              >
+                <edit-table :columns="item.columns" v-model="formData[item.name]"></edit-table>
               </el-form-item>
             </el-col>
           </template>
           <template v-else-if="item.type === 'input'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
+              <el-form-item
+                class="from_item"
+                :key="item.name"
+                :label="item.label"
+                :prop="item.name"
+              >
                 <el-input
                   :disabled="item.disabled"
                   :type="item.type"
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :placeholder="getPlaceholder(item)"
                 >
                   <template v-if="item.append" slot="append">
-                    <slot :name="item.append" :fromData="{ data: fromData, key: item.name }"></slot>
+                    <slot :name="item.append" :formData="{ data: formData, key: item.name }"></slot>
                   </template>
                   <template v-if="item.prepend" slot="prepend">
-                    <slot :name="item.prepend" :fromData="{ data: fromData, key: item.name }"></slot>
+                    <slot
+                      :name="item.prepend"
+                      :formData="{ data: formData, key: item.name }"
+                    ></slot>
                   </template>
                 </el-input>
               </el-form-item>
@@ -167,18 +220,26 @@
           </template>
           <template v-else>
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
+              <el-form-item
+                class="from_item"
+                :key="item.name"
+                :label="item.label"
+                :prop="item.name"
+              >
                 <el-input
                   :disabled="item.disabled"
                   :type="item.type"
-                  v-model="fromData[item.name]"
+                  v-model="formData[item.name]"
                   :placeholder="getPlaceholder(item)"
                 >
                   <template v-if="item.append" slot="append">
-                    <slot :name="item.append" :fromData="{ data: fromData, key: item.name }"></slot>
+                    <slot :name="item.append" :formData="{ data: formData, key: item.name }"></slot>
                   </template>
                   <template v-if="item.prepend" slot="prepend">
-                    <slot :name="item.prepend" :fromData="{ data: fromData, key: item.name }"></slot>
+                    <slot
+                      :name="item.prepend"
+                      :formData="{ data: formData, key: item.name }"
+                    ></slot>
                   </template>
                 </el-input>
               </el-form-item>
@@ -198,10 +259,11 @@
 import EditTable from '../CurdViews/EditTable/'
 import { apiPost } from '@/api'
 export default {
+  name: 'FormData',
   components: { EditTable },
   data() {
     return {
-      fromData: {},
+      formData: {},
       fromItems: this.fromItem,
       rules: {}, // 表单验证规则
       invaildArr: [],
@@ -221,41 +283,50 @@ export default {
         'number',
         'input',
         'textarea',
-        'editTable'
+        'editTable',
       ],
-      dateType: ['date', 'daterange', 'datetime', 'datetimerange', 'year', 'month', 'time', 'timerange'],
-      mediaStyle: 'lg'
+      dateType: [
+        'date',
+        'daterange',
+        'datetime',
+        'datetimerange',
+        'year',
+        'month',
+        'time',
+        'timerange',
+      ],
+      mediaStyle: 'lg',
     }
   },
   props: {
     fromItem: {},
     postUrl: {
       type: String,
-      default: ''
+      default: '',
     }, // 表单提交地址 post请求
     postParams: {
       type: Object,
       default: function () {
         return {}
-      }
+      },
     }, // 默认提交数据,例如在提交表单时，会把选中母线id一同提交进来
     rowData: {}, // 编辑已有表单数据，key和fromData的key值一样
     toolAlign: {
-      default: 'left'
+      default: 'left',
     },
     rulesprops: {}, // 表单验证规则
     beforeSubmit: {
       type: Function,
-      default: function (fromData) {
+      default: function (formData) {
         // 提交前,对value为Array类型的进行字符串拼接
-        for (const key in fromData) {
-          if (fromData[key] instanceof Array) {
-            fromData[key] = fromData[key].join(',')
+        for (const key in formData) {
+          if (formData[key] instanceof Array) {
+            formData[key] = formData[key].join(',')
           }
         }
-        return fromData
-      }
-    }
+        return formData
+      },
+    },
   },
   methods: {
     getPlaceholder(item) {
@@ -263,7 +334,7 @@ export default {
         return item.label
       }
       let result
-      if (item.placeholder == null) {
+      if (item.placeholder === null) {
         switch (item.type) {
           case 'text':
             result = item.disabled || item.readonly ? '' : item.label
@@ -300,7 +371,7 @@ export default {
         for (const key in item) {
           if (key === 'name') {
             const str = item[key]
-            this.$set(this.fromData, [str], '')
+            this.$set(this.formData, [str], '')
           }
           if (key === 'rules') {
             this.rules[item.name] = item[key]
@@ -317,9 +388,9 @@ export default {
           if (key === 'son' && item.type === 'doubleinput') {
             for (const son of item[key]) {
               if (this.rowData[son.name]) {
-                this.$set(this.fromData, son.name, this.rowData[son.name])
+                this.$set(this.formData, son.name, this.rowData[son.name])
               } else {
-                this.$set(this.fromData, son.name, '')
+                this.$set(this.formData, son.name, '')
               }
             }
           }
@@ -331,19 +402,22 @@ export default {
             : item.default !== 'undefined'
             ? item.default
             : null
-          this.fromData[item.name] = defaultValue
+          this.formData[item.name] = defaultValue
           if (item.multiple) {
             // eslint-disable-next-line no-unused-expressions
-            const mulValue = typeof defaultValue === 'string' ? defaultValue.split(',') : defaultValue
-            this.fromData[item.name] = mulValue || []
+            const mulValue =
+              typeof defaultValue === 'string' ? defaultValue.split(',') : defaultValue
+            this.formData[item.name] = mulValue || []
           }
           if (this.dateType.includes(item.type)) {
-            this.fromData[item.name] = item.default ? item.default : this.$day().format(item.format.toUpperCase())
+            this.formData[item.name] = item.default
+              ? item.default
+              : this.$day().format(item.format.toUpperCase())
           }
         }
         if (this.rowData) {
           // eslint-disable-next-line no-unused-expressions
-          this.rowData[item.name] ? (this.fromData[item.name] = this.rowData[item.name]) : '' // 赋值对应key
+          this.rowData[item.name] ? (this.formData[item.name] = this.rowData[item.name]) : '' // 赋值对应key
         }
       })
     },
@@ -352,36 +426,36 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
-        var fromData = Object.assign({}, this.postParams, this.fromData)
-        for (const key in fromData) {
+        let formData = Object.assign({}, this.postParams, this.formData)
+        for (const key in formData) {
           if (this.invaildArr.includes(key)) {
-            delete fromData[key]
+            delete formData[key]
           } else {
-            // if (fromData[key] instanceof Array) {
+            // if (formData[key] instanceof Array) {
             //   // 对value为Array类型的进行字符串拼接
-            //   fromData[key] = fromData[key].join(',')
+            //   formData[key] = formData[key].join(',')
             // }
           }
         }
-        fromData = await this.beforeSubmit(fromData)
-        console.log(fromData)
+        formData = await this.beforeSubmit(formData)
+        console.log(formData)
         if (this.postUrl && this.postUrl !== 'simulationdata') {
           if (valid) {
-            apiPost(this.postUrl, fromData).then((res) => {
+            apiPost(this.postUrl, formData).then((res) => {
               if (res.code === 1) {
-                this.$emit('submit', fromData, res.data)
+                this.$emit('submit', formData, res.data)
                 this.$notify({
                   title: '提示',
                   message: '已提交',
                   duration: 1500,
-                  type: 'success'
+                  type: 'success',
                 })
               } else {
                 this.$notify({
                   title: '提示',
                   message: res.msg,
                   duration: 1500,
-                  type: 'error'
+                  type: 'error',
                 })
               }
             })
@@ -398,13 +472,11 @@ export default {
             console.log('error submit!!')
             return false
           }
+        } else if (valid) {
+          this.$emit('submit', formData)
         } else {
-          if (valid) {
-            this.$emit('submit', fromData)
-          } else {
-            console.log('error submit!!')
-            return false
-          }
+          console.log('error submit!!')
+          return false
         }
       })
     },
@@ -413,7 +485,7 @@ export default {
     },
     fromMediaQuery() {
       if (this.$refs.data_ref) {
-        var parent = this.$refs.data_ref
+        const parent = this.$refs.data_ref
         if (parent.offsetWidth <= 600) {
           this.mediaStyle = 'sm'
         } else if (parent.offsetWidth <= 890) {
@@ -424,12 +496,14 @@ export default {
       }
     },
     debounce(fn, wait) {
-      var timeout = null
+      let timeout = null
       return function () {
-        if (timeout !== null) clearTimeout(timeout)
+        if (timeout !== null) {
+          clearTimeout(timeout)
+        }
         timeout = setTimeout(fn, wait)
       }
-    }
+    },
   },
   created() {
     if (this.fromItem) {
@@ -440,33 +514,33 @@ export default {
     }
   },
   watch: {
-    fromData: {
+    formData: {
       handler: function (val) {
         this.$emit('from-change', val)
       },
-      deep: true
+      deep: true,
     },
     postParams: {
-      handler: function (val) {
+      handler: function () {
         // this.defaultData()
       },
-      deep: true
+      deep: true,
     },
     rowData: {
       handler: function (val) {
-        for (const key in this.fromData) {
+        for (const key in this.formData) {
           if (key in val) {
-            this.fromData[key] = val[key]
+            this.formData[key] = val[key]
           }
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
     this.fromMediaQuery()
     window.addEventListener('resize', this.debounce(this.fromMediaQuery, 500))
-  }
+  },
 }
 </script>
 <style>

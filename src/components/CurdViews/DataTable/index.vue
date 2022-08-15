@@ -1,4 +1,4 @@
- <!--<template>
+<!--<template>
   <div>
     <template v-for="(item,index) in columns">
       <TableColumn
@@ -33,83 +33,88 @@
 </template>-->
 
 <script>
-import { Table, TableColumn } from 'element-ui'
+import { Table as ElTable, TableColumn } from 'element-ui'
 export default {
   name: 'DataTable',
-  components: { Table, TableColumn },
+  components: { ElTable, TableColumn },
   data() {
     return {}
   },
   props: {
     columns: {
       type: Array,
-      required: true
+      required: true,
     },
     tableData: {
-      type: Array
+      type: Array,
     },
     tableSize: {
-      default: 'mini'
+      default: 'mini',
     },
     pageSize: {
-      default: 20
+      default: 20,
     },
     pageIndex: {
-      default: 1
+      default: 1,
     },
     showSettingToolbar: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showPage: {
       type: Boolean,
-      default: true
+      default: true,
     },
     highlightCurrentRow: {
       type: Boolean,
-      default: false
+      default: false,
     },
     lazy: {
       type: Boolean,
-      default: false
+      default: false,
     },
     dataUrl: {},
     params: {},
     height: {
-      default: '53vh'
+      default: '53vh',
     },
     border: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showSummary: {
       type: Boolean,
-      default: false
+      default: false,
     },
     summaryMethod: {
       // 合计自定义方法
-      type: Function
+      type: Function,
     },
     spanMethod: {
       // 合并单元格
       type: Function,
-      default: function () {}
+      default: function () {
+        return {
+          rowspan: 1,
+          colspan: 1,
+        }
+      },
     },
     rowKey: { type: String, default: 'id' }, // 支持树类型的数据的显示,rowKey不为空时生效
     treeProps: {
       type: Object,
       default: function () {
         return { children: 'children', hasChildren: 'hasChildren' }
-      }
+      },
     },
     stripe: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   methods: {
     renderFunc(columns, h) {
-      var that = this
+      const that = this
       let children = []
       const elememtArr = columns.map((item) => {
         // 参照elementui Table-column Attributes
@@ -127,7 +132,7 @@ export default {
           sortMethod: item.sortMethod,
           sortBy: item.sortBy,
           filters: item.filters,
-          filteredValue: item.filteredValue
+          filteredValue: item.filteredValue,
         }
         if (item.filters) {
           columnProps.filterMethod = item.filterMethod ? item.filterMethod : that.filterHandler
@@ -150,21 +155,21 @@ export default {
                     rowData: {
                       row: scope.row,
                       colum: scope.column,
-                      index: scope.$index
-                    }
+                      index: scope.$index,
+                    },
                   })
                 }
                 return [h('p', [indexEle, h('span', index)])]
-              }
-            }
+              },
+            },
           })
         }
         if (item.type === 'selection') {
           return h('TableColumn', {
             props: {
               ...columnProps,
-              type: item.type
-            }
+              type: item.type,
+            },
           })
         }
         if (item.type === 'expand') {
@@ -179,13 +184,13 @@ export default {
                       rowData: {
                         row: scope.row,
                         colum: scope.column,
-                        index: scope.$index
-                      }
-                    })
-                  ])
+                        index: scope.$index,
+                      },
+                    }),
+                  ]),
                 ]
-              }
-            }
+              },
+            },
           })
         }
         if (item.headerSlot && !item.slot) {
@@ -194,7 +199,7 @@ export default {
             props: {
               label: item.label,
               width: item.width,
-              ...columnProps
+              ...columnProps,
             },
             scopedSlots: {
               // scope 就相当于 slot-scope="{title}" 里面的值
@@ -205,13 +210,13 @@ export default {
                       rowData: {
                         row: scope.row,
                         colum: scope.column,
-                        index: scope.$index
-                      }
-                    })
-                  ])
+                        index: scope.$index,
+                      },
+                    }),
+                  ]),
                 ]
-              }
-            }
+              },
+            },
           })
         }
         if (item.headerSlot && item.slot) {
@@ -220,7 +225,7 @@ export default {
             props: {
               label: item.label,
               width: item.width,
-              ...columnProps
+              ...columnProps,
             },
             scopedSlots: {
               // scope 就相当于 slot-scope="{title}" 里面的值
@@ -231,10 +236,10 @@ export default {
                       rowData: {
                         row: scope.row,
                         colum: scope.column,
-                        index: scope.$index
-                      }
-                    })
-                  ])
+                        index: scope.$index,
+                      },
+                    }),
+                  ]),
                 ]
               },
               header: (scope) => {
@@ -244,13 +249,13 @@ export default {
                       rowData: {
                         row: scope.row,
                         colum: scope.column,
-                        index: scope.$index
-                      }
-                    })
-                  ])
+                        index: scope.$index,
+                      },
+                    }),
+                  ]),
                 ]
-              }
-            }
+              },
+            },
           })
         }
         if (!item.headerSlot && item.slot) {
@@ -259,7 +264,7 @@ export default {
             props: {
               label: item.label,
               width: item.width,
-              ...columnProps
+              ...columnProps,
             },
             scopedSlots: {
               // scope 就相当于 slot-scope="{title}" 里面的值
@@ -270,13 +275,13 @@ export default {
                       rowData: {
                         row: scope.row,
                         colum: scope.column,
-                        index: scope.$index
-                      }
-                    })
-                  ])
+                        index: scope.$index,
+                      },
+                    }),
+                  ]),
                 ]
-              }
-            }
+              },
+            },
           })
         }
         if (item.prop && item.enum) {
@@ -286,7 +291,7 @@ export default {
             props: {
               label: item.label,
               width: item.width,
-              ...columnProps
+              ...columnProps,
             },
             scopedSlots: {
               default: (scope) => {
@@ -299,8 +304,8 @@ export default {
                       {
                         props: {
                           size: 'mini',
-                          type: element.type ? element.type : ''
-                        }
+                          type: element.type ? element.type : '',
+                        },
                       },
                       [element.value]
                     )
@@ -308,8 +313,8 @@ export default {
                   }
                 }
                 return node
-              }
-            }
+              },
+            },
           })
         }
         if (item.children && item.children.length > 0) {
@@ -323,8 +328,8 @@ export default {
             props: {
               prop: item.prop,
               // type: item.type,
-              ...columnProps
-            }
+              ...columnProps,
+            },
           },
           [children]
         )
@@ -348,13 +353,13 @@ export default {
     filterHandler(value, row, column) {
       const property = column.property
       return row[property] === value
-    }
+    },
   },
-  render(h) {
-    var that = this
+  render() {
+    const that = this
     const elememtArr = this.renderFunc(that.columns, that.$createElement)
     return this.$createElement(
-      Table,
+      ElTable,
       {
         ref: 'tableView',
         props: {
@@ -369,10 +374,10 @@ export default {
           showSummary: that.showSummary,
           summaryMethod: that.summaryMethod,
           spanMethod: that.spanMethod,
-          stripe: that.stripe
+          stripe: that.stripe,
         },
         style: {
-          width: '100%'
+          width: '100%',
         },
         on: {
           'row-click': (row) => {
@@ -386,8 +391,8 @@ export default {
           },
           'current-change': (row) => {
             that.$emit('current-change', row)
-          }
-        }
+          },
+        },
       },
       elememtArr
     )
@@ -396,8 +401,7 @@ export default {
     this.$nextTick(() => {
       this.$refs.tableView.doLayout()
     })
-  }
+  },
 }
 </script>
-<style>
-</style>
+<style></style>

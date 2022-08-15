@@ -11,7 +11,7 @@ import echarts from 'echarts'
 // 防抖节流全局指令
 import Directives from './directive/index.js'
 Vue.use(Directives)
-Vue.use(Loading.directive);
+Vue.use(Loading.directive)
 Vue.use(plugin)
 
 Vue.prototype.echarts = echarts
@@ -20,5 +20,5 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount('#app')

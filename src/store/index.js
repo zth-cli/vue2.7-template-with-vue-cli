@@ -9,9 +9,9 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
     settings,
-    menuPermission
+    menuPermission,
   },
-  getters
+  getters,
 })
 
 export default store

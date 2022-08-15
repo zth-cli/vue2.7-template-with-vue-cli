@@ -15,7 +15,7 @@ const routes = [
     name: 'Layout',
     component: Layout,
     redirect: '/home',
-    children: [...sonRoute]
+    children: [...sonRoute],
   },
   {
     path: '/redirect',
@@ -36,20 +36,19 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () =>
-      import(/* webpackChunkName: "Login" */ '../views/Login.vue')
-  }
+    component: () => import(/* webpackChunkName: "Login" */ '../views/Login.vue'),
+  },
 ]
 Vue.use(VueRouter)
 // 获取原型对象上的push函数
 const originalPush = VueRouter.prototype.push
 // 修改原型对象中的push方法
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+  return originalPush.call(this, location).catch((err) => err)
 }
 
 const router = new VueRouter({
-  routes
+  routes,
 })
 router.beforeEach((to, from, next) => {
   Nprogress.start()
@@ -58,21 +57,21 @@ router.beforeEach((to, from, next) => {
   // 进入的不是登录路由
   if (to.path === '/login') {
     next()
+  } else if (!getToken('token')) {
+    Message({
+      message: '权限已失效，请重新登录！',
+      type: 'error',
+      duration: 1500,
+    })
+    next({
+      path: '/login',
+    })
   } else {
-    if (!getToken('token')) {
-      Message({
-        message: '权限已失效，请重新登录！',
-        type: 'error',
-        duration: 1500
-      })
-      next({
-        path: '/login'
-      })
-    } else {
-      // 下一跳路由需要登录验证，并且还未登录，则路由定向到  登录路由
-      if (to.meta.title) document.title = to.meta.title
-      next()
+    // 下一跳路由需要登录验证，并且还未登录，则路由定向到  登录路由
+    if (to.meta.title) {
+      document.title = to.meta.title
     }
+    next()
   } // 如果不需要登录验证，或者已经登录成功，则直接放行
 })
 router.afterEach(() => {

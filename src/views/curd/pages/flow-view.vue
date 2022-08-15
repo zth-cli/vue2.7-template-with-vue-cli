@@ -4,7 +4,8 @@
       <template v-slot:tool> </template>
     </flow-bar>
 
-    <CurdTable ref="tableView" class="boxShadow" style="margin-top: 12px" v-bind="tableOptions"> </CurdTable>
+    <CurdTable ref="tableView" class="boxShadow" style="margin-top: 12px" v-bind="tableOptions">
+    </CurdTable>
   </div>
 </template>
 
@@ -20,9 +21,7 @@ export default {
         defaultPanel: [],
         showPanelTool: true,
         params: {
-          datetime: this.$day()
-            .add(-1, 'day')
-            .format('YYYY-MM-DD')
+          datetime: this.$day().add(-1, 'day').format('YYYY-MM-DD'),
         },
         responseName: '',
         dataUrl: '/structureAnalysis/purchaseSale/getList',
@@ -33,37 +32,37 @@ export default {
           // { prop: 'd5000Id', label: '厂站编号', align: 'left' },
           { prop: 'quantity', slot: 'ele', label: '电量(万千瓦时)', align: 'left' },
           { prop: 'price', slot: 'price', label: '电价(元/千瓦时)', align: 'left' },
-          { prop: 'cost', label: '费用(万元)', align: 'left' }
-        ]
+          { prop: 'cost', label: '费用(万元)', align: 'left' },
+        ],
       },
       fromOptions: [
         {
           name: 'area',
           title: '接入电网',
+          disabledAll: true,
           options: [
             { label: '省调公司', value: '1232213213' },
-            { label: '地调公司', value: '1232213213' }
-          ]
+            { label: '地调公司', value: '1232213213' },
+          ],
         },
-        { name: 'stName', label: '厂站', type: 'text' },
+        { name: 'stName', label: '厂站', type: 'input' },
         {
           name: 'datetime',
           label: '日期',
           type: 'date',
           format: 'yyyy-MM-dd',
           pickerOptions: {
-            disabledDate: time => {
+            disabledDate: (time) => {
               // 未来日期不可选
               return time.getTime() > Date.now()
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     }
   },
 
-  created() {},
-  methods: {}
+  methods: {},
 }
 </script>
 <style lang="scss">

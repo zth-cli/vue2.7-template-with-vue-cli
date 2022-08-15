@@ -15,7 +15,7 @@
           class="content-wrapper-layout"
           :style="{
             height: tagsBar ? 'calc(100% - 45px)' : '100%',
-            paddingTop: tagsBar ? '0' : '12px'
+            paddingTop: tagsBar ? '0' : '12px',
           }"
         >
           <!-- <v-bread v-if="$route.path != '/home'"></v-bread> -->
@@ -31,20 +31,19 @@ import bus from '@/utils/bus'
 import vSlidebar from './Menu'
 import vTags from './TagsView'
 import vHeader from './Header'
-import vMain from './Mian'
-import vBread from './Breadcrumb'
+import vMain from './Main'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Layout',
+  name: 'ZthLayout',
   data() {
     return {
       isMini: false,
-      tagsList: []
+      tagsList: [],
     }
   },
-  components: { vTags, vHeader, vSlidebar, vMain, vBread },
+  components: { vTags, vHeader, vSlidebar, vMain },
   computed: {
-    ...mapGetters(['mode', 'showThemeBar', 'tagsBar']) // mode为true时，侧边栏菜单
+    ...mapGetters(['mode', 'showThemeBar', 'tagsBar']), // mode为true时，侧边栏菜单
   },
 
   methods: {},
@@ -68,7 +67,7 @@ export default {
     bus.$on('showMini', (bol) => {
       this.isMini = !bol
     })
-  }
+  },
 }
 </script>
 <style lang="scss">

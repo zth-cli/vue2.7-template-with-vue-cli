@@ -21,7 +21,7 @@
           标签选项
           <i class="el-icon-arrow-down el-icon--right"></i>
         </el-button> -->
-        <i class="el-icon-menu drop-icon"></i>
+        <el-button icon="el-icon-arrow-down" style="border: none" size="mini"></el-button>
         <el-dropdown-menu size="small" slot="dropdown">
           <el-dropdown-item command="other">关闭其他</el-dropdown-item>
           <el-dropdown-item command="all">关闭所有</el-dropdown-item>
@@ -34,10 +34,11 @@
 <script>
 import bus from '@/utils/bus'
 export default {
+  name: 'ZthTags',
   data() {
     return {
       tagsList: [],
-      activeValue: ''
+      activeValue: '',
     }
   },
   methods: {
@@ -47,7 +48,7 @@ export default {
     },
     // 关闭单个标签
     closeTags(tabName) {
-      const index = this.tagsList.findIndex((item) => item.title == tabName)
+      const index = this.tagsList.findIndex((item) => item.title === tabName)
       const delItem = this.tagsList.splice(index, 1)[0]
       // 剩余的tags
       const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1]
@@ -77,7 +78,7 @@ export default {
         fullPath: route.fullPath,
         name: route.matched[1].components.default.name,
         path: route.path,
-        meta: route.meta
+        meta: route.meta,
       }
       const existIndex = this.tagsList.findIndex((item) => {
         return item.path === route.path
@@ -92,21 +93,21 @@ export default {
     },
     handleTags(command) {
       command === 'other' ? this.closeOther() : this.closeAll()
-    }
+    },
   },
   computed: {
     showTags() {
       return this.tagsList.length > 0
-    }
+    },
   },
   watch: {
     $route(newValue) {
       this.setTags(newValue)
-    }
+    },
   },
   created() {
     this.setTags(this.$route)
-  }
+  },
 }
 /*
 逻辑：

@@ -5,7 +5,7 @@ import overlay from '@/components/Overlay'
 import CurdView from '@/components/CurdViews/index'
 const components = { svgIcon, overlay, CurdView }
 
-function plugin (Vue) {
+function plugin(Vue) {
   if (plugin.installed) {
     return
   }

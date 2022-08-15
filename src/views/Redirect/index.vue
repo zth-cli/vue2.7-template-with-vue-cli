@@ -2,7 +2,7 @@
 import { defineComponent, onBeforeMount, getCurrentInstance } from 'vue'
 // 重定向然后返回到重定向之前页面，实现页面重载
 export default defineComponent({
-  name: 'Redirect',
+  name: 'ZthRedirect',
   setup() {
     onBeforeMount(() => {
       const router = getCurrentInstance()?.proxy.$router
@@ -11,10 +11,10 @@ export default defineComponent({
       const { path } = params
       router.replace({
         path: '/' + (Array.isArray(path) ? path.join('/') : path),
-        query
+        query,
       })
     })
     return () => null
-  }
+  },
 })
 </script>
