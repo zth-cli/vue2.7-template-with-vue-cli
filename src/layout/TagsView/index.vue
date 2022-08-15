@@ -123,7 +123,7 @@ export default {
   height: 30px;
   overflow: hidden;
   padding: 0 10px;
-  @include base-background();
+  // @include base-background();
   display: flex;
   justify-content: space-between;
   align-items: center;
