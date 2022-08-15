@@ -113,6 +113,7 @@ export default {
     box-sizing: border-box;
     flex: 1;
     overflow: auto;
+    overflow-x: hidden;
     height: 100%;
   }
 }

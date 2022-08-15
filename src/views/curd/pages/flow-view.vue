@@ -40,9 +40,10 @@ export default {
           name: 'area',
           title: '接入电网',
           disabledAll: true,
+          default: '1232213213',
           options: [
             { label: '省调公司', value: '1232213213' },
-            { label: '地调公司', value: '1232213213' },
+            { label: '地调公司', value: '12322132123' },
           ],
         },
         { name: 'stName', label: '厂站', type: 'input' },

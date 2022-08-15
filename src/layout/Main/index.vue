@@ -4,7 +4,9 @@
       <keep-alive v-if="$route.meta.isCache">
         <router-view></router-view>
       </keep-alive>
-      <router-view v-else></router-view>
+    </transition>
+    <transition :name="mode ? 'slide-fade-Y' : 'slide-fade-X'">
+      <router-view v-if="!$route.meta.isCache"></router-view>
     </transition>
   </div>
 </template>
@@ -34,4 +36,33 @@ export default {
   },
 }
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+/* 离开 */
+.slide-fade-X-leave-active {
+  transition: all 500ms;
+  opacity: 0;
+  transform: scale(0);
+  transform: translateX(50px);
+}
+/* 进入 */
+.slide-fade-X-enter-active {
+  transition: all 500ms;
+  opacity: 0;
+  transform: scale(1);
+  transform: translateX(-50px);
+}
+/* 离开 */
+.slide-fade-Y-leave-active {
+  transition: all 500ms;
+  opacity: 0;
+  transform: scale(0);
+  transform: translateY(50px);
+}
+/* 进入 */
+.slide-fade-Y-enter-active {
+  transition: all 500ms;
+  opacity: 0;
+  transform: scale(1);
+  transform: translateY(-50px);
+}
+</style>
