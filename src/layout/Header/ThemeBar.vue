@@ -61,7 +61,7 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import bus from '@/utils/bus'
-import themes from '@/utils/themeMap'
+import themes from '@/constants/themeMap'
 export default {
   data() {
     return {

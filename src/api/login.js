@@ -1,4 +1,4 @@
-import http from './http'
+import { http } from '@/http'
 
 // 登陆验证码
 export async function getCaptcha() {

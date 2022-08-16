@@ -1,15 +1,7 @@
-/*
- * @Author: 阮志雄
- * @Date: 2021-07-08 14:29:08
- * @LastEditTime: 2021-11-16 23:16:52
- * @LastEditors: 阮志雄
- * @Description: In User Settings Edit
- * @FilePath: \vue-template-with-elementui\src\api\api.js
- */
-import http from './http'
+import { http } from '@/http'
 
 export async function login(params) {
-  const res = await http.get('systemService/user/login', { params })
+  const res = await http.get('systemService/user/login', params)
   return res
 }
 
@@ -20,12 +12,12 @@ export async function relationAsset(params) {
 }
 // 获取用户菜单
 export async function getSystemFuncList(params) {
-  const res = await http.get('/systemManagementService/userService/getSystemFuncList', { params })
+  const res = await http.get('/systemManagementService/userService/getSystemFuncList', params)
   return res
 }
 
 export async function componentsList(params) {
-  const res = await http.get('/get/componentsList', { params })
+  const res = await http.get('/get/componentsList', params)
   return res
 }
 export async function addComponentsList(params) {

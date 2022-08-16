@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { getToken } from '@/utils/auth'
+import { getToken } from '@/utils/cookie'
 import { Message } from 'element-ui'
 import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'

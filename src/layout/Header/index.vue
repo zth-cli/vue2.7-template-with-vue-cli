@@ -120,11 +120,11 @@
   </div>
 </template>
 <script>
-import { removeToken, getToken } from '@/utils/auth'
+import { removeToken, getToken } from '@/utils'
 import Breadcrumb from '../Breadcrumb'
 import ThemeBar from './ThemeBar'
 import { updataPassword } from '@/api'
-import { title } from '@/settings'
+import { title } from '@/constants/settings'
 import bus from '@/utils/bus'
 export default {
   name: 'ZthHeader',

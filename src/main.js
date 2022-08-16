@@ -4,9 +4,8 @@ import router from './router'
 import store from './store'
 import { Loading } from 'element-ui'
 import './plugins/day.js'
-import './plugins/particles.js'
 import '@/assets/scss/base.scss'
-import plugin from '@/utils/install' // 全局组件
+import plugin from '@/plugins/globalComponents.js' // 全局组件
 import echarts from 'echarts'
 // 防抖节流全局指令
 import Directives from './directive/index.js'

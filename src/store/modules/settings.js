@@ -2,12 +2,12 @@
  * @Author: rzx007
  * @Date: 2021-05-24 10:12:09
  * @LastEditors: 阮志雄
- * @LastEditTime: 2022-08-15 15:26:41
+ * @LastEditTime: 2022-08-16 14:46:09
  * @FilePath: \vue-template-with-elementui\src\store\modules\settings.js
  * @Description: Do not edit
  */
 /* eslint-disable no-prototype-builtins */
-import themeSet from '@/settings'
+import themeSet from '@/constants/settings'
 
 function checkStorange(key) {
   return localStorage.getItem(key) !== null ? localStorage.getItem(key) === 'true' : themeSet[key]
