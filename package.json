@@ -14,7 +14,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "core-js": "^3.24.1",
     "dayjs": "^1.8.17",
     "echarts": "^4.9.0",
