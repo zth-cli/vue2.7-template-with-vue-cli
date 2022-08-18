@@ -33,10 +33,10 @@
 </template>-->
 
 <script>
-import { Table as ElTable, TableColumn, Checkbox as ElCheckbox } from 'element-ui'
+import { Table as ElTable, TableColumn, Checkbox as ElCheckbox, Tag } from 'element-ui'
 export default {
   name: 'DataTable',
-  components: { ElTable, TableColumn, ElCheckbox },
+  components: { ElTable, TableColumn, ElCheckbox, Tag },
   data() {
     return {}
   },
@@ -300,7 +300,7 @@ export default {
                   const element = enums[index]
                   if (element.id === scope.row[item.prop]) {
                     node = h(
-                      'el-tag',
+                      Tag,
                       {
                         props: {
                           size: 'mini',
