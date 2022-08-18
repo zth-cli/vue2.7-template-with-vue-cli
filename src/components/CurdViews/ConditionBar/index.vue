@@ -327,9 +327,10 @@ export default {
         }
         this.formData[item.name] = item.default ? item.default : ''
         if (this.typeArr.includes(item.type)) {
-          this.formData[item.name] = item.default
-            ? item.default
-            : this.$day().format(item.format.toUpperCase())
+          this.formData[item.name] =
+            item.default !== 'undefined'
+              ? item.default
+              : this.$day().format(item.format.toUpperCase())
         }
       })
       // setInterval(() => { this.trigger = false }, 0)
