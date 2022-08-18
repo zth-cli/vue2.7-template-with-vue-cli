@@ -1,3 +1,23 @@
+// 扁平数据转树结构
+export const buildTree = (list) => {
+  const temp = {}
+  const tree = []
+  for (const i in list) {
+    temp[list[i].id] = list[i]
+  }
+  for (const i in temp) {
+    if (temp[i].parentId) {
+      if (!temp[temp[i].parentId].children) {
+        temp[temp[i].parentId].children = []
+      }
+      temp[temp[i].parentId].children.push(temp[i])
+    } else {
+      tree.push(temp[i])
+    }
+  }
+  return tree
+}
+
 // 将多维数组转化为一维
 export const newArr = function (arr) {
   return arr.reduce((pre, cur) => pre.concat(Array.isArray(cur) ? newArr(cur) : cur), [])
