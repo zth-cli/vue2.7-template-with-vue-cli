@@ -4,7 +4,7 @@ function addRouter(routeArr = []) {
     return
   }
   routeArr.forEach((item) => {
-    if (item.type === 1 && item.children.length > 0) {
+    if (item.type === 1 && item.children && item.children.length > 0) {
       addRouter(item.children)
     } else if (item.type !== 1) {
       addRoutes.push({

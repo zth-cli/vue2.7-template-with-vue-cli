@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import { Loading } from 'element-ui'
 import './plugins/day.js'
+import './plugins/element-ui.js'
 import '@/assets/scss/base.scss'
 import plugin from '@/plugins/globalComponents.js' // 全局组件
 import echarts from 'echarts'

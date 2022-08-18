@@ -6,44 +6,27 @@
     <div class="slide-logo" v-if="mode">
       <img src="@/assets/img/logo.png" />
     </div>
-    <el-menu
-      class="sidebar-el-menu"
+    <SubMenu
       :default-active="onRoutes"
       :text-color="menuConfig.textColor"
       :active-text-color="menuConfig.activeTextColor"
       unique-opened
       :collapse="isCollapse"
-      router
+      :router="true"
       :mode="mode ? 'vertical' : 'horizontal'"
-    >
-      <template v-for="item in menuData">
-        <template v-if="item.children">
-          <el-submenu :index="item.title" :key="item.index">
-            <template slot="title">
-              <i class="icons" :class="item.icon" :style="{ color: menuConfig.textColor }"></i>
-              <span slot="title">{{ item.title }}</span>
-            </template>
-            <el-menu-item v-for="(subItem, i) in item.children" :key="i" :index="subItem.path">{{
-              subItem.title
-            }}</el-menu-item>
-          </el-submenu>
-        </template>
-        <template v-else>
-          <el-menu-item :index="item.path" :key="item.index">
-            <i class="icons" :class="item.icon" :style="{ color: menuConfig.textColor }"></i>
-            <span slot="title">{{ item.title }}</span>
-          </el-menu-item>
-        </template>
-      </template>
-    </el-menu>
+      :data="menuData"
+      :menuConfig="menuConfig"
+    ></SubMenu>
   </div>
 </template>
 <script>
 import bus from '@/utils/bus'
 import { menuColorObj } from '@/assets/scss/_variables'
 import routeArr from '@/mock/router.js'
+import SubMenu from './subMenu/index.vue'
 export default {
   name: 'ZthMenu',
+  components: { SubMenu },
   data() {
     return {
       menuConfig: {

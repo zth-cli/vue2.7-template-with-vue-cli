@@ -33,10 +33,10 @@
 </template>-->
 
 <script>
-import { Table as ElTable, TableColumn } from 'element-ui'
+import { Table as ElTable, TableColumn, Checkbox as ElCheckbox } from 'element-ui'
 export default {
   name: 'DataTable',
-  components: { ElTable, TableColumn },
+  components: { ElTable, TableColumn, ElCheckbox },
   data() {
     return {}
   },
