@@ -36,6 +36,7 @@
         :mode="tableOptions.mode"
         :searchDynamic="fromOptions"
         :beforeQuery="beforeQuery"
+        :title="title"
         @query="query"
         @params-change="paramsChange"
       >
@@ -51,29 +52,7 @@
       </ConditionBar>
       <CurdTable
         ref="tableView"
-        :highlightCurrentRow="tableOptions.highlightCurrentRow"
-        :columns="tableOptions.columns"
-        :lazy="tableOptions.lazy"
-        :dataUrl="tableOptions.dataUrl"
-        :pageSize="tableOptions.pageSize"
-        :isPrivate="tableOptions.isPrivate"
-        :params="tableOptions.params"
-        :local="tableOptions.local"
-        :height="tableOptions.height"
-        :rowKey="tableOptions.rowKey"
-        :stripe="tableOptions.stripe"
-        :treeProps="tableOptions.treeProps"
-        :maxHeight="tableOptions.maxHeight"
-        :showPage="tableOptions.showPage"
-        :showPanelTool="tableOptions.showPanelTool"
-        :mode="tableOptions.mode"
-        :defaultPanel="tableOptions.defaultPanel"
-        :border="tableOptions.border"
-        :showSummary="tableOptions.showSummary"
-        :summaryMethod="tableOptions.summaryMethod"
-        :spanMethod="tableOptions.spanMethod"
-        :showSettingTool="tableOptions.showSettingTool"
-        :responseName="tableOptions.responseName"
+        v-bind="tableOptions"
         @row-click="rowClick"
         @row-dblclick="rowDblclick"
         @row-add="addRow"
@@ -130,6 +109,7 @@ export default {
       },
     }, // 查询前,请求前参数钩子
     fromWidth: {}, // 查询框得长度，String类型
+    title: {}, // 当前页面标题，String类型
     showSearchDynamic: {
       // 是否显示查询框，提供某些情况下查询完全自定义
       type: Boolean,

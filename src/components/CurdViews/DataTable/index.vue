@@ -100,6 +100,9 @@ export default {
         }
       },
     },
+    rowClassName: {
+      type: Function,
+    },
     rowKey: { type: String, default: 'id' }, // 支持树类型的数据的显示,rowKey不为空时生效
     treeProps: {
       type: Object,
@@ -375,6 +378,7 @@ export default {
           summaryMethod: that.summaryMethod,
           spanMethod: that.spanMethod,
           stripe: that.stripe,
+          rowClassName: that.rowClassName,
         },
         style: {
           width: '100%',

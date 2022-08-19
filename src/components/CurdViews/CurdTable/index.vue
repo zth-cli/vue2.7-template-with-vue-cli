@@ -84,6 +84,7 @@
         :pageIndex="pageParam.pageIndex"
         :showPage="showPage"
         :highlight-current-row="highlightCurrentRow"
+        :row-class-name="rowClassName"
         @row-click="rowClick"
         @row-dblclick="rowDblclick"
         @selection-change="selectionChange"
@@ -209,6 +210,9 @@ export default {
       default: function () {
         return { children: 'children', hasChildren: 'hasChildren' }
       },
+    },
+    rowClassName: {
+      type: Function,
     },
   },
   data() {

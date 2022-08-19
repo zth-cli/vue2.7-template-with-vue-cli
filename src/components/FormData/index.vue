@@ -202,6 +202,7 @@
                 <el-input
                   :disabled="item.disabled"
                   :type="item.type"
+                  :readonly="item.readonly ? item.readonly : !postUrl ? true : false"
                   v-model="formData[item.name]"
                   :placeholder="getPlaceholder(item)"
                 >
@@ -229,6 +230,7 @@
                 <el-input
                   :disabled="item.disabled"
                   :type="item.type"
+                  :readonly="item.readonly ? item.readonly : !postUrl ? true : false"
                   v-model="formData[item.name]"
                   :placeholder="getPlaceholder(item)"
                 >

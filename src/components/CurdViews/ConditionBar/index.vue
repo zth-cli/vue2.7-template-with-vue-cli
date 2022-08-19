@@ -1,5 +1,6 @@
 <template>
   <div class="curd_tool_bar">
+    <h5 class="curd_title" v-if="title">{{ title }}</h5>
     <div class="curd_tool_content">
       <slot name="ltool"></slot>
       <div class="curd_tools" ref="tools" :class="{ ellipsis_curd_tools: expend }">
@@ -231,6 +232,10 @@ export default {
       type: String,
       default: 'normal', // 'normal' 正常模式 'simple'简单模式，布局更紧凑
     },
+    title: {
+      type: String,
+      default: '信息查询',
+    },
     searchDynamic: {
       type: Array,
       default: function () {
@@ -410,6 +415,24 @@ export default {
   @include border-color();
   padding: 14px;
   border-radius: 4px 4px 0 0;
+  .curd_title {
+    letter-spacing: 3px;
+    text-indent: 4px;
+    position: relative;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-indent: 12px;
+    @include font_color(null);
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0px;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      @include tool-bar-color();
+    }
+  }
 }
 
 .curd_tool_content {
