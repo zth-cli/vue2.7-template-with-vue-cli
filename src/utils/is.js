@@ -120,3 +120,26 @@ export function isNullOrUnDef(val) {
 
 // 比较两个数组
 export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+
+// 判断是否是http链接
+export function isHttpLink(link) {
+  return link.search(/^http[s]?:\/\//) !== -1
+}
+
+/** 判断字符串是否是json结构 */
+export const isJSON = (str) => {
+  if (!str) {
+    return false
+  }
+  if (typeof str === 'string') {
+    try {
+      const obj = JSON.parse(str)
+      if (typeof obj === 'object' && obj) {
+        return true
+      }
+      return false
+    } catch (e) {
+      return false
+    }
+  }
+}

@@ -73,6 +73,9 @@
         <template v-slot:panel>
           <slot name="panel"></slot>
         </template>
+        <template v-slot:panel-gap>
+          <slot name="panel-gap"></slot>
+        </template>
       </CurdTable>
     </div>
   </div>

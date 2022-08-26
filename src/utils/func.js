@@ -102,3 +102,15 @@ export const diffDays = (date, otherDate) =>
 
 //检查日期是否有效
 export const isDateValid = (...val) => !Number.isNaN(new Date(...val).valueOf())
+
+// 颜色格式 hex 转 rgba
+export const hexToRgba = (bgColor, opt = 1) => {
+  const color = bgColor.slice(1) // 去掉'#'号
+  const rgba = [
+    parseInt('0x' + color.slice(0, 2)),
+    parseInt('0x' + color.slice(2, 4)),
+    parseInt('0x' + color.slice(4, 6)),
+    opt,
+  ]
+  return 'rgba(' + rgba.toString() + ')'
+}
