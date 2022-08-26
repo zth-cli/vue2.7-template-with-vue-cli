@@ -1,49 +1,51 @@
 <template>
   <div class="curd_table">
     <div class="panel_tool">
-      <div class="panel_tool_left" v-if="showPanelTool && mode !== 'simple'">
-        <el-button
-          icon="el-icon-plus"
-          size="mini"
-          v-if="defaultPanel.includes('add')"
-          type="primary"
-          @click="addRow()"
-          >新增工单</el-button
-        >
-        <el-button
-          icon="el-icon-edit"
-          size="mini"
-          v-if="defaultPanel.includes('edit')"
-          type="primary"
-          :disabled="isSingle"
-          @click="editRow()"
-          >修改</el-button
-        >
-        <el-popover placement="top" width="160" v-model="visible">
-          <p>确定删除吗？</p>
-          <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-            <el-button
-              type="primary"
-              size="mini"
-              @click="
-                visible = false
-                deleteRows()
-              "
-              >确定</el-button
-            >
-          </div>
+      <div class="panel_tool_left" v-if="mode !== 'simple'">
+        <template v-if="showPanelTool">
           <el-button
-            v-if="defaultPanel.includes('delete')"
-            icon="el-icon-circle-close"
-            slot="reference"
-            type="danger"
-            class="warning"
-            :disabled="isMultiple"
+            icon="el-icon-plus"
             size="mini"
-            >删除
-          </el-button>
-        </el-popover>
+            v-if="defaultPanel.includes('add')"
+            type="primary"
+            @click="addRow()"
+            >新增工单</el-button
+          >
+          <el-button
+            icon="el-icon-edit"
+            size="mini"
+            v-if="defaultPanel.includes('edit')"
+            type="primary"
+            :disabled="isSingle"
+            @click="editRow()"
+            >修改</el-button
+          >
+          <el-popover placement="top" width="160" v-model="visible">
+            <p>确定删除吗？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="
+                  visible = false
+                  deleteRows()
+                "
+                >确定</el-button
+              >
+            </div>
+            <el-button
+              v-if="defaultPanel.includes('delete')"
+              icon="el-icon-circle-close"
+              slot="reference"
+              type="danger"
+              class="warning"
+              :disabled="isMultiple"
+              size="mini"
+              >删除
+            </el-button>
+          </el-popover>
+        </template>
         <slot name="panel"></slot>
       </div>
       <div class="panel_tool_right" v-if="showSettingTool && mode !== 'simple'">
