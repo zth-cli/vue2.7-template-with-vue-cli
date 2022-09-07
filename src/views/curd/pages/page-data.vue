@@ -154,6 +154,13 @@ const fromItem = [
     span: 12,
   },
   {
+    name: 'uploads',
+    label: '上传附件',
+    type: 'upload',
+    span: 24,
+    url: '/api/sys/attach/uploadImg',
+  },
+  {
     name: 'details',
     label: '所属厂站',
     type: 'editTable',

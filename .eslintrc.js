@@ -4,12 +4,7 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:vue/essential',
-    'plugin:prettier/recommended',
-    'prettier',
-  ],
+  extends: ['eslint:recommended', 'plugin:vue/essential', 'plugin:prettier/recommended', 'prettier'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -31,7 +26,7 @@ module.exports = {
     ],
     'no-var': 'error',
     'no-undef': 0,
-    'prettier/prettier': 'error',
+    'prettier/prettier': ['error', { semi: false, printWidth: 120, singleQuote: true }],
     // 禁止出现console
     'no-console': 'off',
     // 禁用debugger

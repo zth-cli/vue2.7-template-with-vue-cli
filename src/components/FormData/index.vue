@@ -21,12 +21,7 @@
           </template>
           <template v-else-if="item.type === 'month' || item.type === 'year'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                :key="item.name"
-                class="from_item"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
                 <el-date-picker
                   style="width: 100%"
                   :type="item.type"
@@ -41,12 +36,7 @@
           </template>
           <template v-else-if="item.type === 'daterange'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                :key="item.name"
-                class="from_item"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
                 <el-date-picker
                   style="width: 100%"
                   v-model="formData[item.name]"
@@ -63,12 +53,7 @@
           </template>
           <template v-else-if="item.type === 'select'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                :key="item.name"
-                class="from_item"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
                 <el-select
                   style="width: 100%"
                   v-model="formData[item.name]"
@@ -93,17 +78,10 @@
           </template>
           <template v-else-if="item.type === 'radio'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                :key="item.name"
-                class="from_item"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
                 <el-radio-group v-model="formData[item.name]">
                   <template v-for="ele in item.options">
-                    <el-radio :disabled="item.disabled" :label="ele.value" :key="ele.value">{{
-                      ele.label
-                    }}</el-radio>
+                    <el-radio :disabled="item.disabled" :label="ele.value" :key="ele.value">{{ ele.label }}</el-radio>
                   </template>
                 </el-radio-group>
               </el-form-item>
@@ -111,12 +89,7 @@
           </template>
           <template v-else-if="item.type === 'checkbox'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                :key="item.name"
-                class="from_item"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
                 <el-checkbox-group v-model="formData[item.name]">
                   <template v-for="ele in item.options">
                     <el-checkbox :disabled="item.disabled" :label="ele.value" :key="ele.value">{{
@@ -129,22 +102,9 @@
           </template>
           <template v-else-if="item.type === 'groupinput'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                :key="item.name"
-                class="from_item"
-                :label="item.label"
-                :prop="item.name"
-              >
-                <el-input
-                  placeholder="请输入内容"
-                  v-model="formData[item.name]"
-                  :disabled="item.disabled"
-                >
-                  <el-button
-                    slot="append"
-                    icon="el-icon-connection"
-                    @click="changeGroupinput"
-                  ></el-button>
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <el-input placeholder="请输入内容" v-model="formData[item.name]" :disabled="item.disabled">
+                  <el-button slot="append" icon="el-icon-connection" @click="changeGroupinput"></el-button>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -181,24 +141,33 @@
           </template>
           <template v-else-if="item.type === 'editTable'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                :key="item.name"
-                class="from_item"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
                 <edit-table :columns="item.columns" v-model="formData[item.name]"></edit-table>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'upload'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item :key="item.name" class="from_item" :label="item.label" :prop="item.name">
+                <zth-upload v-model="formData[item.name]" :data="item.params" :url="item.url"></zth-upload>
+              </el-form-item>
+            </el-col>
+          </template>
+          <template v-else-if="item.type === 'cascader'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
+                <el-cascader
+                  v-model="formData[item.name]"
+                  :options="item.options"
+                  :props="{ ...item.props }"
+                  clearable
+                ></el-cascader>
               </el-form-item>
             </el-col>
           </template>
           <template v-else-if="item.type === 'input'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                class="from_item"
-                :key="item.name"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
                 <el-input
                   :disabled="item.disabled"
                   :type="item.type"
@@ -210,10 +179,7 @@
                     <slot :name="item.append" :formData="{ data: formData, key: item.name }"></slot>
                   </template>
                   <template v-if="item.prepend" slot="prepend">
-                    <slot
-                      :name="item.prepend"
-                      :formData="{ data: formData, key: item.name }"
-                    ></slot>
+                    <slot :name="item.prepend" :formData="{ data: formData, key: item.name }"></slot>
                   </template>
                 </el-input>
               </el-form-item>
@@ -221,12 +187,7 @@
           </template>
           <template v-else-if="item.type === 'treeSelect'">
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                class="from_item"
-                :key="item.name"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
                 <el-cascader
                   v-model="formData[item.name]"
                   :options="item.options"
@@ -238,12 +199,7 @@
           </template>
           <template v-else>
             <el-col :span="item.span || 12" :key="item.name">
-              <el-form-item
-                class="from_item"
-                :key="item.name"
-                :label="item.label"
-                :prop="item.name"
-              >
+              <el-form-item class="from_item" :key="item.name" :label="item.label" :prop="item.name">
                 <el-input
                   :disabled="item.disabled"
                   :type="item.type"
@@ -255,10 +211,7 @@
                     <slot :name="item.append" :formData="{ data: formData, key: item.name }"></slot>
                   </template>
                   <template v-if="item.prepend" slot="prepend">
-                    <slot
-                      :name="item.prepend"
-                      :formData="{ data: formData, key: item.name }"
-                    ></slot>
+                    <slot :name="item.prepend" :formData="{ data: formData, key: item.name }"></slot>
                   </template>
                 </el-input>
               </el-form-item>
@@ -276,10 +229,11 @@
 
 <script>
 import EditTable from '../CurdViews/EditTable/'
+import ZthUpload from '@/components/Upload/index.vue'
 import { apiPost } from '@/api'
 export default {
   name: 'FormData',
-  components: { EditTable },
+  components: { EditTable, ZthUpload },
   data() {
     return {
       formData: {},
@@ -303,17 +257,9 @@ export default {
         'input',
         'textarea',
         'editTable',
+        'upload',
       ],
-      dateType: [
-        'date',
-        'daterange',
-        'datetime',
-        'datetimerange',
-        'year',
-        'month',
-        'time',
-        'timerange',
-      ],
+      dateType: ['date', 'daterange', 'datetime', 'datetimerange', 'year', 'month', 'time', 'timerange'],
       mediaStyle: 'lg',
     }
   },
@@ -399,11 +345,7 @@ export default {
             // 筛选部分只显示不提交字段
             this.invaildArr.push(item.name)
           }
-          if (
-            key === 'remoteMethod' &&
-            item.remoteMethod &&
-            ['select', 'treeSelect'].includes(item.type)
-          ) {
+          if (key === 'remoteMethod' && item.remoteMethod && ['select', 'treeSelect'].includes(item.type)) {
             item.remoteMethod.then((res) => {
               item.options = res
             })
@@ -428,14 +370,11 @@ export default {
           this.formData[item.name] = defaultValue
           if (item.multiple) {
             // eslint-disable-next-line no-unused-expressions
-            const mulValue =
-              typeof defaultValue === 'string' ? defaultValue.split(',') : defaultValue
+            const mulValue = typeof defaultValue === 'string' ? defaultValue.split(',') : defaultValue
             this.formData[item.name] = mulValue || []
           }
           if (this.dateType.includes(item.type)) {
-            this.formData[item.name] = item.default
-              ? item.default
-              : this.$day().format(item.format.toUpperCase())
+            this.formData[item.name] = item.default ? item.default : this.$day().format(item.format.toUpperCase())
           }
         }
         if (this.rowData) {

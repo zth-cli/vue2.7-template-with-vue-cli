@@ -37,3 +37,8 @@ export async function apiPost(url, params, config) {
   const res = await http.post(url, params, config)
   return res
 }
+// upload
+export async function apiUpload(url, params) {
+  const res = await http.post(url, params)
+  return res
+}
