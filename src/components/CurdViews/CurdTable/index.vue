@@ -54,12 +54,7 @@
           <div style="margin: 5px 0">
             <div>
               <div v-for="(col, index) in columns" :key="index">
-                <el-checkbox
-                  @change="columnsChange"
-                  v-if="col.label"
-                  v-model="col.show"
-                  :label="col.label"
-                >
+                <el-checkbox @change="columnsChange" v-if="col.label" v-model="col.show" :label="col.label">
                   {{ col.label }}
                 </el-checkbox>
               </div>

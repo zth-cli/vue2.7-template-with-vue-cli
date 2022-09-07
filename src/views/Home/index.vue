@@ -5,8 +5,7 @@
       <i :class="collspe ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
     </p>
     <el-select v-model="cameraId" placeholder="选择相机" style="width: 100%; margin-bottom: 12px">
-      <el-option v-for="item in cameraList" :key="item.id" :label="item.imeival" :value="item.id">
-      </el-option>
+      <el-option v-for="item in cameraList" :key="item.id" :label="item.imeival" :value="item.id"> </el-option>
     </el-select>
     <div class="x-upload-content">
       <el-upload
@@ -62,10 +61,7 @@ export default {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('name', file.name)
-      formData.append(
-        'lastModifiedDate',
-        this.$day(file.lastModified).format('YYYY-MM-DD HH:mm:ss')
-      )
+      formData.append('lastModifiedDate', this.$day(file.lastModified).format('YYYY-MM-DD HH:mm:ss'))
       // this.$day(params.lastModifiedDate).format('YYYY-MM-DD HH:mm:ss')
       // /admin/carousel/addFile
       apiPost('/admin/carousel/addFile', formData)

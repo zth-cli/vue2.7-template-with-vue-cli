@@ -7,10 +7,7 @@
         <template v-for="(item, index) in searchDynamic">
           <template v-if="item.type && allowType.includes(item.type)">
             <template
-              v-if="
-                !item.dateSwitch &&
-                (item.type === 'date' || item.type === 'month' || item.type === 'year')
-              "
+              v-if="!item.dateSwitch && (item.type === 'date' || item.type === 'month' || item.type === 'year')"
             >
               <div :key="'item' + index" class="curd_tool_item" ref="tool">
                 <label class="label" v-if="mode !== 'simple'">{{ item.label }}：</label>
@@ -97,21 +94,13 @@
                   </el-checkbox-group>
                 </template>
                 <template v-else>
-                  <el-checkbox
-                    size="mini"
-                    v-model="formData[item.name]"
-                    true-label="1"
-                    false-label="0"
-                    >{{ item.label }}</el-checkbox
-                  >
+                  <el-checkbox size="mini" v-model="formData[item.name]" true-label="1" false-label="0">{{
+                    item.label
+                  }}</el-checkbox>
                 </template>
               </div>
             </template>
-            <template
-              v-else-if="
-                typeArr.includes(item.type) && item.dateSwitch && item.dateSwitch.length > 1
-              "
-            >
+            <template v-else-if="typeArr.includes(item.type) && item.dateSwitch && item.dateSwitch.length > 1">
               <div :key="'item' + index" class="curd_tool_item" ref="tool">
                 <el-button
                   class="mini_btns"
@@ -176,11 +165,7 @@
         <i :class="[expend ? 'el-icon-arrow-up' : 'el-icon-arrow-down']"></i>
       </div>
       <div class="btns">
-        <el-button
-          type="primary"
-          v-if="searchDynamic.length > 0 && mode !== 'simple'"
-          size="mini"
-          @click="query()"
+        <el-button type="primary" v-if="searchDynamic.length > 0 && mode !== 'simple'" size="mini" @click="query()"
           >查询</el-button
         >
         <slot name="tool"></slot>
@@ -212,16 +197,7 @@ export default {
         'select',
         'switch',
       ],
-      typeArr: [
-        'date',
-        'daterange',
-        'datetime',
-        'datetimerange',
-        'year',
-        'month',
-        'time',
-        'timerange',
-      ],
+      typeArr: ['date', 'daterange', 'datetime', 'datetimerange', 'year', 'month', 'time', 'timerange'],
       switchIndex: 0,
       trigger: true,
     }
@@ -272,8 +248,7 @@ export default {
           ? 'yyyy'
           : 'yyyy-MM-dd'
       // 解决日期选择多日后，切换为日和月报错问题
-      const date =
-        typeof this.formData[prop] === 'string' ? this.formData[prop] : this.formData[prop][0]
+      const date = typeof this.formData[prop] === 'string' ? this.formData[prop] : this.formData[prop][0]
       this.formData[prop] = this.$day(date).format(format.toUpperCase())
       if (typeParamName) {
         this.formData[typeParamName] = typeObj.typeName
@@ -333,9 +308,7 @@ export default {
         this.formData[item.name] = item.default ? item.default : ''
         if (this.typeArr.includes(item.type)) {
           this.formData[item.name] =
-            item.default !== 'undefined'
-              ? item.default
-              : this.$day().format(item.format.toUpperCase())
+            item.default !== 'undefined' ? item.default : this.$day().format(item.format.toUpperCase())
         }
       })
       // setInterval(() => { this.trigger = false }, 0)

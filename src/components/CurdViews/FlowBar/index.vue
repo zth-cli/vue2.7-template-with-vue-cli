@@ -6,10 +6,7 @@
           <div class="category-title ellipsis">
             <span class="title">{{ item.title }}：</span>
           </div>
-          <div
-            ref="categorys"
-            :class="[switchData[item.name] ? 'category-content-auto' : '', 'category-content']"
-          >
+          <div ref="categorys" :class="[switchData[item.name] ? 'category-content-auto' : '', 'category-content']">
             <el-button
               v-if="item.options.length > 1"
               size="small"
@@ -30,9 +27,7 @@
                     setActive(item, index, inde)
                     setValue(item, ele.value)
                   "
-                  :type="
-                    item.options.length < 2 ? 'primary' : isActive(index, inde) ? 'primary' : 'text'
-                  "
+                  :type="item.options.length < 2 ? 'primary' : isActive(index, inde) ? 'primary' : 'text'"
                 >
                   {{ ele.label }}
                 </el-button>
@@ -53,12 +48,7 @@
         </section>
       </template>
     </template>
-    <ConditionBar
-      :searchDynamic="options"
-      @query="query"
-      @params-change="paramsChange"
-      @reset-data="resetData"
-    >
+    <ConditionBar :searchDynamic="options" @query="query" @params-change="paramsChange" @reset-data="resetData">
       <template v-slot:tool>
         <slot name="tool"></slot>
       </template>
@@ -142,9 +132,7 @@ export default {
           if (!item.disabled) {
             this.$set(this.formData, item.name, [])
             const defaultValue = item.default ? toArray(item.default) : []
-            this.formData[item.name] = this.initParams[item.name]
-              ? toArray(this.initParams[item.name])
-              : defaultValue
+            this.formData[item.name] = this.initParams[item.name] ? toArray(this.initParams[item.name]) : defaultValue
             this.orignalFromData[item.name] = this.initParams[item.name]
               ? toArray(this.initParams[item.name])
               : defaultValue

@@ -1,13 +1,7 @@
 <template>
   <div style="display: inline-block">
     <template v-for="(item, index) in list">
-      <el-popover
-        v-if="item === 'delete'"
-        placement="bottom"
-        width="160"
-        v-model="visible"
-        :key="index"
-      >
+      <el-popover v-if="item === 'delete'" placement="bottom" width="160" v-model="visible" :key="index">
         <p>此操作将删除内容,确定删除吗？</p>
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="visible = false">取消</el-button>
@@ -30,13 +24,7 @@
           title="删除"
         ></el-button>
       </el-popover>
-      <el-popover
-        v-else-if="item === 'end'"
-        placement="bottom"
-        width="160"
-        v-model="visible"
-        :key="index"
-      >
+      <el-popover v-else-if="item === 'end'" placement="bottom" width="160" v-model="visible" :key="index">
         <p>此操作将中止工单,确定继续吗？</p>
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="visible = false">取消</el-button>

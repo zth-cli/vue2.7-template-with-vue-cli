@@ -15,12 +15,7 @@
               filterable
               :multiple="col.multiple ? col.multiple : false"
             >
-              <el-option
-                v-for="item in col.options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
+              <el-option v-for="item in col.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </template>
@@ -38,9 +33,7 @@
       </el-table-column>
       <el-table-column label="操作" width="120" align="center">
         <template v-slot="scope">
-          <el-button type="danger" size="mini" @click="TableData.splice(scope.$index, 1)"
-            >移除</el-button
-          >
+          <el-button type="danger" size="mini" @click="TableData.splice(scope.$index, 1)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>

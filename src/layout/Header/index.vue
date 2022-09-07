@@ -53,12 +53,8 @@
             <i f class="el-icon-caret-bottom"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-mouse" command="updataPassword"
-              >密码修改</el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-switch-button" command="loginout"
-              >注销</el-dropdown-item
-            >
+            <el-dropdown-item icon="el-icon-mouse" command="updataPassword">密码修改</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-switch-button" command="loginout">注销</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -66,20 +62,9 @@
     <theme-bar :status="switchThemeBar" @visibleChange="toggleThemeBar"></theme-bar>
     <overlay :close.sync="close" owidth="400px" oheight="40vh" title="密码修改">
       <div v-if="close" class="addUser">
-        <el-form
-          :model="ruleForm"
-          :rules="rules"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="登录名称" prop="userName">
-            <el-input
-              v-model="ruleForm.userName"
-              :disabled="true"
-              size="mini"
-              style="width: 220px"
-            ></el-input>
+            <el-input v-model="ruleForm.userName" :disabled="true" size="mini" style="width: 220px"></el-input>
           </el-form-item>
           <el-form-item label="旧密码">
             <el-input
@@ -109,9 +94,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="submitForm('ruleForm')"
-              >立即创建</el-button
-            >
+            <el-button type="primary" size="mini" @click="submitForm('ruleForm')">立即创建</el-button>
             <el-button @click="resetForm('ruleForm')" size="mini">重置</el-button>
           </el-form-item>
         </el-form>

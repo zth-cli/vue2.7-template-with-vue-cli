@@ -4,8 +4,7 @@
       <template v-slot:tool> </template>
     </flow-bar>
 
-    <CurdTable ref="tableView" class="boxShadow" style="margin-top: 12px" v-bind="tableOptions">
-    </CurdTable>
+    <CurdTable ref="tableView" class="boxShadow" style="margin-top: 12px" v-bind="tableOptions"> </CurdTable>
   </div>
 </template>
 

@@ -53,10 +53,7 @@ export function numberFormatter(num, digits) {
   ]
   for (let i = 0; i < si.length; i++) {
     if (num >= si[i].value) {
-      return (
-        (num / si[i].value + 0.1).toFixed(digits).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1') +
-        si[i].symbol
-      )
+      return (num / si[i].value + 0.1).toFixed(digits).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1') + si[i].symbol
     }
   }
   return num.toString()
@@ -97,8 +94,7 @@ export const toHump = (str) => str.replace(/\_(\w)/g, (all, letter) => letter.to
 export const toLine = (str) => str.replace(/([A-Z])/g, '_$1').toLowerCase()
 
 // 两个日期之间相差的天数
-export const diffDays = (date, otherDate) =>
-  Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24))
+export const diffDays = (date, otherDate) => Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24))
 
 //检查日期是否有效
 export const isDateValid = (...val) => !Number.isNaN(new Date(...val).valueOf())

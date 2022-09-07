@@ -13,9 +13,7 @@ export default {
       return
     }
     document.documentElement.setAttribute('data-theme', theme)
-    document
-      .getElementById('theme')
-      .setAttribute('href', `${process.env.BASE_URL}theme/${theme}/index.css`)
+    document.getElementById('theme').setAttribute('href', `${process.env.BASE_URL}theme/${theme}/index.css`)
   },
 }
 </script>

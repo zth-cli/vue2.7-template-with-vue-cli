@@ -5,17 +5,11 @@
     </el-steps>
     <div class="steps_from_item">
       <div v-for="(fromItem, index) in stepsForm" :key="index">
-        <from-layout
-          v-show="active === index + 1"
-          :fromItem="fromItem"
-          @from-change="getFormData"
-        ></from-layout>
+        <from-layout v-show="active === index + 1" :fromItem="fromItem" @from-change="getFormData"></from-layout>
       </div>
       <div class="btns">
         <el-button @click="active--" v-show="active > 1" size="mini">上一步</el-button>
-        <el-button @click="active++" size="mini" v-show="active <= stepsForm.length - 1"
-          >下一步</el-button
-        >
+        <el-button @click="active++" size="mini" v-show="active <= stepsForm.length - 1">下一步</el-button>
         <el-button type="primary" size="mini" v-show="active === stepsForm.length">提交</el-button>
         <!-- <el-popover placement="top" style="margin-left: 10px;" width="160" v-model="visible" v-show='active === stepsForm.length'>
         <p>此操作将会清空所有表单内容！</p>

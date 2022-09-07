@@ -1,12 +1,5 @@
 <template>
-  <el-drawer
-    title="主题配置"
-    append-to-body
-    :visible.sync="visible"
-    :styles="styles"
-    @close="change"
-    size="300px"
-  >
+  <el-drawer title="主题配置" append-to-body :visible.sync="visible" :styles="styles" @close="change" size="300px">
     <ul class="theme-list">
       <li class="theme-item">
         <p>菜单布局</p>
@@ -110,9 +103,7 @@ export default {
     },
     changeTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme)
-      document
-        .getElementById('theme')
-        .setAttribute('href', `${process.env.BASE_URL}theme/${theme}/index.css`)
+      document.getElementById('theme').setAttribute('href', `${process.env.BASE_URL}theme/${theme}/index.css`)
       localStorage.setItem('theme', theme)
       bus.$emit('changMenuColor', theme)
     },

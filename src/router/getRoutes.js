@@ -12,8 +12,7 @@ function addRouter(routeArr = []) {
         name: item.componentName,
         // component: (resolve) => require([`@/views/${item.componentPath}.vue`], resolve),
         // component: () => import(/* webpackChunkName: "[request]" */ `@/views/${item.componentPath}.vue`),
-        component: () =>
-          lazyLoad(import(/* webpackChunkName: "[request]" */ `@/views/${item.componentPath}.vue`)),
+        component: () => lazyLoad(import(/* webpackChunkName: "[request]" */ `@/views/${item.componentPath}.vue`)),
         meta: {
           title: item.title,
           isCache: false,

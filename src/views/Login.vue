@@ -9,11 +9,7 @@
         <div class="formbox">
           <!--用户名-->
           <div class="bdbox">
-            <el-input
-              placeholder="用户名"
-              prefix-icon="el-icon-user"
-              v-model="lgusername"
-            ></el-input>
+            <el-input placeholder="用户名" prefix-icon="el-icon-user" v-model="lgusername"></el-input>
           </div>
 
           <!--密码-->
@@ -26,9 +22,7 @@
               prefix-icon="el-icon-c-scale-to-original"
             ></el-input>
           </div>
-          <el-button type="primary" v-debounce="loginajax" :loading="isLoging" class="login_btn"
-            >登录</el-button
-          >
+          <el-button type="primary" v-debounce="loginajax" :loading="isLoging" class="login_btn">登录</el-button>
         </div>
       </div>
     </div>
