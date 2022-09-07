@@ -6,6 +6,7 @@
       @tab-remove="closeTags"
       type="card"
       v-model="activeValue"
+      class="tag-main"
     >
       <el-tab-pane
         :key="item.path"
@@ -129,6 +130,10 @@ export default {
   align-items: center;
   padding: 6px 19px 8px 10px;
   // @include box-shadow();
+  .tag-main {
+    overflow: hidden;
+    overflow-x: auto;
+  }
   .el-tabs--top.el-tabs--card > .el-tabs__header {
     border: none;
   }

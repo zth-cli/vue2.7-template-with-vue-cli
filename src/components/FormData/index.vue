@@ -219,6 +219,23 @@
               </el-form-item>
             </el-col>
           </template>
+          <template v-else-if="item.type === 'treeSelect'">
+            <el-col :span="item.span || 12" :key="item.name">
+              <el-form-item
+                class="from_item"
+                :key="item.name"
+                :label="item.label"
+                :prop="item.name"
+              >
+                <el-cascader
+                  v-model="formData[item.name]"
+                  :options="item.options"
+                  :props="{ checkStrictly: true, ...item.props }"
+                  clearable
+                ></el-cascader>
+              </el-form-item>
+            </el-col>
+          </template>
           <template v-else>
             <el-col :span="item.span || 12" :key="item.name">
               <el-form-item
@@ -382,7 +399,11 @@ export default {
             // 筛选部分只显示不提交字段
             this.invaildArr.push(item.name)
           }
-          if (key === 'remoteMethod' && item.remoteMethod && item.type === 'select') {
+          if (
+            key === 'remoteMethod' &&
+            item.remoteMethod &&
+            ['select', 'treeSelect'].includes(item.type)
+          ) {
             item.remoteMethod.then((res) => {
               item.options = res
             })
